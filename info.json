@@ -2,6 +2,7 @@
     "author": ["Predä"],
     "install_msg": "Thank you for installing my repository !\n`[p]cog list preda`",
     "name": "Predä Cogs",
+    "short": "Utility cogs.",
     "description": "Utility cogs.",
     "tags": [
         "utility",

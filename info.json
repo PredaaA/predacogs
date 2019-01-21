@@ -1,0 +1,13 @@
+{
+    "author": ["Predä"],
+    "install_msg": "Thank you for installing the serverinfo cog !\nDon't forget to `[p]load serverinfo` !",
+    "name": "ServerInfo",
+    "short": "Replace serverinfo command with more details.",
+    "description": "Replace original serverinfo command with more details, about users and server.",
+    "tags": [
+        "serverinfo",
+        "utility",
+        "information",
+        "replacement"
+    ]
+}

@@ -1,5 +1,6 @@
 # PredäCogs
 [![Build Status](https://travis-ci.org/predaAa/predacogs.svg?branch=master)](https://travis-ci.org/predaAa/predacogs)
+[![Red](https://img.shields.io/badge/Red-DiscordBot-red.svg)](https://github.com/Cog-Creators/Red-DiscordBot/tree/V3/develop) 
 
 - `[p]load downloader`
 - `[p]repo add preda https://github.com/predaAa/predacogs`

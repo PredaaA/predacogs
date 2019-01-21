@@ -4,7 +4,9 @@ cache: pip
 notifications:
   email: false
 sudo: true
-
+python:
+- 3.6.6
+- 3.7
 pip:
  - pip install git+git://github.com/Rapptz/discord.py.git#egg=discord.py[voice]
 script:

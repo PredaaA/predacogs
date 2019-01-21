@@ -1,7 +1,10 @@
+dist: xenial
 language: python
-python:
- - "3.6"
- - "3.7"
+cache: pip
+notifications:
+  email: false
+sudo: true
+
 pip:
  - pip install git+git://github.com/Rapptz/discord.py.git#egg=discord.py[voice]
 script:

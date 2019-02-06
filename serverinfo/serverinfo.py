@@ -176,10 +176,8 @@ class ServerInfo(BaseCog):
                 icon_url="https://cdn.discordapp.com/emojis/457879292152381443.png",
             )
         if guild.icon_url:
-            data.set_author(name=guild.name)
             data.set_thumbnail(url=guild.icon_url)
         else:
-            data.set_author(name=guild.name)
             data.set_thumbnail(
                 url="https://cdn.discordapp.com/attachments/494975386334134273/529843761635786754/Discord-Logo-Black.png"
             )

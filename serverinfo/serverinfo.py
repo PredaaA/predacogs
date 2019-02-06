@@ -170,6 +170,7 @@ class ServerInfo(BaseCog):
                     "{vip} VIP Regions\n{van} Vanity URL\n{splash} Splash Invite\n{m_emojis} More Emojis\n{verify} Verified"
                 ).format(**format_kwargs),
             )
+        data.set_author(name=guild.name)
         if "VERIFIED" in guild.features:
             data.set_author(
                 name=guild.name,

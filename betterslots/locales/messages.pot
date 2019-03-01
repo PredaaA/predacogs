@@ -1,0 +1,82 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2019-03-01 18:38+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: redgettext 2.2\n"
+
+
+#: betterslots.py:27
+#, docstring
+msgid ""
+"\n"
+"    Replace slots command with a new different one.\n"
+"    "
+msgstr ""
+
+#: betterslots.py:39
+#, docstring
+msgid "Use the slot machine."
+msgstr ""
+
+#: betterslots.py:63
+msgid "⛔ You're on cooldown ! Try again in a bit."
+msgstr ""
+
+#: betterslots.py:67
+msgid "⛔ That's an invalid bid amount, sorry."
+msgstr ""
+
+#: betterslots.py:71
+msgid "⛔ You ain't got enough money, friend."
+msgstr ""
+
+#: betterslots.py:145
+msgid ""
+"You've reached the maximum amount of {currency}! Please spend some more 😬\n"
+"{old_balance} -> {new_balance}!"
+msgstr ""
+
+#: betterslots.py:160
+msgid "You didn't win anything !"
+msgstr ""
+
+#: betterslots.py:161
+msgid "Rolling ... 🎰"
+msgstr ""
+
+#: betterslots.py:170
+msgid ""
+"Your bid : **{amount} {credits_name}**\n"
+"(**{amount_} {credits_name}**)"
+msgstr ""
+
+#: betterslots.py:179
+msgid ""
+"Your bid : **{amount} {credits_name}**\n"
+"(**+{amount_} {credits_name}**)"
+msgstr ""
+
+#: betterslots.py:184
+msgid "Balance :"
+msgstr ""
+
+#: betterslots.py:185
+msgid ""
+"Old balance : **{old_balance} {credits_name}**\n"
+"New balance : **{new_balance} {credits_name}**"
+msgstr ""
+
+#: betterslots.py:190
+msgid "You are #{pos} on the {scope}leaderboard!"
+msgstr ""
+

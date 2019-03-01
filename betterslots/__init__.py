@@ -1,0 +1,1 @@
+from .betterslots import setup

@@ -6,6 +6,7 @@
     "description": "Replace original slot command for a new one in embed with a little animation.",
     "tags": [
         "slots",
-        "economy"
+        "economy",
+        "replace"
     ]
 }

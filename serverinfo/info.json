@@ -1,6 +1,10 @@
 {
     "author": ["Predä"],
-    "install_msg": "Thank you for installing the serverinfo cog !\nDon't forget to `[p]load serverinfo` !",
+    "install_msg": [
+        "Thank you for installing the serverinfo cog !\nDon't forget to `[p]load serverinfo` !",
+        "Important note : You will need to use `[p]reload general` command",
+        "to bring back original serverinfo command if you unload this cog."
+    ],
     "name": "ServerInfo",
     "short": "Replace serverinfo command with more details.",
     "description": "Replace original serverinfo command with more details, about users and server.",

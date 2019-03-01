@@ -1,6 +1,6 @@
 {
     "author": ["Predä"],
-    "install_msg": "Thank you for installing the betterslots cog !\nDon't forget to `[p]load betterslots` !\n\nImportant note : You will need to use `[p]reload economy` command to bring back original slots if you unload this cog.",
+    "install_msg": "Thank you for installing the betterslots cog !\nDon't forget to `[p]load betterslots` !\n\nImportant note : You will need to use `[p]reload economy` command to bring back original slots if you unload or uninstall this cog.",
     "name": "betterslots",
     "short": "Replace slots command with a new one with animation.",
     "description": "Replace original slot command for a new one in embed with a little animation.",

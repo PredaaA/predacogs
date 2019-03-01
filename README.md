@@ -7,3 +7,8 @@
 # Contact
 Predä - 梅丽莎。十四#1001 on Discord.
 Or join my [Discord server](https://discord.gg/3EeJCjR)
+
+# Credits
+- [Red devs](https://github.com/Cog-Creators) for base of my remplacement commands cogs.
+- [Red Discord server community](https://discord.gg/red) for all the help in coding.
+- [Mikeshardming (Sinbad)](https://github.com/mikeshardmind/SinbadCogs) for the command replace logic.

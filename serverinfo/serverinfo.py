@@ -188,6 +188,9 @@ class ServerInfo(BaseCog):
             await ctx.send(embed=data)
         except discord.Forbidden:
             await ctx.send(_("I need the `Embed links` permission to send this."))
+
+def _unload(bot):
+    bot.add_command("serverinfo")
         
 def setup(bot):
     sinfo = ServerInfo(bot)

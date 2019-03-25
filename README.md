@@ -1,8 +1,4 @@
-<h1 align="center">
-  <br>
-  Predä Cogs for Red V3
-  <br>
-</h1>
+<h1 align="center">Predä Cogs for Red V3</h1>
 
 <p align="center">
   <a href="https://github.com/Cog-Creators/Red-DiscordBot/tree/V3/develop">

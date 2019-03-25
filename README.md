@@ -13,7 +13,7 @@ Feel free to open a PR or an issue for any suggestion about my cogs !
 
 # Contact
 Predä - 梅丽莎。十四#1001 on Discord.
-Or join my [Discord server](https://discord.gg/3EeJCjR)
+Or join my [Discord server](https://discord.gg/TwCNvVz)
 
 # Credits
 - [Red devs](https://github.com/Cog-Creators) for base of my remplacement commands cogs.

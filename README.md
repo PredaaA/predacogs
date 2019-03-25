@@ -1,10 +1,9 @@
 # Predä Cogs for Red V3
-<center>
+
 [![Red](https://img.shields.io/badge/Red-DiscordBot-red.svg)](https://github.com/Cog-Creators/Red-DiscordBot/tree/V3/develop)
 [![Discord.py](https://img.shields.io/badge/Discord.py-rewrite-blue.svg)](https://github.com/Rapptz/discord.py/tree/rewrite)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 [![Discord Server](https://discordapp.com/api/guilds/337224005901615104/widget.png?style=shield)](https://discord.gg/3EeJCjR)
-</center>
 
 ## Installation
 

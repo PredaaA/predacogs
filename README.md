@@ -10,6 +10,7 @@
 - `[p]load downloader`
 - `[p]repo add preda https://github.com/predaAa/predacogs`
 - `[p]cog install preda <cog_you_want>`
+- `[p]load <installed_cog>`
 
 ## Contributing
 

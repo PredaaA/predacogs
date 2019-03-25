@@ -5,16 +5,16 @@ import discord
 from redbot.core import commands
 from redbot.core.i18n import Translator, cog_i18n
 
-BaseCog = getattr(commands, "Cog", object)
 _old_serverinfo = None
 _ = Translator("ServerInfo", __file__)
 
+
 @cog_i18n(_)
-class ServerInfo(BaseCog):
+class ServerInfo(commands.Cog):
     """
     Replace serverinfo command with more details.
     """
-    
+
     __author__ = "Predä"
 
     def __init__(self, bot):
@@ -74,13 +74,14 @@ class ServerInfo(BaseCog):
             "japan": _("Japan :flag_jp:"),
             "southafrica": _("South Africa :flag_za:"),
         }
+
         online = len([m.status for m in guild.members if m.status == discord.Status.online])
         idle = len([m.status for m in guild.members if m.status == discord.Status.idle])
         dnd = len([m.status for m in guild.members if m.status == discord.Status.dnd])
         offline = len([m.status for m in guild.members if m.status == discord.Status.offline])
         streaming = len([m for m in guild.members if isinstance(m.activity, discord.Streaming)])
         mobile = len([m for m in guild.members if m.is_on_mobile()])
-        lurkers = len([m for m in guild.members if m.joined_at is None])
+        # lurkers = len([m for m in guild.members if m.joined_at is None])
         total_users = len(guild.members)
         humans = len([a for a in ctx.guild.members if a.bot == False])
         bots = len([a for a in ctx.guild.members if a.bot])
@@ -97,7 +98,7 @@ class ServerInfo(BaseCog):
             "{bot_name} joined this server on {bot_join}. That's over {since_join} days ago !"
         ).format(bot_name=ctx.bot.user.name, bot_join=bot_joined, since_join=since_joined)
         data = discord.Embed(description=created_at, colour=(await ctx.embed_colour()))
-        if lurkers:
+        """if lurkers: # Lurkers detection disabled until this bug https://github.com/discordapp/discord-api-docs/issues/855 is not fixed.
             data.add_field(
                 name=_("Members :"),
                 value=_(
@@ -123,10 +124,9 @@ class ServerInfo(BaseCog):
                 value=_(
                     "Total users : **{total}**\nHumans : **{hum}** • Bots : **{bots}**\n"
                     "📗 `{online}` 📙 `{idle}`\n📕 `{dnd}` 📓 `{off}`\n"
-                    "🎥 `{streaming}` 📱 `{mobile}`\n"                    
+                    "🎥 `{streaming}` 📱 `{mobile}`\n"
                 ).format(
                     total=total_users,
-                    lurkers=lurkers,
                     hum=humans,
                     bots=bots,
                     online=online,
@@ -136,7 +136,25 @@ class ServerInfo(BaseCog):
                     streaming=streaming,
                     mobile=mobile,
                 ),
-            )
+            )"""
+        data.add_field(  # Delete this field when lurkers will be fixed cause it's just a copy-paste of the field above.
+            name=_("Members :"),
+            value=_(
+                "Total users : **{total}**\nHumans : **{hum}** • Bots : **{bots}**\n"
+                "📗 `{online}` 📙 `{idle}`\n📕 `{dnd}` 📓 `{off}`\n"
+                "🎥 `{streaming}` 📱 `{mobile}`\n"
+            ).format(
+                total=total_users,
+                hum=humans,
+                bots=bots,
+                online=online,
+                idle=idle,
+                dnd=dnd,
+                off=offline,
+                streaming=streaming,
+                mobile=mobile,
+            ),
+        )
         data.add_field(
             name=_("Channels :"),
             value=_("💬 Text : **{text}**\n🔊 Voice : **{voice}**").format(
@@ -191,9 +209,11 @@ class ServerInfo(BaseCog):
         except discord.Forbidden:
             await ctx.send(_("I need the `Embed links` permission to send this."))
 
+
 def _unload(bot):
     bot.add_command("serverinfo")
-        
+
+
 def setup(bot):
     sinfo = ServerInfo(bot)
     global _old_serverinfo

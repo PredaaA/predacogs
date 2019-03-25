@@ -14,7 +14,7 @@ IMGUR_LINKS = "http://imgur.com", "https://m.imgur.com", "https://imgur.com"
 
 
 class Nsfw(Functions, commands.Cog):
-    """Send random NSFW from random subreddits"""
+    """Send random NSFW images from random subreddits"""
 
     __author__ = ["Predä", "aikaterna"]
     __version__ = "1.0"

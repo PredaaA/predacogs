@@ -29,7 +29,7 @@ Feel free to open a PR or an issue for any suggestion about my cogs !
 ## Contact
 
 Predä - 梅丽莎。十四#1001 on Discord.
-Or join my [Discord server](https://discord.gg/TwCNvVz)
+Or join my [Discord server](https://discord.gg/TwCNvVz).
 
 ## Credits
 

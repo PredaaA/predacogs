@@ -73,3 +73,6 @@ class Functions(commands.Cog):
             await ctx.send(embed=embed)
         else:
             await ctx.send(embed)
+
+    def __unload(self):
+        self.bot.loop.create_task(self.session.close())

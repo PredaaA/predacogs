@@ -752,3 +752,6 @@ class Nsfw(Functions, commands.Cog):
 
             embed = await self._make_embed(ctx, subr, "gonewild", url)
             await self._maybe_embed(ctx, embed=embed)
+
+    def __unload(self):
+        self.bot.loop.create_task(self.session.close())

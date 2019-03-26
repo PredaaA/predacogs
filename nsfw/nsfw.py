@@ -2,8 +2,8 @@ import discord
 
 from redbot.core import checks, commands
 
-from . import subrs
-from .ext_functions import Functions, EMOJIS
+from .ext_functions import Functions
+from . import subs
 
 import aiohttp
 import random
@@ -17,7 +17,7 @@ class Nsfw(Functions, commands.Cog):
     """Send random NSFW images from random subreddits"""
 
     __author__ = ["Predä", "aikaterna"]
-    __version__ = "1.0.1"
+    __version__ = "1.0.2"
 
     def __init__(self, bot):
         self.bot = bot
@@ -36,11 +36,13 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.FOUR_K, url=None, subr=None, text=None, cmd=self.four_k
+                ctx, sub=subs.FOUR_K, url=None, subr=None, text=None, cmd=self.four_k
             )
             # TODO : Create a function for not imgs and reconfigure links
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -62,10 +64,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.AHEGAO, url=None, subr=None, text=None, cmd=self.ahegao
+                ctx, sub=subs.AHEGAO, url=None, subr=None, text=None, cmd=self.ahegao
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -87,10 +91,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.ASS, url=None, subr=None, text=None, cmd=self.ass
+                ctx, sub=subs.ASS, url=None, subr=None, text=None, cmd=self.ass
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -112,10 +118,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.ANAL, url=None, subr=None, text=None, cmd=self.anal
+                ctx, sub=subs.ANAL, url=None, subr=None, text=None, cmd=self.anal
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -137,10 +145,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.BDSM, url=None, subr=None, text=None, cmd=self.bdsm
+                ctx, sub=subs.BDSM, url=None, subr=None, text=None, cmd=self.bdsm
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -162,10 +172,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.BLACKCOCK, url=None, subr=None, text=None, cmd=self.blackcock
+                ctx, sub=subs.BLACKCOCK, url=None, subr=None, text=None, cmd=self.blackcock
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -187,10 +199,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.BLOWJOB, url=None, subr=None, text=None, cmd=self.blowjob
+                ctx, sub=subs.BLOWJOB, url=None, subr=None, text=None, cmd=self.blowjob
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -212,10 +226,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.BOOBS, url=None, subr=None, text=None, cmd=self.boobs
+                ctx, sub=subs.BOOBS, url=None, subr=None, text=None, cmd=self.boobs
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -237,10 +253,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.BOTTOMLESS, url=None, subr=None, text=None, cmd=self.bottomless
+                ctx, sub=subs.BOTTOMLESS, url=None, subr=None, text=None, cmd=self.bottomless
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -262,10 +280,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.CUNNI, url=None, subr=None, text=None, cmd=self.cunnilingus
+                ctx, sub=subs.CUNNI, url=None, subr=None, text=None, cmd=self.cunnilingus
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -287,10 +307,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.CUMSHOTS, url=None, subr=None, text=None, cmd=self.cumshot
+                ctx, sub=subs.CUMSHOTS, url=None, subr=None, text=None, cmd=self.cumshot
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -312,10 +334,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.DEEPTHROAT, url=None, subr=None, text=None, cmd=self.deepthroat
+                ctx, sub=subs.DEEPTHROAT, url=None, subr=None, text=None, cmd=self.deepthroat
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -337,10 +361,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.DICK, url=None, subr=None, text=None, cmd=self.dick
+                ctx, sub=subs.DICK, url=None, subr=None, text=None, cmd=self.dick
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -362,10 +388,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.DOUBLE_P, url=None, subr=None, text=None, cmd=self.doublepenetration
+                ctx, sub=subs.DOUBLE_P, url=None, subr=None, text=None, cmd=self.doublepenetration
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -387,10 +415,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.GAY_P, url=None, subr=None, text=None, cmd=self.gay
+                ctx, sub=subs.GAY_P, url=None, subr=None, text=None, cmd=self.gay
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -412,10 +442,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.GROUPS, url=None, subr=None, text=None, cmd=self.group
+                ctx, sub=subs.GROUPS, url=None, subr=None, text=None, cmd=self.group
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -426,9 +458,9 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command()
+    @commands.command(aliases=["hentaigif"])
     async def hentai(self, ctx):
-        """Show some hentai images from random subreddits."""
+        """Show some hentai images/gifs from Nekobot API."""
         try:
             if ctx.message.channel.is_nsfw() == False:
                 em = await self.blocked_msg(ctx)
@@ -436,43 +468,23 @@ class Nsfw(Functions, commands.Cog):
         except:
             pass
         async with ctx.typing():
-            url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.HENTAI, url=None, subr=None, text=None, cmd=self.hentai
-            )
-            if url.startswith(IMGUR_LINKS):
-                url = url + ".png"
-            if url.endswith(".gifv"):
-                url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
-                return await ctx.invoke(self.hentai)
-
-            embed = await self._make_embed(ctx, subr, "hentai", url)
-            await self._maybe_embed(ctx, embed=embed)
-
-    @commands.bot_has_permissions(embed_links=True)
-    @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command(aliases=["hentaigifs"])
-    async def hentaigif(self, ctx):
-        """Show some hentai images from random subreddits."""
-        try:
-            if ctx.message.channel.is_nsfw() == False:
-                em = await self.blocked_msg(ctx)
-                return await ctx.send(embed=em)
-        except:
-            pass
-        async with ctx.typing():
-            url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.HENTAI_GIFS, url=None, subr=None, text=None, cmd=self.hentaigif
-            )
-            if url.startswith(IMGUR_LINKS):
-                url = url + ".png"
-            if url.endswith(".gifv"):
-                url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
-                return await ctx.invoke(self.hentaigif)
-
-            embed = await self._make_embed(ctx, subr, "hentai gif", url)
-            await self._maybe_embed(ctx, embed=embed)
+            url = subs.NEKOBOT_BASEURL + random.choice(["hentai_anal", "hentai"])
+            emoji = await self.emojis(emoji=None)
+            async with self.session.get(url) as i:
+                data = await i.json()
+                img = data["message"]
+                em = discord.Embed(
+                    color=0x891193,
+                    title="Here is hentai ... \N{EYES}",
+                    description=f"[**Link if you don't see image**]({img})",
+                )
+                em.set_image(url=f"{img}")
+                em.set_footer(
+                    text="Requested by {name} {emoji} • From Nekobot API".format(
+                        name=ctx.author.display_name, emoji=emoji
+                    )
+                )
+        await ctx.send(embed=em)
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
@@ -487,10 +499,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.LESBIANS, url=None, subr=None, text=None, cmd=self.lesbian
+                ctx, sub=subs.LESBIANS, url=None, subr=None, text=None, cmd=self.lesbian
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -512,10 +526,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.MILF, url=None, subr=None, text=None, cmd=self.milf
+                ctx, sub=subs.MILF, url=None, subr=None, text=None, cmd=self.milf
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -537,10 +553,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.ORAL, url=None, subr=None, text=None, cmd=self.oral
+                ctx, sub=subs.ORAL, url=None, subr=None, text=None, cmd=self.oral
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -561,7 +579,8 @@ class Nsfw(Functions, commands.Cog):
         except:
             pass
         async with ctx.typing():
-            url = "https://nekobot.xyz/api/image?type=pgif"
+            url = subs.NEKOBOT_BASEURL + "pgif"
+            emoji = await self.emojis(emoji=None)
             async with self.session.get(url) as i:
                 data = await i.json()
                 img = data["message"]
@@ -572,8 +591,8 @@ class Nsfw(Functions, commands.Cog):
                 )
                 em.set_image(url=f"{img}")
                 em.set_footer(
-                    text="Requested by {name} {emoji}".format(
-                        name=ctx.author.display_name, emoji=EMOJIS
+                    text="Requested by {name} {emoji} • From Nekobot API".format(
+                        name=ctx.author.display_name, emoji=emoji
                     )
                 )
         await ctx.send(embed=em)
@@ -591,10 +610,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.PUBLIC, url=None, subr=None, text=None, cmd=self.public
+                ctx, sub=subs.PUBLIC, url=None, subr=None, text=None, cmd=self.public
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -616,10 +637,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.PUSSY, url=None, subr=None, text=None, cmd=self.pussy
+                ctx, sub=subs.PUSSY, url=None, subr=None, text=None, cmd=self.pussy
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -641,10 +664,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.REAL_GIRLS, url=None, subr=None, text=None, cmd=self.realgirls
+                ctx, sub=subs.REAL_GIRLS, url=None, subr=None, text=None, cmd=self.realgirls
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -666,10 +691,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.RULE_34, url=None, subr=None, text=None, cmd=self.rule34
+                ctx, sub=subs.RULE_34, url=None, subr=None, text=None, cmd=self.rule34
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -691,10 +718,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.THIGHS, url=None, subr=None, text=None, cmd=self.thigh
+                ctx, sub=subs.THIGHS, url=None, subr=None, text=None, cmd=self.thigh
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -716,10 +745,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.TRAPS, url=None, subr=None, text=None, cmd=self.trap
+                ctx, sub=subs.TRAPS, url=None, subr=None, text=None, cmd=self.trap
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):
@@ -741,10 +772,12 @@ class Nsfw(Functions, commands.Cog):
             pass
         async with ctx.typing():
             url, subr, text = await self._get_imgs(
-                ctx, sub=subrs.WILD, url=None, subr=None, text=None, cmd=self.wild
+                ctx, sub=subs.WILD, url=None, subr=None, text=None, cmd=self.wild
             )
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
             if text or not url.endswith(GOOD_EXTENSIONS):

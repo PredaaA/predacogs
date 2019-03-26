@@ -2,8 +2,8 @@
     "author": ["Predä", "aikaterna"],
     "install_msg": "Thank you for installing my Nsfw cog !\nDon't forget to `[p]load nsfw` !",
     "name": "Nsfw",
-    "short": "Send random NSFW images from random subreddits.",
-    "description": "Send random NSFW images from random subreddits in NSFW only channels.",
+    "short": "Send random NSFW images from random subreddits and Nekobot API.",
+    "description": "Send random NSFW images from random subreddits and Nekobot API in NSFW only channels.",
     "tags": [
         "nsfw",
         "reddit",

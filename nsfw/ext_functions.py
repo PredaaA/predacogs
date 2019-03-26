@@ -3,40 +3,31 @@ import discord
 import aiohttp
 import random
 
-from redbot.core import commands
-
-EMOJIS = random.choice(
-    [
-        "\N{AUBERGINE}",
-        "\N{SMIRKING FACE}",
-        "\N{PEACH}",
-        "\N{SPLASHING SWEAT SYMBOL}",
-        "\N{BANANA}",
-        "\N{KISS MARK}",
-    ]
-)
+from .subs import EMOJIS
 
 BASE_URL = "https://api.reddit.com/r/"
 ENDPOINT = "/random"
 
+IMGUR_LINKS = "http://imgur.com", "https://m.imgur.com", "https://imgur.com"
 GOOD_EXTENSIONS = ".png", ".jpg", ".jpeg", ".gif"
 
 
-class Functions(commands.Cog):
+class Functions:
     def __init__(self, bot):
         self.bot = bot
         self.session = aiohttp.ClientSession()
 
     async def _get_imgs(self, ctx, sub=None, url=None, subr=None, text=None, cmd=None):
         sub = random.choice(sub)
-        async with self.session.get(BASE_URL + f"{sub}" + ENDPOINT) as reddit:
-            data = await reddit.json()
-        try:
-            url = data[0]["data"]["children"][0]["data"]["url"]
-            subr = data[0]["data"]["children"][0]["data"]["subreddit"]
-            text = data[0]["data"]["children"][0]["data"]["selftext"]
-        except KeyError:
-            await self._retry(ctx, cmd)
+        async with self.session.get(BASE_URL + sub + ENDPOINT) as reddit:
+            try:
+                data = await reddit.json(content_type=None)
+                content = data[0]["data"]["children"][0]["data"]
+                url = content["url"]
+                subr = content["subreddit"]
+                text = content["selftext"]
+            except (KeyError, ValueError):
+                await self._retry(ctx, cmd)
         return url, subr, text
 
     async def _retry(self, ctx, cmd):
@@ -48,7 +39,12 @@ class Functions(commands.Cog):
         )
         return em
 
+    async def emojis(self, emoji=None):
+        emoji = random.choice(EMOJIS)
+        return emoji
+
     async def _make_embed(self, ctx, subr, name, url):
+        emoji = await self.emojis(emoji=None)
         em = discord.Embed(
             color=0x891193,
             title="Here is {name} image ... \N{EYES}".format(name=name),
@@ -56,16 +52,15 @@ class Functions(commands.Cog):
         )
         em.set_footer(
             text="Requested by {req} {emoji} • From r/{r}".format(
-                req=ctx.author.display_name, emoji=EMOJIS, r=subr
+                req=ctx.author.display_name, emoji=emoji, r=subr
             )
         )
         if url.endswith(GOOD_EXTENSIONS):
             em.set_image(url=url)
         if url.startswith("https://gfycat.com"):
             em = "Here is {name} gif ... \N{EYES}\n\nRequested by **{req}** {emoji} • From **r/{r}**\n{url}".format(
-                name=name, req=ctx.author.display_name, emoji=EMOJIS, r=subr, url=url
+                name=name, req=ctx.author.display_name, emoji=emoji, r=subr, url=url
             )
-
         return em
 
     async def _maybe_embed(self, ctx, embed):

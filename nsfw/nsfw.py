@@ -45,7 +45,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.four_k)
 
             embed = await self._make_embed(ctx, subr, "4k", url)
@@ -72,7 +76,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.ahegao)
 
             embed = await self._make_embed(ctx, subr, "ahegao", url)
@@ -99,7 +107,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.ass)
 
             embed = await self._make_embed(ctx, subr, "ass", url)
@@ -126,7 +138,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.anal)
 
             embed = await self._make_embed(ctx, subr, "anal", url)
@@ -153,7 +169,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.bdsm)
 
             embed = await self._make_embed(ctx, subr, "bdsm", url)
@@ -180,7 +200,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.blackcock)
 
             embed = await self._make_embed(ctx, subr, "blackcock", url)
@@ -207,7 +231,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.blowjob)
 
             embed = await self._make_embed(ctx, subr, "blowjob", url)
@@ -234,7 +262,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.boobs)
 
             embed = await self._make_embed(ctx, subr, "boobs", url)
@@ -261,7 +293,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.bottomless)
 
             embed = await self._make_embed(ctx, subr, "bottomless", url)
@@ -288,7 +324,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.cunnilingus)
 
             embed = await self._make_embed(ctx, subr, "cunnilingus", url)
@@ -315,7 +355,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.cumshot)
 
             embed = await self._make_embed(ctx, subr, "cumshot", url)
@@ -342,7 +386,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.deepthroat)
 
             embed = await self._make_embed(ctx, subr, "deepthroat", url)
@@ -369,7 +417,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.dick)
 
             embed = await self._make_embed(ctx, subr, "dick", url)
@@ -396,7 +448,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.doublepenetration)
 
             embed = await self._make_embed(ctx, subr, "double penetration", url)
@@ -423,7 +479,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.gay)
 
             embed = await self._make_embed(ctx, subr, "gay porn", url)
@@ -450,7 +510,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.group)
 
             embed = await self._make_embed(ctx, subr, "group nudes", url)
@@ -478,7 +542,7 @@ class Nsfw(Functions, commands.Cog):
                     title="Here is hentai ... \N{EYES}",
                     description=f"[**Link if you don't see image**]({img})",
                 )
-                em.set_image(url=f"{img}")
+                em.set_image(url=img)
                 em.set_footer(
                     text="Requested by {name} {emoji} • From Nekobot API".format(
                         name=ctx.author.display_name, emoji=emoji
@@ -507,7 +571,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.lesbian)
 
             embed = await self._make_embed(ctx, subr, "lesbian", url)
@@ -534,7 +602,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.milf)
 
             embed = await self._make_embed(ctx, subr, "milf", url)
@@ -561,7 +633,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.oral)
 
             embed = await self._make_embed(ctx, subr, "oral", url)
@@ -589,7 +665,7 @@ class Nsfw(Functions, commands.Cog):
                     title="Here is porn gif ... \N{EYES}",
                     description=f"[**Link if you don't see image**]({img})",
                 )
-                em.set_image(url=f"{img}")
+                em.set_image(url=img)
                 em.set_footer(
                     text="Requested by {name} {emoji} • From Nekobot API".format(
                         name=ctx.author.display_name, emoji=emoji
@@ -618,7 +694,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.public)
 
             embed = await self._make_embed(ctx, subr, "public nudes", url)
@@ -645,7 +725,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.pussy)
 
             embed = await self._make_embed(ctx, subr, "pussy", url)
@@ -672,7 +756,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.realgirls)
 
             embed = await self._make_embed(ctx, subr, "real nudes", url)
@@ -699,7 +787,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.redhead)
 
             embed = await self._make_embed(ctx, subr, "red head", url)
@@ -726,7 +818,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.rule34)
 
             embed = await self._make_embed(ctx, subr, "rule34", url)
@@ -753,7 +849,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.thigh)
 
             embed = await self._make_embed(ctx, subr, "thigh", url)
@@ -780,7 +880,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.trap)
 
             embed = await self._make_embed(ctx, subr, "trap", url)
@@ -807,7 +911,11 @@ class Nsfw(Functions, commands.Cog):
                 url = url[:-3] + "gif"
             if url.endswith(".gifv"):
                 url = url[:-1]
-            if text or not url.endswith(GOOD_EXTENSIONS):
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
                 return await ctx.invoke(self.wild)
 
             embed = await self._make_embed(ctx, subr, "gonewild", url)

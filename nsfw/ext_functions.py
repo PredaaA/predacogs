@@ -2,6 +2,7 @@ import discord
 
 import aiohttp
 import random
+import json
 
 from .subs import EMOJIS
 
@@ -19,16 +20,16 @@ class Functions:
 
     # TODO: Use something different for getting images, like caching.
     async def _get_imgs(self, ctx, sub=None, url=None, subr=None, text=None, cmd=None):
-        sub = random.choice(sub)
-        async with self.session.get(BASE_URL + sub + ENDPOINT) as reddit:
+        csub = random.choice(sub)
+        async with self.session.get(BASE_URL + csub + ENDPOINT) as reddit:
             try:
                 data = await reddit.json(content_type=None)
                 content = data[0]["data"]["children"][0]["data"]
                 url = content["url"]
                 subr = content["subreddit"]
                 text = content["selftext"]
-            except (KeyError, ValueError):
-                await self._retry(ctx, cmd)
+            except (KeyError, ValueError, json.decoder.JSONDecodeError):
+                url, subr, text = await self._get_imgs(ctx, sub=sub, cmd=cmd)
         return url, subr, text
 
     async def _retry(self, ctx, cmd):

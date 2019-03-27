@@ -19,7 +19,8 @@ class Functions:
         self.session = aiohttp.ClientSession()
 
     # TODO: Use something different for getting images, like caching.
-    async def _get_imgs(self, ctx, sub=None, url=None, subr=None, text=None, cmd=None):
+    # Or maybe not ? Works well now without ctx.invoke.
+    async def _get_imgs(self, ctx, sub=None, url=None, subr=None):
         csub = random.choice(sub)
         async with self.session.get(BASE_URL + csub + ENDPOINT) as reddit:
             try:
@@ -29,11 +30,20 @@ class Functions:
                 subr = content["subreddit"]
                 text = content["selftext"]
             except (KeyError, ValueError, json.decoder.JSONDecodeError):
-                url, subr, text = await self._get_imgs(ctx, sub=sub, cmd=cmd)
-        return url, subr, text
-
-    async def _retry(self, ctx, cmd):
-        return await ctx.invoke(cmd)
+                url, subr, text = await self._get_imgs(ctx, sub=sub)
+            if url.startswith(IMGUR_LINKS):
+                url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
+            if url.endswith(".gifv"):
+                url = url[:-1]
+            if (
+                text
+                or not url.endswith(GOOD_EXTENSIONS)
+                and not url.startswith("https://gfycat.com")
+            ):
+                url, subr = await self._get_imgs(ctx, sub=sub)
+        return url, subr
 
     async def blocked_msg(self, ctx):
         em = discord.Embed(

@@ -680,6 +680,33 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
+    @commands.command(aliases=["redheads", "ginger", "gingers"])
+    async def redhead(self, ctx):
+        """Show some red heads images from random subreddits."""
+        try:
+            if ctx.message.channel.is_nsfw() == False:
+                em = await self.blocked_msg(ctx)
+                return await ctx.send(embed=em)
+        except:
+            pass
+        async with ctx.typing():
+            url, subr, text = await self._get_imgs(
+                ctx, sub=subs.REDHEADS, url=None, subr=None, text=None, cmd=self.redhead
+            )
+            if url.startswith(IMGUR_LINKS):
+                url = url + ".png"
+            if url.endswith(".mp4"):
+                url = url[:-3] + "gif"
+            if url.endswith(".gifv"):
+                url = url[:-1]
+            if text or not url.endswith(GOOD_EXTENSIONS):
+                return await ctx.invoke(self.redhead)
+
+            embed = await self._make_embed(ctx, subr, "red head", url)
+            await self._maybe_embed(ctx, embed=embed)
+
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["r34"])
     async def rule34(self, ctx):
         """Show some rule34 images from random subreddits."""

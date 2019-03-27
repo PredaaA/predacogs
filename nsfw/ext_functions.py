@@ -17,6 +17,7 @@ class Functions:
         self.bot = bot
         self.session = aiohttp.ClientSession()
 
+    # TODO: Use something different for getting images, like caching.
     async def _get_imgs(self, ctx, sub=None, url=None, subr=None, text=None, cmd=None):
         sub = random.choice(sub)
         async with self.session.get(BASE_URL + sub + ENDPOINT) as reddit:

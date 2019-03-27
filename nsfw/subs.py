@@ -9,7 +9,7 @@ EMOJIS = [
 NEKOBOT_BASEURL = "https://nekobot.xyz/api/image?type="
 
 FOUR_K = ["HighResNSFW", "UHDnsfw", "nsfw4k", "nsfw_hd", "NSFW_Wallpapers", "HDnsfw", "closeup"]
-AHEGAO = ["AhegaoGirls", "RealAhegao", "EyeRollOrgasm", "MouthWideOpen"]
+AHEGAO = ["AhegaoGirls", "RealAhegao", "EyeRollOrgasm", "MouthWideOpen", "O_Faces"]
 ASS = [
     "ass",
     "pawg",
@@ -34,6 +34,7 @@ ASS = [
     "Underbun",
     "datass",
     "ILikeLittleButts",
+    "datgap",
 ]
 ANAL = [
     "MasterOfAnal",
@@ -92,6 +93,7 @@ BOOBS = [
     "cleavage",
     "BoobsBetweenArms",
     "BustyNaturals",
+    "burstingout",
 ]
 BOTTOMLESS = ["upskirt", "Bottomless", "Bottomless_Vixens", "nopanties", "Pantiesdown"]
 CUNNI = ["cunnilingus", "eatpussy2015", "CunnilingusSelfie", "Hegoesdown"]
@@ -177,6 +179,16 @@ PUSSY = [
     "grool",
 ]
 REAL_GIRLS = ["RealGirls", "RealGirlsGoneWild", "Nude_Selfie"]
+REDHEADS = [
+    "redheadxxx",
+    "redheads",
+    "ginger",
+    "FireBush",
+    "FreckledRedheads",
+    "redhead",
+    "thesluttyginger",
+    "RedheadGifs",
+]
 RULE_34 = [
     "rule34",
     "rule34cartoons",
@@ -223,4 +235,5 @@ WILD = [
     "TallGoneWild",
     "LingerieGW",
     "Swingersgw",
+    "workgonewild",
 ]

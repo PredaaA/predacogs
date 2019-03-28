@@ -84,18 +84,34 @@ class Functions:
             data = await i.json(content_type=None)
             url = data["message"]
             emoji = await self._emojis(emoji=None)
-            em = discord.Embed(
-                color=0x891193,
-                title="Here is {name} image ... \N{EYES}".format(name=name),
-                description="[**Link if you don't see image**]({url})".format(url=url),
-            )
-            em.set_image(url=url)
-            em.set_footer(
-                text="Requested by {req} {emoji} • From Nekobot API".format(
-                    req=ctx.author.display_name, emoji=emoji
+            try:
+                if ctx.message.channel.is_nsfw() == True:
+                    em = discord.Embed(
+                        color=0x891193,
+                        title="Here is {name} image ... \N{EYES}".format(name=name),
+                        description="[**Link if you don't see image**]({url})".format(url=url),
+                    )
+                    em.set_image(url=url)
+                    em.set_footer(
+                        text="Requested by {req} {emoji} • From Nekobot API".format(
+                            req=ctx.author.display_name, emoji=emoji
+                        )
+                    )
+                else:
+                    em = await self._nsfw_channel_check(ctx)
+            except AttributeError:
+                em = discord.Embed(
+                    color=0x891193,
+                    title="Here is {name} image ... \N{EYES}".format(name=name),
+                    description="[**Link if you don't see image**]({url})".format(url=url),
                 )
-            )
-        return await ctx.send(embed=em)
+                em.set_image(url=url)
+                em.set_footer(
+                    text="Requested by {req} {emoji} • From Nekobot API".format(
+                        req=ctx.author.display_name, emoji=emoji
+                    )
+                )
+            return await ctx.send(embed=em)
 
     async def _maybe_embed(self, ctx, embed):
         if type(embed) == discord.Embed:

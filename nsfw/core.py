@@ -105,11 +105,15 @@ class Functions:
 
     async def _send_msg(self, ctx, name, sub=None, subr=None):
         async with ctx.typing():
-            if ctx.message.channel.is_nsfw() == True:
+            try:
+                if ctx.message.channel.is_nsfw() == True:
+                    url, subr = await self._get_imgs(ctx, sub=sub, url=None, subr=None)
+                    embed = await self._make_embed(ctx, subr, name, url)
+                else:
+                    embed = await self._nsfw_channel_check(ctx)
+            except AttributeError:
                 url, subr = await self._get_imgs(ctx, sub=sub, url=None, subr=None)
                 embed = await self._make_embed(ctx, subr, name, url)
-            else:
-                embed = await self._nsfw_channel_check(ctx)
         await self._maybe_embed(ctx, embed=embed)
 
     def __unload(self):

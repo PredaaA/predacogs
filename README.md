@@ -40,5 +40,5 @@ Or join my [Discord server](https://discord.gg/TwCNvVz).
 
 - [Red devs](https://github.com/Cog-Creators) for base of my remplacement commands cogs.
 - [Red Discord server community](https://discord.gg/red) for all the help in coding.
-- [Mikeshardming (Sinbad)](https://github.com/mikeshardmind/SinbadCogs) for the command replace logic.
+- [Mikeshardmind (Sinbad)](https://github.com/mikeshardmind/SinbadCogs) for the command replace logic.
 - [Aikaterna](https://github.com/aikaterna) for the help on [nsfw cog](https://github.com/PredaaA/predacogs/tree/master/nsfw).

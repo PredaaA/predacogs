@@ -44,7 +44,7 @@ class Functions:
                 or not url.endswith(GOOD_EXTENSIONS)
                 and not url.startswith("https://gfycat.com")
             ):
-                url, subr = await self._get_imgs(ctx, sub=sub)
+                url, subr = await self._get_imgs(ctx, sub=sub, url=url)
         return url, subr
 
     async def _nsfw_channel_check(self, ctx, embed=None):

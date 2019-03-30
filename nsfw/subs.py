@@ -46,6 +46,7 @@ ANAL = [
     "analinsertions",
     "AnalGW",
     "assholegonewild",
+    "sodomy"
 ]
 BDSM = ["BDSMGW", "bdsm", "ropeart", "shibari"]
 BLACKCOCK = ["ChurchOfTheBBC", "blackcock", "Blackdick", "bigblackcocks"]
@@ -59,6 +60,7 @@ BLOWJOB = [
     "SuckingItDry",
     "OralCreampie",
     "SwordSwallowers",
+    "fellatio"
 ]
 BOOBS = [
     "boobs",
@@ -114,7 +116,7 @@ CUMSHOTS = [
     "ContainTheLoad",
     "bodyshots",
 ]
-DEEPTHROAT = ["DeepThroatTears", "deepthroat", "SwordSwallowers"]
+DEEPTHROAT = ["deepthroat_gifs", "AmateurDeepthroat", "DeepThroatTears", "deepthroat", "SwordSwallowers"]
 DICK = ["DickPics4Freedom", "mangonewild", "MassiveCock", "penis", "cock", "ThickDick"]
 DOUBLE_P = ["doublepenetration", "dp_porn", "Technical_DP"]
 GAY_P = ["gayporn", "GayPornForStrtGuys", "ladybonersgw", "mangonewild"]

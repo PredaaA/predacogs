@@ -32,7 +32,7 @@ class Functions:
                 subr = content["subreddit"]
                 text = content["selftext"]
             except (KeyError, ValueError, json.decoder.JSONDecodeError):
-                url, subr, text = await self._get_imgs(ctx, sub=sub)
+                url, subr, text = await self._get_imgs(ctx, sub=sub, url=url)
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
             if url.endswith(".mp4"):

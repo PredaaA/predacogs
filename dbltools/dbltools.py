@@ -46,16 +46,15 @@ class DblTools(commands.Cog):
         Note : You need to have a bot published
         on DBL to use API and have a key.
         """
-        if not isinstance(ctx.channel, discord.DMChannel):
+        if ctx.guild:
             try:
                 await ctx.message.delete()
             except discord.Forbidden:
                 pass
-
             return await ctx.send("You need to use this command in DM.")
-
-        await self.config.dbl_key.set(key)
-        await ctx.send("API key set.")
+        else:
+            await self.config.dbl_key.set(key)
+            await ctx.send("API key set.")
 
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)

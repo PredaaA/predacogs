@@ -15,7 +15,6 @@ GOOD_EXTENSIONS = ".png", ".jpg", ".jpeg", ".gif"
 
 
 class Functions:
-
     def __init__(self, bot):
         self.bot = bot
         self.session = aiohttp.ClientSession()
@@ -84,7 +83,7 @@ class Functions:
             data = await i.json(content_type=None)
             url = data["message"]
             emoji = await self._emojis(emoji=None)
-            try:
+            if ctx.guild:
                 if ctx.message.channel.is_nsfw() == True:
                     em = discord.Embed(
                         color=0x891193,
@@ -99,7 +98,7 @@ class Functions:
                     )
                 else:
                     em = await self._nsfw_channel_check(ctx)
-            except AttributeError:
+            else:
                 em = discord.Embed(
                     color=0x891193,
                     title="Here is {name} image ... \N{EYES}".format(name=name),
@@ -121,13 +120,13 @@ class Functions:
 
     async def _send_msg(self, ctx, name, sub=None, subr=None):
         async with ctx.typing():
-            try:
+            if ctx.guild:
                 if ctx.message.channel.is_nsfw() == True:
                     url, subr = await self._get_imgs(ctx, sub=sub, url=None, subr=None)
                     embed = await self._make_embed(ctx, subr, name, url)
                 else:
                     embed = await self._nsfw_channel_check(ctx)
-            except AttributeError:
+            else:
                 url, subr = await self._get_imgs(ctx, sub=sub, url=None, subr=None)
                 embed = await self._make_embed(ctx, subr, name, url)
         await self._maybe_embed(ctx, embed=embed)

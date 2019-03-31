@@ -20,6 +20,9 @@
 
 ## Installation
 
+```
+- [p] is your prefix
+```
 ```md
 - [p]load downloader
 - [p]repo add preda https://github.com/predaAa/predacogs

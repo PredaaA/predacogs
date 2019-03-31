@@ -14,7 +14,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command(name="4k", aliases=["4K"])
+    @commands.command(name="4k", aliases=["4K", "fourk"])
     async def four_k(self, ctx):
         """Show some 4k images from random subreddits."""
 
@@ -22,7 +22,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command()
+    @commands.command(aliases=["oface", "ofaces"])
     async def ahegao(self, ctx):
         """Show some ahegao images from random subreddits."""
 
@@ -30,7 +30,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command(aliases=["butt"])
+    @commands.command(aliases=["butt", "booty"])
     async def ass(self, ctx):
         """Show some ass images from random subreddits."""
 
@@ -38,7 +38,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command()
+    @commands.command(aliases=["sodomy"])
     async def anal(self, ctx):
         """Show some anal images/gifs from random subreddits."""
 
@@ -46,7 +46,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command()
+    @commands.command(aliases=["shibari"])
     async def bdsm(self, ctx):
         """Show some bdsm from random subreddits."""
 
@@ -62,7 +62,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command(aliases=["blowjobs", "blowj", "bjob"])
+    @commands.command(aliases=["blowjobs", "blowj", "bjob", "fellatio", "fellation"])
     async def blowjob(self, ctx):
         """Show some blowjob images/gifs from random subreddits."""
 
@@ -70,7 +70,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command(aliases=["boob", "tits", "titties"])
+    @commands.command(aliases=["boob", "boobies", "tits", "titties", "breasts", "breast"])
     async def boobs(self, ctx):
         """Show some boobs images from random subreddits."""
 
@@ -78,7 +78,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command(aliases=["boless"])
+    @commands.command(aliases=["boless", "b_less"])
     async def bottomless(self, ctx):
         """Show some bottomless images from random subreddits."""
 
@@ -86,7 +86,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command(aliases=["cunni"])
+    @commands.command(aliases=["cunni", "pussyeating"])
     async def cunnilingus(self, ctx):
         """Show some cunnilingus images from random subreddits."""
 
@@ -94,7 +94,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command(aliases=["cum", "cumshots"])
+    @commands.command(aliases=["cum", "cums", "cumshots"])
     async def cumshot(self, ctx):
         """Show some cumshot images/gifs from random subreddits."""
 
@@ -102,7 +102,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command(aliases=["deept"])
+    @commands.command(aliases=["deept", "deepthroating"])
     async def deepthroat(self, ctx):
         """Show some deepthroat images from random subreddits."""
 
@@ -110,7 +110,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command()
+    @commands.command(aliases=["cock", "penis"])
     async def dick(self, ctx):
         """Show some dicks images from random subreddits."""
 
@@ -118,7 +118,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command(aliases=["doublep", "dpenetration", "doublepene"])
+    @commands.command(aliases=["doublep", "dpenetration", "doublepene", "doublepen"])
     async def doublepenetration(self, ctx):
         """Show some double penetration images/gifs from random subreddits."""
 
@@ -126,7 +126,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command(aliases=["nudeman"])
+    @commands.command(aliases=["gpp"])
     async def gay(self, ctx):
         """Show some gay porn from random subreddits."""
 
@@ -134,7 +134,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command(aliases=["groups"])
+    @commands.command(aliases=["groups", "nudegroup", "nudegroups"])
     async def group(self, ctx):
         """Show some groups nudes from random subreddits."""
 
@@ -150,7 +150,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command()
+    @commands.command(aliases=["lesbians"])
     async def lesbian(self, ctx):
         """Show some lesbian gifs or images from random subreddits."""
 
@@ -166,7 +166,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command(aliases=["suck"])
+    @commands.command(aliases=["oralsex"])
     async def oral(self, ctx):
         """Show some oral gifs or images from random subreddits."""
 
@@ -174,7 +174,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command(aliases=["pgif"])
+    @commands.command(aliases=["pgif", "prongif"])
     async def porngif(self, ctx):
         """Show some porn gifs from Nekobot API."""
 
@@ -182,7 +182,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command()
+    @commands.command(aliases=["flashinggirl"])
     async def public(self, ctx):
         """Show some public nude images from random subreddits."""
 
@@ -190,7 +190,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command()
+    @commands.command(aliases=["vagina", "puss"])
     async def pussy(self, ctx):
         """Show some pussy nude images from random subreddits."""
 
@@ -222,7 +222,7 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command(aliases=["thighs"])
+    @commands.command(aliases=["thighs", "legs"])
     async def thigh(self, ctx):
         """Show some thighs images from random subreddits."""
 
@@ -238,8 +238,8 @@ class Nsfw(Functions, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command(aliases=["gonewild", "gwild"])
-    async def wild(self, ctx):
+    @commands.command(aliases=["wild", "gwild"])
+    async def gonewild(self, ctx):
         """Show some gonewild images from random subreddits."""
 
         await self._send_msg(ctx, "gonewild", sub=subs.WILD, subr=None)

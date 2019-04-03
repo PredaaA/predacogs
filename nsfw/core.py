@@ -14,16 +14,13 @@ IMGUR_LINKS = "http://imgur.com", "https://m.imgur.com", "https://imgur.com"
 GOOD_EXTENSIONS = ".png", ".jpg", ".jpeg", ".gif"
 
 
-class Functions:
+class Core:
     def __init__(self, bot):
         self.bot = bot
         self.session = aiohttp.ClientSession()
 
-    # TODO: Use something different for getting images, like caching.
-    # Or maybe not ? Works well now without ctx.invoke.
     async def _get_imgs(self, ctx, sub=None, url=None, subr=None):
-        csub = random.choice(sub)
-        async with self.session.get(BASE_URL + csub + ENDPOINT) as reddit:
+        async with self.session.get(BASE_URL + random.choice(sub) + ENDPOINT) as reddit:
             try:
                 data = await reddit.json(content_type=None)
                 content = data[0]["data"]["children"][0]["data"]
@@ -47,7 +44,7 @@ class Functions:
         return url, subr
 
     async def _nsfw_channel_check(self, ctx, embed=None):
-        if ctx.message.channel.is_nsfw() == False:
+        if not ctx.message.channel.is_nsfw():
             embed = discord.Embed(
                 title="\N{LOCK} You can't use that command in a non-NSFW channel !", color=0xAA0000
             )
@@ -59,18 +56,17 @@ class Functions:
 
     async def _make_embed(self, ctx, subr, name, url):
         emoji = await self._emojis(emoji=None)
-        em = discord.Embed(
-            color=0x891193,
-            title="Here is {name} image ... \N{EYES}".format(name=name),
-            description="[**Link if you don't see image**]({url})".format(url=url),
-        )
-        em.set_footer(
-            text="Requested by {req} {emoji} • From r/{r}".format(
-                req=ctx.author.display_name, emoji=emoji, r=subr
-            )
-        )
         if url.endswith(GOOD_EXTENSIONS):
-            em.set_image(url=url)
+            em = await self._embed(
+                ctx,
+                color=0x891193,
+                title="Here is {name} image ... \N{EYES}".format(name=name),
+                description="[**Link if you don't see image**]({url})".format(url=url),
+                image=url,
+                text="Requested by {req} {emoji} • From r/{r}".format(
+                    req=ctx.author.display_name, emoji=emoji, r=subr
+                ),
+            )
         if url.startswith("https://gfycat.com"):
             em = "Here is {name} gif ... \N{EYES}\n\nRequested by **{req}** {emoji} • From **r/{r}**\n{url}".format(
                 name=name, req=ctx.author.display_name, emoji=emoji, r=subr, url=url
@@ -83,33 +79,24 @@ class Functions:
             data = await i.json(content_type=None)
             url = data["message"]
             emoji = await self._emojis(emoji=None)
-            if ctx.guild:
-                if ctx.message.channel.is_nsfw() == True:
-                    em = discord.Embed(
-                        color=0x891193,
-                        title="Here is {name} image ... \N{EYES}".format(name=name),
-                        description="[**Link if you don't see image**]({url})".format(url=url),
-                    )
-                    em.set_image(url=url)
-                    em.set_footer(
-                        text="Requested by {req} {emoji} • From Nekobot API".format(
-                            req=ctx.author.display_name, emoji=emoji
-                        )
-                    )
+            embed = await self._embed(
+                ctx,
+                color=0x891193,
+                title="Here is {name} image ... \N{EYES}".format(name=name),
+                description="[**Link if you don't see image**]({url})".format(url=url),
+                image=url,
+                text="Requested by {req} {emoji} • From Nekobot API".format(
+                    req=ctx.author.display_name, emoji=emoji
+                ),
+            )
+            async with ctx.typing():  # TODO: Shorten this.
+                if ctx.guild:
+                    if ctx.message.channel.is_nsfw():
+                        em = embed
+                    else:
+                        em = await self._nsfw_channel_check(ctx)
                 else:
-                    em = await self._nsfw_channel_check(ctx)
-            else:
-                em = discord.Embed(
-                    color=0x891193,
-                    title="Here is {name} image ... \N{EYES}".format(name=name),
-                    description="[**Link if you don't see image**]({url})".format(url=url),
-                )
-                em.set_image(url=url)
-                em.set_footer(
-                    text="Requested by {req} {emoji} • From Nekobot API".format(
-                        req=ctx.author.display_name, emoji=emoji
-                    )
-                )
+                    em = embed
             return await ctx.send(embed=em)
 
     async def _maybe_embed(self, ctx, embed):
@@ -119,9 +106,9 @@ class Functions:
             await ctx.send(embed)
 
     async def _send_msg(self, ctx, name, sub=None, subr=None):
-        async with ctx.typing():
+        async with ctx.typing():  # TODO: Shorten this.
             if ctx.guild:
-                if ctx.message.channel.is_nsfw() == True:
+                if ctx.message.channel.is_nsfw():
                     url, subr = await self._get_imgs(ctx, sub=sub, url=None, subr=None)
                     embed = await self._make_embed(ctx, subr, name, url)
                 else:
@@ -130,6 +117,13 @@ class Functions:
                 url, subr = await self._get_imgs(ctx, sub=sub, url=None, subr=None)
                 embed = await self._make_embed(ctx, subr, name, url)
         await self._maybe_embed(ctx, embed=embed)
+
+    @staticmethod
+    async def _embed(ctx, color=None, title=None, description=None, image=None, text=None):
+        em = discord.Embed(color=color, title=title, description=description)
+        em.set_image(url=image)
+        em.set_footer(text=text)
+        return em
 
     def __unload(self):
         self.bot.loop.create_task(self.session.close())

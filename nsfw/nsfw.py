@@ -2,15 +2,15 @@ import discord
 
 from redbot.core import checks, commands
 
-from .core import Functions
+from .core import Core
 from . import subs
 
 
-class Nsfw(Functions, commands.Cog):
+class Nsfw(Core, commands.Cog):
     """Send random NSFW images from random subreddits"""
 
     __author__ = ["Predä", "aikaterna"]
-    __version__ = "1.9.2"
+    __version__ = "1.9.3"
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)

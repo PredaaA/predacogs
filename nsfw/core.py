@@ -50,12 +50,13 @@ class Core:
             )
         return embed
 
-    async def _emojis(self, emoji=None):
-        emoji = random.choice(EMOJIS)
-        return emoji
+    async def _emojis(self):
+        return random.choice(EMOJIS)
 
-    async def _make_embed(self, ctx, subr, name, url):
-        emoji = await self._emojis(emoji=None)
+    emoji = _emojis
+
+    async def _make_embed(self, ctx, sub, subr, name, url):
+        url, subr = await self._get_imgs(ctx, sub=sub, url=None, subr=None)
         if url.endswith(GOOD_EXTENSIONS):
             em = await self._embed(
                 ctx,
@@ -64,12 +65,12 @@ class Core:
                 description="[**Link if you don't see image**]({url})".format(url=url),
                 image=url,
                 text="Requested by {req} {emoji} • From r/{r}".format(
-                    req=ctx.author.display_name, emoji=emoji, r=subr
+                    req=ctx.author.display_name, emoji=await self.emoji(), r=subr
                 ),
             )
         if url.startswith("https://gfycat.com"):
             em = "Here is {name} gif ... \N{EYES}\n\nRequested by **{req}** {emoji} • From **r/{r}**\n{url}".format(
-                name=name, req=ctx.author.display_name, emoji=emoji, r=subr, url=url
+                name=name, req=ctx.author.display_name, emoji=await self.emoji(), r=subr, url=url
             )
         return em
 
@@ -78,7 +79,6 @@ class Core:
         async with self.session.get(api) as i:
             data = await i.json(content_type=None)
             url = data["message"]
-            emoji = await self._emojis(emoji=None)
             embed = await self._embed(
                 ctx,
                 color=0x891193,
@@ -86,18 +86,20 @@ class Core:
                 description="[**Link if you don't see image**]({url})".format(url=url),
                 image=url,
                 text="Requested by {req} {emoji} • From Nekobot API".format(
-                    req=ctx.author.display_name, emoji=emoji
+                    req=ctx.author.display_name, emoji=await self.emoji()
                 ),
             )
-            async with ctx.typing():  # TODO: Shorten this.
-                if ctx.guild:
-                    if ctx.message.channel.is_nsfw():
-                        em = embed
-                    else:
-                        em = await self._nsfw_channel_check(ctx)
-                else:
-                    em = embed
-            return await ctx.send(embed=em)
+            async with ctx.typing():
+                if ctx.message.channel.is_nsfw():
+                    embed = embed
+            return await self._maybe_embed(
+                ctx,
+                embed=(
+                    await self._nsfw_channel_check(ctx)
+                    if (hasattr(ctx.channel, "is_nsfw") and (not (ctx.channel.is_nsfw())))
+                    else embed
+                ),
+            )
 
     async def _maybe_embed(self, ctx, embed):
         if type(embed) == discord.Embed:
@@ -106,17 +108,17 @@ class Core:
             await ctx.send(embed)
 
     async def _send_msg(self, ctx, name, sub=None, subr=None):
-        async with ctx.typing():  # TODO: Shorten this.
-            if ctx.guild:
-                if ctx.message.channel.is_nsfw():
-                    url, subr = await self._get_imgs(ctx, sub=sub, url=None, subr=None)
-                    embed = await self._make_embed(ctx, subr, name, url)
-                else:
-                    embed = await self._nsfw_channel_check(ctx)
-            else:
-                url, subr = await self._get_imgs(ctx, sub=sub, url=None, subr=None)
-                embed = await self._make_embed(ctx, subr, name, url)
-        await self._maybe_embed(ctx, embed=embed)
+        async with ctx.typing():
+            if ctx.message.channel.is_nsfw():
+                embed = await self._make_embed(ctx, sub, subr, name, url=None)
+        return await self._maybe_embed(
+            ctx,
+            embed=(
+                await self._nsfw_channel_check(ctx)
+                if (hasattr(ctx.channel, "is_nsfw") and (not (ctx.channel.is_nsfw())))
+                else embed
+            ),
+        )
 
     @staticmethod
     async def _embed(ctx, color=None, title=None, description=None, image=None, text=None):

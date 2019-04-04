@@ -10,7 +10,7 @@ class Nsfw(Core, commands.Cog):
     """Send random NSFW images from random subreddits"""
 
     __author__ = ["Predä", "aikaterna"]
-    __version__ = "1.9.3"
+    __version__ = "1.9.4"
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)

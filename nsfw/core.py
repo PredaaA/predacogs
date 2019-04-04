@@ -90,7 +90,7 @@ class Core:
                 ),
             )
             async with ctx.typing():
-                if ctx.message.channel.is_nsfw():
+                if not ctx.guild or ctx.message.channel.is_nsfw():
                     embed = embed
             return await self._maybe_embed(
                 ctx,
@@ -109,7 +109,7 @@ class Core:
 
     async def _send_msg(self, ctx, name, sub=None, subr=None):
         async with ctx.typing():
-            if ctx.message.channel.is_nsfw():
+            if not ctx.guild or ctx.message.channel.is_nsfw():
                 embed = await self._make_embed(ctx, sub, subr, name, url=None)
         return await self._maybe_embed(
             ctx,

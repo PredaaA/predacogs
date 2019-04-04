@@ -21,7 +21,7 @@
 ## Installation
 
 ```
-- [p] is your prefix
+[p] is your prefix
 ```
 ```md
 - [p]load downloader

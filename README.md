@@ -1,19 +1,19 @@
 <h1 align="center">Predä Cogs for Red V3</h1>
 
 <p align="center">
-  <a target="_blank" rel="noopener noreferrer" href="https://github.com/Cog-Creators/Red-DiscordBot/tree/V3/develop">
+  <a href="https://github.com/Cog-Creators/Red-DiscordBot/tree/V3/develop">
     <img src="https://img.shields.io/badge/Red%20DiscordBot-V3-red.svg">
     </a>
-  <a target="_blank" rel="noopener noreferrer" href="https://github.com/Rapptz/discord.py/tree/rewrite">
+  <a href="https://github.com/Rapptz/discord.py/tree/rewrite">
     <img src="https://img.shields.io/badge/Discord.py-rewrite-blue.svg">
     </a>
-  <a target="_blank" rel="noopener noreferrer" href="https://github.com/ambv/black">
+  <a href="https://github.com/ambv/black">
     <img src="https://img.shields.io/badge/code%20style-black-000000.svg">
     </a>
-  <a target="_blank" rel="noopener noreferrer" href="https://www.patreon.com/predaaA">
+  <a href="https://www.patreon.com/predaaA">
     <img src="https://img.shields.io/badge/Follow%20me-Patreon-orange.svg">
     </a>
-  <a target="_blank" rel="noopener noreferrer" href="https://discord.gg/3EeJCjR">
+  <a href="https://discord.gg/3EeJCjR">
     <img src="https://discordapp.com/api/guilds/337224005901615104/widget.png?style=shield">
     </a>
 </p>

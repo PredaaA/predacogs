@@ -13,7 +13,7 @@ class DblTools(commands.Cog):
     """Tools to get bots information from discordbots.org."""
 
     __author__ = "Predä"
-    __version__ = "0.8"
+    __version__ = "0.1"
 
     def __init__(self, bot):
         defaut = {"dbl_key": None}
@@ -59,7 +59,7 @@ class DblTools(commands.Cog):
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
     @commands.guild_only()
-    async def dblinfo(self, ctx, *, bot: Union[int, discord.Member, discord.User, None]=None):
+    async def dblinfo(self, ctx, *, bot: Union[int, discord.Member, discord.User, None] = None):
         """
         Show information of a choosen bot on discordbots.org.
 
@@ -95,13 +95,9 @@ class DblTools(commands.Cog):
                         else ""
                     ),
                     "prefix": (
-                        "**Prefix :** {}\n".format(info["prefix"])
-                        if info.get("prefix", "")
-                        else ""
+                        "**Prefix :** {}\n".format(info["prefix"]) if info.get("prefix", "") else ""
                     ),
-                    "lib": (
-                        "**Library :** {}\n".format(info["lib"]) if info.get("lib", "") else ""
-                    ),
+                    "lib": ("**Library :** {}\n".format(info["lib"]) if info.get("lib", "") else ""),
                     "servs": (
                         "**Server count :** {:,}\n".format(stats["server_count"])
                         if stats.get("server_count", "")
@@ -113,14 +109,16 @@ class DblTools(commands.Cog):
                         else ""
                     ),
                     "m_votes": (
-                        "**Monthly votes :** {:,}\n".format(info["monthlyPoints"])
-                        if info.get("monthlyPoints", "")
-                        else ""
+                        "**Monthly votes :** "
+                        + (
+                            "{:,}\n".format(info["monthlyPoints"])
+                            if info.get("monthlyPoints", "")
+                            else "0\n"
+                        )
                     ),
                     "t_votes": (
-                        "**Total votes :** {:,}\n\n".format(info["points"])
-                        if info.get("points", "")
-                        else ""
+                        "**Total votes :** "
+                        + ("{:,}\n\n".format(info["points"]) if info.get("points", "") else "0\n\n")
                     ),
                     "dbl_page": ("[DBL Page]({})".format(f"https://discordbots.org/bot/{bot.id}")),
                     "if_inv": (

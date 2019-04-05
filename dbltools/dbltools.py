@@ -13,7 +13,7 @@ class DblTools(commands.Cog):
     """Tools to get bots information from discordbots.org."""
 
     __author__ = "Predä"
-    __version__ = "0.1"
+    __version__ = "0.8"
 
     def __init__(self, bot):
         defaut = {"dbl_key": None}
@@ -59,7 +59,7 @@ class DblTools(commands.Cog):
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
     @commands.guild_only()
-    async def dblinfo(self, ctx, bot: Union[int, discord.User] = None):
+    async def dblinfo(self, ctx, *, bot: Union[int, discord.Member, discord.User, None]=None):
         """
         Show information of a choosen bot on discordbots.org.
 
@@ -78,53 +78,63 @@ class DblTools(commands.Cog):
         try:
             async with ctx.typing():
                 info, stats = await self._get_info(ctx, bot=bot.id, info=None, stats=None)
-                try:
-                    desc = "**Description :**\n```{}```\n".format(str(info["shortdesc"]))
-                except:
-                    desc = ""
-                try:
-                    tag = "**Tags :**\n```{}```\n".format(", ".join(info["tags"]))
-                except:
-                    tag = ""
-                try:
-                    pfix = "**Prefix :** {}\n".format(str(info["prefix"]))
-                except:
-                    pfix = ""
-                try:
-                    libr = "**Library :** {}\n".format(str(info["lib"]))
-                except:
-                    libr = ""
-                try:
-                    serv = "**Server count :** {:,}\n".format(stats["server_count"])
-                except:
-                    serv = ""
-                try:
-                    shard = "**Shard count :** {:,}\n".format(stats["shard_count"])
-                except:
-                    shard = ""
-                try:
-                    mvotes = "{:,}".format(info["monthlyPoints"])
-                except:
-                    mvotes = "0"
-                try:
-                    tvotes = "{:,}".format(info["points"])
-                except:
-                    tvotes = "0"
                 format_kwargs = {
-                    "description": desc,
-                    "tags": tag,  # <:dblCertified:392249976639455232>
-                    "if_cert": "**Certified !** \N{WHITE HEAVY CHECK MARK}\n" if info["certifiedBot"] == True else "",
-                    "prefix": pfix,
-                    "lib": libr,
-                    "servs": serv,
-                    "shards": shard,
-                    "m_votes": "**Monthly votes :** {}\n".format(mvotes),
-                    "t_votes": "**Total votes :** {}\n\n".format(tvotes),
-                    "dbl_page": "[DBL Page]({})".format(f"https://discordbots.org/bot/{bot.id}"),
-                    "if_inv": " • [Invitation link]({})".format(str(info["invite"])) if info["invite"] else "",
-                    "if_supp": " • [Support](https://discord.gg/{})".format(str(info["support"])) if info["support"] else "",
-                    "if_gh": " • [GitHub]({})".format(str(info["github"])) if info["github"] else "",
-                    "if_wsite": " • [Website]({})".format(str(info["website"])) if info["website"] else "",
+                    "description": (
+                        "**Description :**\n```{}```\n".format(info["shortdesc"])
+                        if info["tags"]
+                        else ""
+                    ),
+                    "tags": (
+                        "**Tags :**\n```{}```\n".format(", ".join(info["tags"]))
+                        if info["tags"]
+                        else ""
+                    ),
+                    "if_cert": (
+                        "**Certified !** `\N{WHITE HEAVY CHECK MARK}`\n"
+                        if info["certifiedBot"]
+                        else ""
+                    ),
+                    "prefix": (
+                        "**Prefix :** {}\n".format(info["prefix"])
+                        if info.get("prefix", "")
+                        else ""
+                    ),
+                    "lib": (
+                        "**Library :** {}\n".format(info["lib"]) if info.get("lib", "") else ""
+                    ),
+                    "servs": (
+                        "**Server count :** {:,}\n".format(stats["server_count"])
+                        if stats.get("server_count", "")
+                        else ""
+                    ),
+                    "shards": (
+                        "**Shard count :** {:,}\n".format(stats["shard_count"])
+                        if stats.get("shard_count", "")
+                        else ""
+                    ),
+                    "m_votes": (
+                        "**Monthly votes :** {:,}\n".format(info["monthlyPoints"])
+                        if info.get("monthlyPoints", "")
+                        else ""
+                    ),
+                    "t_votes": (
+                        "**Total votes :** {:,}\n\n".format(info["points"])
+                        if info.get("points", "")
+                        else ""
+                    ),
+                    "dbl_page": ("[DBL Page]({})".format(f"https://discordbots.org/bot/{bot.id}")),
+                    "if_inv": (
+                        " • [Invitation link]({})".format(info["invite"]) if info["invite"] else ""
+                    ),
+                    "if_supp": (
+                        " • [Support](https://discord.gg/{})".format(info["support"])
+                        if info["support"]
+                        else ""
+                    ),
+                    "if_gh": (" • [GitHub]({})".format(info["github"]) if info["github"] else ""),
+                    "if_wsite": (
+                        " • [Website]({})".format(info["website"]) if info["website"] else ""
+                    ),
                 }
                 description = (
                     "{description}"
@@ -139,7 +149,7 @@ class DblTools(commands.Cog):
                 ).format(**format_kwargs)
                 em = discord.Embed(color=(await ctx.embed_colour()), description=description)
                 em.set_author(
-                    name="DBL Stats of {} :".format(str(info["username"])),
+                    name="DBL Stats of {} :".format(info["username"]),
                     icon_url="https://cdn.discordapp.com/emojis/393548388664082444.gif",
                 )
                 em.set_thumbnail(url=bot.avatar_url_as(static_format="png"))

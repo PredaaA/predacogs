@@ -13,7 +13,7 @@ class DblTools(commands.Cog):
     """Tools to get bots information from discordbots.org."""
 
     __author__ = "Predä"
-    __version__ = "0.1"
+    __version__ = "0.8"
 
     def __init__(self, bot):
         defaut = {"dbl_key": None}

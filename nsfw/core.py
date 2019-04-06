@@ -28,7 +28,7 @@ class Core:
                 subr = content["subreddit"]
                 text = content["selftext"]
             except (KeyError, ValueError, json.decoder.JSONDecodeError):
-                url, subr, text = await self._get_imgs(ctx, sub=sub, url=url)
+                url, subr, text = await self._get_imgs(ctx, sub=sub, url=url, subr=subr)
             if url.startswith(IMGUR_LINKS):
                 url = url + ".png"
             elif url.endswith(".mp4"):
@@ -40,7 +40,7 @@ class Core:
                 or not url.endswith(GOOD_EXTENSIONS)
                 and not url.startswith("https://gfycat.com")
             ):
-                url, subr = await self._get_imgs(ctx, sub=sub, url=url)
+                url, subr = await self._get_imgs(ctx, sub=sub, url=url, subr=subr)
         return url, subr
 
     async def _nsfw_channel_check(self, ctx, embed=None):

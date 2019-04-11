@@ -12,6 +12,13 @@ class Nsfw(Core, commands.Cog):
     __author__ = ["Predä", "aikaterna"]
     __version__ = "1.9.4"
 
+    @commands.command()
+    async def nsfwversion(self, ctx):
+        """Get the version of the installed Nsfw cog."""
+        msg = "```py\nNsfw cog version: {version}```".format(
+            version=self.__version__)
+        await ctx.send(msg)
+
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(name="4k", aliases=["4K", "fourk"])

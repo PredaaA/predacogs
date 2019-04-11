@@ -1,0 +1,7 @@
+{
+    "author" : ["Stevy", "Predä"],
+    "install_msg" : "Thank you for installing WhoPlays cog !\nDon't forget to `[p]load whoplays`.\n`[p]help WhoPlays` to get all commands.",
+    "name" : "WhoPlays",
+    "short" : "See who's playing what!",
+    "description" : "V3 Rewrite of: https://github.com/AznStevy/Maybe-Useful-Cogs/blob/master/whoplays/whoplays.py\nCheck who's playing certain games or who's playing what on your server."
+}

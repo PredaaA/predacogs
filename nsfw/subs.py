@@ -117,9 +117,9 @@ CUMSHOTS = [
     "bodyshots",
 ]
 DEEPTHROAT = ["deepthroat_gifs", "AmateurDeepthroat", "DeepThroatTears", "deepthroat", "SwordSwallowers"]
-DICK = ["DickPics4Freedom", "mangonewild", "MassiveCock", "penis", "cock", "ThickDick"]
+DICK = ["DickPics4Freedom", "MassiveCock", "penis", "cock", "ThickDick"]
 DOUBLE_P = ["doublepenetration", "dp_porn", "Technical_DP"]
-GAY_P = ["gayporn", "GayPornForStrtGuys", "ladybonersgw", "mangonewild"]
+GAY_P = ["gayporn", "GayPornForStrtGuys", "ladybonersgw"]
 GROUPS = ["GroupOfNudeGirls", "GroupOfNudeMILFs", "groupsex"]
 # HENTAI = ["hentai", "thick_hentai", "HQHentai", "AnimeBooty", "thighdeology"]
 # HENTAI_GIFS = ["ecchigifs", "nsfwanimegifs", "oppai_gif"]

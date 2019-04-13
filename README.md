@@ -46,3 +46,7 @@ Or join my [Discord server](https://discord.gg/TwCNvVz).
 - [Mikeshardmind (Sinbad)](https://github.com/mikeshardmind/SinbadCogs) for the command replace logic.
 - [Aikaterna](https://github.com/aikaterna) for the help on [Nsfw cog](https://github.com/PredaaA/predacogs/tree/master/nsfw).
 - [Stevy](https://github.com/AznStevy) to authorize me to publish rewritten version of [WhoPlays cog](https://github.com/PredaaA/predacogs/tree/master/whoplays).
+
+<a href="https://github.com/PredaaA/predacogs">
+  <img src="https://img.shields.io/badge/PredaCogs-Red V3-blue.svg?style=popout&logo=Python">
+</a>

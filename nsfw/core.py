@@ -4,6 +4,9 @@ import aiohttp
 import random
 import json
 
+from redbot.core.i18n import Translator, cog_i18n
+from redbot.core.utils.chat_formatting import bold, box
+
 from .subs import EMOJIS
 from . import subs
 
@@ -13,7 +16,10 @@ ENDPOINT = "/random"
 IMGUR_LINKS = "http://imgur.com", "https://m.imgur.com", "https://imgur.com"
 GOOD_EXTENSIONS = ".png", ".jpg", ".jpeg", ".gif"
 
+_ = Translator("Nsfw", __file__)
 
+
+@cog_i18n(_)
 class Core:
     def __init__(self, bot):
         self.bot = bot
@@ -43,10 +49,15 @@ class Core:
                 url, subr = await self._get_imgs(ctx, sub=sub, url=url, subr=subr)
         return url, subr
 
+    async def _version_msg(self, ctx, version=None):
+        msg = box(_("Nsfw cog version: ") + version, lang="py")
+        return await ctx.send(msg)
+
     async def _nsfw_channel_check(self, ctx, embed=None):
         if not ctx.message.channel.is_nsfw():
             embed = discord.Embed(
-                title="\N{LOCK} You can't use that command in a non-NSFW channel !", color=0xAA0000
+                title="\N{LOCK} " + _("You can't use that command in a non-NSFW channel !"),
+                color=0xAA0000,
             )
         return embed
 
@@ -61,20 +72,30 @@ class Core:
             em = await self._embed(
                 ctx,
                 color=0x891193,
-                title="Here is {name} image ... \N{EYES}".format(name=name),
-                description="[**Link if you don't see image**]({url})".format(url=url),
+                title=(_("Here is {name} image ...") + " \N{EYES}").format(name=name),
+                description=bold(_("[Link if you don't see image]({url})")).format(url=url),
                 image=url,
-                text="Requested by {req} {emoji} • From r/{r}".format(
+                text=_("Requested by {req} {emoji} • From r/{r}").format(
                     req=ctx.author.display_name, emoji=await self.emoji(), r=subr
                 ),
             )
         if url.startswith("https://gfycat.com"):
-            em = "Here is {name} gif ... \N{EYES}\n\nRequested by **{req}** {emoji} • From **r/{r}**\n{url}".format(
-                name=name, req=ctx.author.display_name, emoji=await self.emoji(), r=subr, url=url
+            em = (
+                _("Here is {name} gif ...")
+                + " \N{EYES}\n\n"
+                + _("Requested by {req} {emoji} • From {r}\n{url}")
+            ).format(
+                name=name,
+                req=bold(f"{ctx.author.display_name}"),
+                emoji=await self.emoji(),
+                r=bold(f"r/{subr}"),
+                url=url,
             )
         return em
 
-    async def _make_embed_others(self, ctx, name, api_category=None):
+    async def _make_embed_others(
+        self, ctx, name, api_category=None
+    ):  # TODO: Catch exception when API's down.
         api = subs.NEKOBOT_BASEURL + random.choice(api_category)
         async with self.session.get(api) as i:
             data = await i.json(content_type=None)
@@ -82,10 +103,10 @@ class Core:
             embed = await self._embed(
                 ctx,
                 color=0x891193,
-                title="Here is {name} image ... \N{EYES}".format(name=name),
-                description="[**Link if you don't see image**]({url})".format(url=url),
+                title=(_("Here is {name} image ...") + " \N{EYES}").format(name=name),
+                description=bold(_("[Link if you don't see image]({url})")).format(url=url),
                 image=url,
-                text="Requested by {req} {emoji} • From Nekobot API".format(
+                text=_("Requested by {req} {emoji} • From Nekobot API").format(
                     req=ctx.author.display_name, emoji=await self.emoji()
                 ),
             )

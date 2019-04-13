@@ -1,0 +1,318 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2019-04-13 16:37+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: redgettext 2.2\n"
+
+
+#: core.py:53
+msgid "Nsfw cog version: "
+msgstr ""
+
+#: core.py:59
+msgid "You can't use that command in a non-NSFW channel !"
+msgstr ""
+
+#: core.py:75 core.py:106
+msgid "Here is {name} image ..."
+msgstr ""
+
+#: core.py:76 core.py:107
+msgid "[Link if you don't see image]({url})"
+msgstr ""
+
+#: core.py:78
+msgid "Requested by {req} {emoji} • From r/{r}"
+msgstr ""
+
+#: core.py:84
+msgid "Here is {name} gif ..."
+msgstr ""
+
+#: core.py:86
+msgid ""
+"Requested by {req} {emoji} • From {r}\n"
+"{url}"
+msgstr ""
+
+#: core.py:109
+msgid "Requested by {req} {emoji} • From Nekobot API"
+msgstr ""
+
+#: nsfw.py:14
+#, docstring
+msgid "Send random NSFW images from random subreddits"
+msgstr ""
+
+#: nsfw.py:21
+#, docstring
+msgid "Get the version of the installed Nsfw cog."
+msgstr ""
+
+#: nsfw.py:29
+#, docstring
+msgid "Show some 4k images from random subreddits."
+msgstr ""
+
+#: nsfw.py:31
+msgid "4k"
+msgstr ""
+
+#: nsfw.py:37
+#, docstring
+msgid "Show some ahegao images from random subreddits."
+msgstr ""
+
+#: nsfw.py:39
+msgid "ahegao"
+msgstr ""
+
+#: nsfw.py:45
+#, docstring
+msgid "Show some ass images from random subreddits."
+msgstr ""
+
+#: nsfw.py:47
+msgid "ass"
+msgstr ""
+
+#: nsfw.py:53
+#, docstring
+msgid "Show some anal images/gifs from random subreddits."
+msgstr ""
+
+#: nsfw.py:55
+msgid "anal"
+msgstr ""
+
+#: nsfw.py:61
+#, docstring
+msgid "Show some bdsm from random subreddits."
+msgstr ""
+
+#: nsfw.py:63
+msgid "bdsm"
+msgstr ""
+
+#: nsfw.py:69
+#, docstring
+msgid "Show some blackcock images from random subreddits."
+msgstr ""
+
+#: nsfw.py:71
+msgid "black cock"
+msgstr ""
+
+#: nsfw.py:77
+#, docstring
+msgid "Show some blowjob images/gifs from random subreddits."
+msgstr ""
+
+#: nsfw.py:79
+msgid "blowjob"
+msgstr ""
+
+#: nsfw.py:85
+#, docstring
+msgid "Show some boobs images from random subreddits."
+msgstr ""
+
+#: nsfw.py:87
+msgid "boobs"
+msgstr ""
+
+#: nsfw.py:93
+#, docstring
+msgid "Show some bottomless images from random subreddits."
+msgstr ""
+
+#: nsfw.py:95
+msgid "bottomless"
+msgstr ""
+
+#: nsfw.py:101
+#, docstring
+msgid "Show some cunnilingus images from random subreddits."
+msgstr ""
+
+#: nsfw.py:103
+msgid "cunnilingus"
+msgstr ""
+
+#: nsfw.py:109
+#, docstring
+msgid "Show some cumshot images/gifs from random subreddits."
+msgstr ""
+
+#: nsfw.py:111
+msgid "cumshot"
+msgstr ""
+
+#: nsfw.py:117
+#, docstring
+msgid "Show some deepthroat images from random subreddits."
+msgstr ""
+
+#: nsfw.py:119
+msgid "deepthroat"
+msgstr ""
+
+#: nsfw.py:125
+#, docstring
+msgid "Show some dicks images from random subreddits."
+msgstr ""
+
+#: nsfw.py:127
+msgid "dick"
+msgstr ""
+
+#: nsfw.py:133
+#, docstring
+msgid "Show some double penetration images/gifs from random subreddits."
+msgstr ""
+
+#: nsfw.py:135
+msgid "double penetration"
+msgstr ""
+
+#: nsfw.py:141
+#, docstring
+msgid "Show some gay porn from random subreddits."
+msgstr ""
+
+#: nsfw.py:143
+msgid "gay porn"
+msgstr ""
+
+#: nsfw.py:149
+#, docstring
+msgid "Show some groups nudes from random subreddits."
+msgstr ""
+
+#: nsfw.py:157
+#, docstring
+msgid "Show some hentai images/gifs from Nekobot API."
+msgstr ""
+
+#: nsfw.py:159
+msgid "hentai"
+msgstr ""
+
+#: nsfw.py:165
+#, docstring
+msgid "Show some lesbian gifs or images from random subreddits."
+msgstr ""
+
+#: nsfw.py:167
+msgid "lesbian"
+msgstr ""
+
+#: nsfw.py:173
+#, docstring
+msgid "Show some milf images from random subreddits."
+msgstr ""
+
+#: nsfw.py:175
+msgid "milf"
+msgstr ""
+
+#: nsfw.py:181
+#, docstring
+msgid "Show some oral gifs or images from random subreddits."
+msgstr ""
+
+#: nsfw.py:183
+msgid "oral"
+msgstr ""
+
+#: nsfw.py:189
+#, docstring
+msgid "Show some porn gifs from Nekobot API."
+msgstr ""
+
+#: nsfw.py:191
+msgid "porn gif"
+msgstr ""
+
+#: nsfw.py:197
+#, docstring
+msgid "Show some public nude images from random subreddits."
+msgstr ""
+
+#: nsfw.py:199
+msgid "public nude"
+msgstr ""
+
+#: nsfw.py:205
+#, docstring
+msgid "Show some pussy nude images from random subreddits."
+msgstr ""
+
+#: nsfw.py:207
+msgid "pussy"
+msgstr ""
+
+#: nsfw.py:213
+#, docstring
+msgid "Show some real girls images from random subreddits."
+msgstr ""
+
+#: nsfw.py:215
+msgid "real nudes"
+msgstr ""
+
+#: nsfw.py:221
+#, docstring
+msgid "Show some red heads images from random subreddits."
+msgstr ""
+
+#: nsfw.py:223
+msgid "red head"
+msgstr ""
+
+#: nsfw.py:229
+#, docstring
+msgid "Show some rule34 images from random subreddits."
+msgstr ""
+
+#: nsfw.py:231
+msgid "rule34"
+msgstr ""
+
+#: nsfw.py:237
+#, docstring
+msgid "Show some thighs images from random subreddits."
+msgstr ""
+
+#: nsfw.py:239
+msgid "thigh"
+msgstr ""
+
+#: nsfw.py:245
+#, docstring
+msgid "Show some traps from random subreddits."
+msgstr ""
+
+#: nsfw.py:247
+msgid "trap"
+msgstr ""
+
+#: nsfw.py:253
+#, docstring
+msgid "Show some gonewild images from random subreddits."
+msgstr ""
+
+#: nsfw.py:255
+msgid "gonewild"
+msgstr ""
+

@@ -35,12 +35,12 @@
 
 ## Cogs
 
-| Name | Description |
+| Name | Description (Click for more details) |
 | ---- | ----------- |
-| Nsfw | Send random NSFW images from random subreddits and Nekobot API. |
-| WhoPlays | Look at what games people in the server are playing. V3 Rewrite of [Stevy's cog](https://github.com/AznStevy/Maybe-Useful-Cogs/blob/master/whoplays/whoplays.py). |
-| DblTools | Tools to get bots information from discordbots.org. |
-| ServerInfo | Replace original Red serverinfo command with more details. |
+| Nsfw | <details><summary>Send random NSFW images from random subreddits and Nekobot API.</summary>Send random NSFW images from random subreddits and Nekobot API in NSFW only channels. Important note: As indicated in name of this cog, it contains mature content and is not suited for all audiences, use it responsibly.</details> |
+| WhoPlays | <details><summary>Look at what games people in the server are playing. V3 Rewrite of [Stevy's cog](https://github.com/AznStevy/Maybe-Useful-Cogs/blob/master/whoplays/whoplays.py).</summary>Check who's playing certain games or who's playing what on your server.</details> |
+| DblTools | <details><summary>Tools to get bots information from discordbots.org.</summary>Tools to get bots information from discordbots.org, like description, votes, published server count, and more.</details> |
+| ServerInfo | <details><summary>Replace original Red serverinfo command with more details.</summary>Replace original Red serverinfo command with more details, about users and server.</details> |
 
 ## Contributing
 

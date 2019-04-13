@@ -1,6 +1,8 @@
 import discord
 
 from redbot.core import checks, commands, Config
+from redbot.core.i18n import Translator, cog_i18n
+from redbot.core.utils.chat_formatting import bold, box, inline
 
 from typing import Union
 
@@ -8,12 +10,15 @@ import aiohttp
 
 DBL_BASE_URL = "https://discordbots.org/api/bots/"
 
+_ = Translator("DblTools", __file__)
 
+
+@cog_i18n(_)
 class DblTools(commands.Cog):
     """Tools to get bots information from discordbots.org."""
 
     __author__ = "Predä"
-    __version__ = "0.8"
+    __version__ = "0.9"
 
     def __init__(self, bot):
         defaut = {"dbl_key": None}
@@ -51,10 +56,10 @@ class DblTools(commands.Cog):
                 await ctx.message.delete()
             except discord.Forbidden:
                 pass
-            return await ctx.send("You need to use this command in DM.")
+            return await ctx.send(_("You need to use this command in DM."))
         else:
             await self.config.dbl_key.set(key)
-            await ctx.send("API key set.")
+            await ctx.send(_("API key set."))
 
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
@@ -66,72 +71,88 @@ class DblTools(commands.Cog):
         `[bot]` : Can be a mention or ID of a bot.
         """
         if await self.config.dbl_key() is None:
-            return await ctx.send("Owner of this bot need to set an API key first !")
+            return await ctx.send(_("Owner of this bot need to set an API key first !"))
         if bot is None:
             return await ctx.send_help()
         if type(bot) == int:
             try:
                 bot = await self.bot.get_user_info(bot)
             except discord.errors.NotFound:
-                return await ctx.send(f"{str(bot)} is not a Discord user.")
+                return await ctx.send(str(bot) + _(" is not a Discord user."))
 
         try:
             async with ctx.typing():
                 info, stats = await self._get_info(ctx, bot=bot.id, info=None, stats=None)
                 format_kwargs = {
                     "description": (
-                        "**Description :**\n```{}```\n".format(info["shortdesc"])
+                        bold(_("Description :")) + box("\n{}\n").format(info["shortdesc"])
                         if info["tags"]
                         else ""
                     ),
                     "tags": (
-                        "**Tags :**\n```{}```\n".format(", ".join(info["tags"]))
+                        bold(_("Tags :")) + box("\n{}\n\n").format(", ".join(info["tags"]))
                         if info["tags"]
                         else ""
                     ),
                     "if_cert": (
-                        "**Certified !** `\N{WHITE HEAVY CHECK MARK}`\n"
+                        bold(_("\nCertified !")) + " `\N{WHITE HEAVY CHECK MARK}`\n"
                         if info["certifiedBot"]
-                        else ""
+                        else "\n"
                     ),
                     "prefix": (
-                        "**Prefix :** {}\n".format(info["prefix"]) if info.get("prefix", "") else ""
+                        bold(_("Prefix :")) + " {}\n".format(info["prefix"])
+                        if info.get("prefix", "")
+                        else ""
                     ),
-                    "lib": ("**Library :** {}\n".format(info["lib"]) if info.get("lib", "") else ""),
+                    "lib": (
+                        bold(_("Library :")) + " {}\n".format(info["lib"])
+                        if info.get("lib", "")
+                        else ""
+                    ),
                     "servs": (
-                        "**Server count :** {:,}\n".format(stats["server_count"])
+                        bold(_("Server count :")) + " {:,}\n".format(stats["server_count"])
                         if stats.get("server_count", "")
                         else ""
                     ),
                     "shards": (
-                        "**Shard count :** {:,}\n".format(stats["shard_count"])
+                        bold(_("Shard count :")) + " {:,}\n".format(stats["shard_count"])
                         if stats.get("shard_count", "")
                         else ""
                     ),
                     "m_votes": (
-                        "**Monthly votes :** "
+                        bold(_("Monthly votes :"))
                         + (
-                            "{:,}\n".format(info["monthlyPoints"])
+                            " {:,}\n".format(info["monthlyPoints"])
                             if info.get("monthlyPoints", "")
                             else "0\n"
                         )
                     ),
                     "t_votes": (
-                        "**Total votes :** "
-                        + ("{:,}\n\n".format(info["points"]) if info.get("points", "") else "0\n\n")
+                        bold(_("Total votes :"))
+                        + (
+                            " {:,}\n\n".format(info["points"])
+                            if info.get("points", "")
+                            else "0\n\n"
+                        )
                     ),
-                    "dbl_page": ("[DBL Page]({})".format(f"https://discordbots.org/bot/{bot.id}")),
+                    "dbl_page": (
+                        _("[DBL Page]({})").format(f"https://discordbots.org/bot/{bot.id}")
+                    ),
                     "if_inv": (
-                        " • [Invitation link]({})".format(info["invite"]) if info["invite"] else ""
+                        _(" • [Invitation link]({})").format(info["invite"])
+                        if info["invite"]
+                        else ""
                     ),
                     "if_supp": (
-                        " • [Support](https://discord.gg/{})".format(info["support"])
+                        _(" • [Support](https://discord.gg/{})").format(info["support"])
                         if info["support"]
                         else ""
                     ),
-                    "if_gh": (" • [GitHub]({})".format(info["github"]) if info["github"] else ""),
+                    "if_gh": (
+                        _(" • [GitHub]({})").format(info["github"]) if info["github"] else ""
+                    ),
                     "if_wsite": (
-                        " • [Website]({})".format(info["website"]) if info["website"] else ""
+                        _(" • [Website]({})").format(info["website"]) if info["website"] else ""
                     ),
                 }
                 description = (
@@ -147,14 +168,14 @@ class DblTools(commands.Cog):
                 ).format(**format_kwargs)
                 em = discord.Embed(color=(await ctx.embed_colour()), description=description)
                 em.set_author(
-                    name="DBL Stats of {} :".format(info["username"]),
+                    name=_("DBL Stats of {} :").format(info["username"]),
                     icon_url="https://cdn.discordapp.com/emojis/393548388664082444.gif",
                 )
                 em.set_thumbnail(url=bot.avatar_url_as(static_format="png"))
                 return await ctx.send(embed=em)
         except:
             return await ctx.send(
-                "It doesn't seem to be a valid ID. Try again or check if the ID is right."
+                _("It doesn't seem to be a valid ID. Try again or check if the ID is right.")
             )
 
     def __unload(self):

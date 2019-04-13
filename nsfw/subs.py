@@ -38,13 +38,11 @@ ASS = [
 ]
 ANAL = [
     "MasterOfAnal",
-    "analgonewild",
     "anal",
     "buttsex",
     "buttsthatgrip",
     "AnalGW",
     "analinsertions",
-    "AnalGW",
     "assholegonewild",
     "sodomy"
 ]

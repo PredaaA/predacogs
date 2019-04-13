@@ -2,10 +2,12 @@
     "author": ["Predä"],
     "install_msg": "Thank you for installing my repository !\n\nUse `[p]cog list preda` command to see all my cogs.",
     "name": "Predä Cogs",
-    "short": "Utility cogs.",
-    "description": "Utility cogs.",
+    "short": "Various cogs.",
+    "description": "Various cogs.",
     "tags": [
         "utility",
-        "information"
+        "information",
+        "nsfw",
+        "various"
     ]
 }

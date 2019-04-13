@@ -33,6 +33,15 @@
 - [p]load <installed_cog>
 ```
 
+## Cogs
+
+| Name | Description |
+| ---- | ----------- |
+| Nsfw | Send random NSFW images from random subreddits and Nekobot API. |
+| WhoPlays | Look at what games people in the server are playing. V3 Rewrite of [Stevy's cog](https://github.com/AznStevy/Maybe-Useful-Cogs/blob/master/whoplays/whoplays.py). |
+| DblTools | Tools to get bots information from discordbots.org. |
+| ServerInfo | Replace original Red serverinfo command with more details. |
+
 ## Contributing
 
 Feel free to open a PR or an issue for any suggestion about my cogs !

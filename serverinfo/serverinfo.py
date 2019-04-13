@@ -12,7 +12,7 @@ _ = Translator("ServerInfo", __file__)
 @cog_i18n(_)
 class ServerInfo(commands.Cog):
     """
-    Replace serverinfo command with more details.
+        Replace original Red serverinfo command with more details.
     """
 
     __author__ = "Predä"

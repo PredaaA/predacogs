@@ -14,7 +14,7 @@ class Nsfw(Core, commands.Cog):
     """Send random NSFW images from random subreddits"""
 
     __author__ = ["Predä", "aikaterna"]
-    __version__ = "1.9.5"
+    __version__ = "1.9.6"
 
     @commands.command()
     async def nsfwversion(self, ctx):
@@ -156,7 +156,7 @@ class Nsfw(Core, commands.Cog):
     async def hentai(self, ctx):
         """Show some hentai images/gifs from Nekobot API."""
 
-        await self._make_embed_others(ctx, _("hentai"), api_category=["hentai_anal", "hentai"])
+        await self._send_msg_others(ctx, _("hentai"), api_category=["hentai_anal", "hentai"])
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
@@ -188,7 +188,7 @@ class Nsfw(Core, commands.Cog):
     async def porngif(self, ctx):
         """Show some porn gifs from Nekobot API."""
 
-        await self._make_embed_others(ctx, _("porn gif"), api_category=["pgif"])
+        await self._send_msg_others(ctx, _("porn gif"), api_category=["pgif"])
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)

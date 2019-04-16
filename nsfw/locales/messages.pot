@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2019-04-13 16:37+0200\n"
+"POT-Creation-Date: 2019-04-16 16:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,37 +15,37 @@ msgstr ""
 "Generated-By: redgettext 2.2\n"
 
 
-#: core.py:53
+#: core.py:71
 msgid "Nsfw cog version: "
 msgstr ""
 
-#: core.py:59
+#: core.py:77
 msgid "You can't use that command in a non-NSFW channel !"
 msgstr ""
 
-#: core.py:75 core.py:106
+#: core.py:94 core.py:123
 msgid "Here is {name} image ..."
 msgstr ""
 
-#: core.py:76 core.py:107
+#: core.py:95 core.py:124
 msgid "[Link if you don't see image]({url})"
 msgstr ""
 
-#: core.py:78
+#: core.py:97
 msgid "Requested by {req} {emoji} • From r/{r}"
 msgstr ""
 
-#: core.py:84
+#: core.py:103
 msgid "Here is {name} gif ..."
 msgstr ""
 
-#: core.py:86
+#: core.py:105
 msgid ""
 "Requested by {req} {emoji} • From {r}\n"
 "{url}"
 msgstr ""
 
-#: core.py:109
+#: core.py:126
 msgid "Requested by {req} {emoji} • From Nekobot API"
 msgstr ""
 

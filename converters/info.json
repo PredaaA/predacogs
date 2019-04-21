@@ -1,0 +1,14 @@
+{
+    "author": ["Predä"],
+    "install_msg": "Thank you for installing my converters cog !\nDon't forget to `[p]load converters` !",
+    "name": "Converters",
+    "short": "Some utility converters.",
+    "description": "Replace original Red serverinfo command with more details, about users and server.",
+    "tags": [
+        "convert",
+        "converters",
+        "utility",
+        "information"
+    ],
+    "bot_version": [3, 0, 0]
+}

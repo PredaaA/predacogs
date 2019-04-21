@@ -3,7 +3,7 @@
     "install_msg": "Thank you for installing my converters cog !\nDon't forget to `[p]load converters` !",
     "name": "Converters",
     "short": "Some utility converters.",
-    "description": "Some utility converters, for temperatures, mass, but also date to timestamps.",
+    "description": "Some utility converters, for temperatures, mass, but also dates to timestamps.",
     "tags": [
         "convert",
         "converters",

@@ -59,7 +59,7 @@ class Converters(commands.Cog):
             "%d",
         ]
         for pattern in patterns:
-            with contextlib.suppress(ValueError): # TODO: Use the other thing Sinbad has sent.
+            with contextlib.suppress(ValueError):
                 convert = int(datetime.strptime(date, pattern).timestamp())
             if None:
                 break
@@ -134,12 +134,24 @@ class Converters(commands.Cog):
 
     @convert.command(aliases=["lb"])
     async def pounds(self, ctx, mass: float):
-        """Convert pounds to kilograms"""
+        """Convert pounds to kilograms."""
         kg = round((mass * 0.45359237), 1)
         await ctx.send(f"{mass:,} lb is equal to {kg:,} kg.")
 
     @convert.command(aliases=["kg"])
     async def kilograms(self, ctx, mass: float):
-        """Convert kilograms to pounds"""
+        """Convert kilograms to pounds."""
         lb = round((mass / 0.45359237), 1)
         await ctx.send(f"{mass:,} kg is equal to {lb:,} lb.")
+
+    @convert.command(aliases=["mi"])
+    async def miles(self, ctx, lenght: float):
+        """Convert miles to kilometers"""
+        km = round((lenght * 1.609344), 1)
+        await ctx.send(f"{lenght:,} mi is equal to {km:,} km.")
+
+    @convert.command(aliases=["km"])
+    async def kilometers(self, ctx, lenght: float):
+        """Convert kilometers to miles."""
+        mi = round((lenght / 1.609344), 1)
+        await ctx.send(f"{lenght:,} km is equal to {mi:,} mi.")

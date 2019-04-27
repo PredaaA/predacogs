@@ -5,7 +5,11 @@ import random
 import json
 
 from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils.chat_formatting import bold, box
+from redbot.core.utils.chat_formatting import bold, box, inline
+from redbot.core.utils.predicates import ReactionPredicate
+from redbot.core.utils.menus import start_adding_reactions
+
+from typing import Optional
 
 from .subs import EMOJIS
 from . import subs
@@ -28,13 +32,14 @@ class Core:
     async def _get_imgs(self, ctx, sub=None, url=None, subr=None):
         try:
             async with self.session.get(BASE_URL + random.choice(sub) + ENDPOINT) as reddit:
-                if reddit.status == 200:
+                if reddit.status != 200:
+                    return await self._api_errors_msg(ctx, error_code=reddit.status)
+                else:
                     try:
                         data = await reddit.json(content_type=None)
                         content = data[0]["data"]["children"][0]["data"]
                         url = content["url"]
                         subr = content["subreddit"]
-                        text = content["selftext"]
                     except (KeyError, ValueError, json.decoder.JSONDecodeError):
                         url, subr = await self._get_imgs(ctx, sub=sub, url=url, subr=subr)
                     if url.startswith(IMGUR_LINKS):
@@ -44,28 +49,33 @@ class Core:
                     elif url.endswith(".gifv"):
                         url = url[:-1]
                     elif (
-                        text
-                        or not url.endswith(GOOD_EXTENSIONS)
+                        not url.endswith(GOOD_EXTENSIONS)
                         and not url.startswith("https://gfycat.com")
                     ):
                         url, subr = await self._get_imgs(ctx, sub=sub, url=url, subr=subr)
                     return url, subr
-                else:
-                    return None, None
-        except aiohttp.client_exceptions.ClientConnectionError:
-            return None, None
+        except aiohttp.client_exceptions.ClientConnectionError as error:
+            return await self._api_errors_msg(ctx, error_code=error)
 
     async def _get_imgs_others(self, ctx, api_category=None):
         try:
-            async with self.session.get(subs.NEKOBOT_BASEURL + random.choice(api_category)) as others:
-                if others.status == 200:
+            async with self.session.get(
+                subs.NEKOBOT_BASEURL + random.choice(api_category)
+            ) as others:
+                if others.status != 200:
+                    return await self._api_errors_msg(ctx, error_code=others.status)
+                else:
                     data = await others.json(content_type=None)
                     url = data["message"]
                     return url
-                else:
-                    return None
-        except aiohttp.client_exceptions.ClientConnectionError:
-            return None
+        except aiohttp.client_exceptions.ClientConnectionError as error:
+            return await self._api_errors_msg(ctx, error_code=error)
+
+    async def _api_errors_msg(self, ctx, error_code=None):
+        return await ctx.send(
+            _("Error when trying to contact image service, please try again later. ")
+            + "(Code: {})".format(inline(str(error_code)))
+        )
 
     async def _version_msg(self, ctx, version=None):
         msg = box(_("Nsfw cog version: ") + version, lang="py")
@@ -87,55 +97,55 @@ class Core:
     async def _make_embed(self, ctx, sub, subr, name, url):
         try:
             url, subr = await self._get_imgs(ctx, sub=sub, url=None, subr=None)
-            if url.endswith(GOOD_EXTENSIONS):
-                em = await self._embed(
-                    ctx,
-                    color=0x891193,
-                    title=(_("Here is {name} image ...") + " \N{EYES}").format(name=name),
-                    description=bold(_("[Link if you don't see image]({url})")).format(url=url),
-                    image=url,
-                    text=_("Requested by {req} {emoji} • From r/{r}").format(
-                        req=ctx.author.display_name, emoji=await self.emoji(), r=subr
-                    ),
-                )
-            if url.startswith("https://gfycat.com"):
-                em = (
-                    _("Here is {name} gif ...")
-                    + " \N{EYES}\n\n"
-                    + _("Requested by {req} {emoji} • From {r}\n{url}")
-                ).format(
-                    name=name,
-                    req=bold(f"{ctx.author.display_name}"),
-                    emoji=await self.emoji(),
-                    r=bold(f"r/{subr}"),
-                    url=url,
-                )
-        except AttributeError:
-            em = "Error when trying to contact image service, please try again later."
-        return em
-
-    async def _make_embed_others(self, ctx, name, api_category):
-        try:
-            url = await self._get_imgs_others(ctx, api_category=api_category)
+        except TypeError:
+            return
+        if url.endswith(GOOD_EXTENSIONS):
             em = await self._embed(
                 ctx,
                 color=0x891193,
                 title=(_("Here is {name} image ...") + " \N{EYES}").format(name=name),
                 description=bold(_("[Link if you don't see image]({url})")).format(url=url),
                 image=url,
-                text=_("Requested by {req} {emoji} • From Nekobot API").format(
-                    req=ctx.author.display_name, emoji=await self.emoji()
+                footer=_("Requested by {req} {emoji} • From r/{r}").format(
+                    req=ctx.author.display_name, emoji=await self.emoji(), r=subr
                 ),
             )
-        except AttributeError:
-            em = "Error when trying to contact image service, please try again later."
+        if url.startswith("https://gfycat.com"):
+            em = (
+                _("Here is {name} gif ...")
+                + " \N{EYES}\n\n"
+                + _("Requested by {req} {emoji} • From {r}\n{url}")
+            ).format(
+                name=name,
+                req=bold(f"{ctx.author.display_name}"),
+                emoji=await self.emoji(),
+                r=bold(f"r/{subr}"),
+                url=url,
+            )
+        return em
+
+    async def _make_embed_others(self, ctx, name, api_category):
+        url = await self._get_imgs_others(ctx, api_category=api_category)
+        em = await self._embed(
+            ctx,
+            color=0x891193,
+            title=(_("Here is {name} image ...") + " \N{EYES}").format(name=name),
+            description=bold(_("[Link if you don't see image]({url})")).format(url=url),
+            image=url,
+            footer=_("Requested by {req} {emoji} • From Nekobot API").format(
+                req=ctx.author.display_name, emoji=await self.emoji()
+            ),
+        )
         return em
 
     async def _maybe_embed(self, ctx, embed):
-        if type(embed) == discord.Embed:
-            await ctx.send(embed=embed)
-        else:
-            await ctx.send(embed)
+        try:
+            if type(embed) is discord.Embed:
+                await ctx.send(embed=embed)
+            else:
+                await ctx.send(embed)
+        except discord.errors.HTTPException:
+            return
 
     async def _send_msg(self, ctx, name, sub=None, subr=None):
         async with ctx.typing():
@@ -164,10 +174,13 @@ class Core:
         )
 
     @staticmethod
-    async def _embed(ctx, color=None, title=None, description=None, image=None, text=None):
+    async def _embed(
+        ctx, color=None, title=None, description=None, image=None, footer: Optional[str] = None
+    ):
         em = discord.Embed(color=color, title=title, description=description)
         em.set_image(url=image)
-        em.set_footer(text=text)
+        if footer:
+            em.set_footer(text=footer)
         return em
 
     def __unload(self):

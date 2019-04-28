@@ -16,6 +16,8 @@ class ServerInfo(commands.Cog):
     """
 
     __author__ = "Predä"
+    # Things to change when Red 3.1
+    # Lines: 58 and 180
 
     def __init__(self, bot):
         self.bot = bot
@@ -53,6 +55,13 @@ class ServerInfo(commands.Cog):
             3: _("3 - Hard"),
             4: _("4 - Extreme"),
         }
+        """verif = {
+            "none": _("0 - None"),
+            "low": _("1 - Low"),
+            "medium": _("2 - Medium"),
+            "high": _("3 - Hard"),
+            "extreme": _("4 - Extreme"),
+        }"""
         region = {
             "vip-us-east": _("__VIP__ US East :flag_us:"),
             "vip-us-west": _("__VIP__ US West :flag_us:"),
@@ -168,7 +177,7 @@ class ServerInfo(commands.Cog):
             ).format(
                 owner=guild.owner,
                 region=region[str(guild.region)],
-                verif=verif[int(guild.verification_level)],
+                verif=verif[int(guild.verification_level)], # verif[str(guild.verification_level)]
                 id=guild.id,
             ),
         )

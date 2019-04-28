@@ -46,14 +46,14 @@ class Core:
                         url = url[:-3] + "gif"
                     elif url.endswith(".gifv"):
                         url = url[:-1]
-                    elif (
-                        not url.endswith(GOOD_EXTENSIONS)
-                        and not url.startswith("https://gfycat.com")
+                    elif not url.endswith(GOOD_EXTENSIONS) and not url.startswith(
+                        "https://gfycat.com"
                     ):
                         url, subr = await self._get_imgs(ctx, sub=sub, url=url, subr=subr)
                     return url, subr
-        except aiohttp.client_exceptions.ClientConnectionError as error:
-            return await self._api_errors_msg(ctx, error_code=error)
+        except aiohttp.client_exceptions.ClientConnectionError:
+            await self._api_errors_msg(ctx, error_code="JSON decode failed")
+            return None, None
 
     async def _get_imgs_others(self, ctx, api_category=None):
         try:
@@ -66,13 +66,14 @@ class Core:
                     data = await others.json(content_type=None)
                     url = data["message"]
                     return url
-        except aiohttp.client_exceptions.ClientConnectionError as error:
-            return await self._api_errors_msg(ctx, error_code=error)
+        except aiohttp.client_exceptions.ClientConnectionError:
+            await self._api_errors_msg(ctx, error_code="JSON decode failed")
+            return None
 
     async def _api_errors_msg(self, ctx, error_code=None):
         return await ctx.send(
             _("Error when trying to contact image service, please try again later. ")
-            + "(Code: {})".format(inline(str(error_code)))
+            + "(Code: `{}`)".format(inline(str(error_code)))
         )
 
     async def _version_msg(self, ctx, version=None):
@@ -93,9 +94,8 @@ class Core:
     emoji = _emojis
 
     async def _make_embed(self, ctx, sub, subr, name, url):
-        try:
-            url, subr = await self._get_imgs(ctx, sub=sub, url=None, subr=None)
-        except TypeError:
+        url, subr = await self._get_imgs(ctx, sub=sub, url=None, subr=None)
+        if url is None:
             return
         if url.endswith(GOOD_EXTENSIONS):
             em = await self._embed(
@@ -124,6 +124,8 @@ class Core:
 
     async def _make_embed_others(self, ctx, name, api_category):
         url = await self._get_imgs_others(ctx, api_category=api_category)
+        if url is None:
+            return
         em = await self._embed(
             ctx,
             color=0x891193,

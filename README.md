@@ -38,6 +38,7 @@
 | Name | Description (Click for more details) |
 | ---- | ----------- |
 | Nsfw | <details><summary>Send random NSFW images from random subreddits and Nekobot API.</summary>Send random NSFW images from random subreddits and Nekobot API in NSFW only channels. Important note: As indicated in name of this cog, it contains mature content and is not suited for all audiences, use it responsibly.</details> |
+| SpaceX | <details><summary>Get multiple information about SpaceX using SpaceX-API.</summary></details>
 | WhoPlays | <details><summary>Look at what games people in the server are playing. V3 Rewrite of [Stevy's cog](https://github.com/AznStevy/Maybe-Useful-Cogs/blob/master/whoplays/whoplays.py).</summary>Check who's playing certain games or who's playing what on your server.</details> |
 | Converters | <details><summary>Some utility converters.</summary>Some utility converters, for temperatures, mass, but also dates to timestamps.</details> |
 | DblTools | <details><summary>Tools to get bots information from discordbots.org.</summary>Tools to get bots information from discordbots.org, like description, votes, published server count, and more.</details> |

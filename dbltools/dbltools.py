@@ -47,9 +47,10 @@ class DblTools(commands.Cog):
     @dblset.command()
     async def key(self, ctx, key):
         """
-        Set your DBL key with this command only in DM.
-        Note : You need to have a bot published
-        on DBL to use API and have a key.
+            Set your DBL key with this command only in DM.
+
+            Note : You need to have a bot published
+            on DBL to use API and have a key.
         """
         if ctx.guild:
             try:
@@ -66,9 +67,9 @@ class DblTools(commands.Cog):
     @commands.guild_only()
     async def dblinfo(self, ctx, *, bot: Union[int, discord.Member, discord.User, None] = None):
         """
-        Show information of a choosen bot on discordbots.org.
+            Show information of a chosen bot on discordbots.org.
 
-        `[bot]` : Can be a mention or ID of a bot.
+            `[bot]` : Can be a mention or ID of a bot.
         """
         if await self.config.dbl_key() is None:
             return await ctx.send(_("Owner of this bot need to set an API key first !"))

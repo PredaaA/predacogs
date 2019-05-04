@@ -82,6 +82,7 @@ class ServerInfo(commands.Cog):
             "russia": _("Russia :flag_ru:"),
             "japan": _("Japan :flag_jp:"),
             "southafrica": _("South Africa :flag_za:"),
+            "india": "India :flag_in:",
         }
 
         online = len([m.status for m in guild.members if m.status == discord.Status.online])

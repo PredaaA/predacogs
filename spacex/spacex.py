@@ -13,7 +13,7 @@ class SpaceX(Core, commands.Cog):
     """Get multiple information about SpaceX using SpaceX-API."""
 
     __author__ = "Predä"
-    __version__ = "0.0.1"
+    __version__ = "0.1.0"
 
     @commands.group()
     async def spacex(self, ctx):
@@ -21,9 +21,132 @@ class SpaceX(Core, commands.Cog):
         pass
 
     @spacex.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def about(self, ctx):
+        """Send general company information about SpaceX."""
+
+        await self._about(ctx)
+
+    @spacex.command()
     async def aboutcog(self, ctx):
-        """Information about the cog and SpaceX-API."""
-        await self._about(ctx, version=self.__version__)
+        """Send information about the cog and SpaceX-API."""
+
+        await self._about_cog(ctx, version=self.__version__)
+
+    @spacex.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def history(self, ctx):
+        """Return SpaceX historical events."""
+        async with ctx.typing():
+            resp = await self._get_data(ctx, "history")
+            if resp is None:
+                return
+
+            msg = []
+            page = 1
+            for data in resp:
+                description = await self._history_texts(data)
+                em = discord.Embed(
+                    color=await ctx.embed_colour(),
+                    title=data["title"],
+                    description=data["details"],
+                )
+                em.add_field(name="Infos:", value=description)
+                em.set_footer(text="Page {} of {}".format(page, len(resp)))
+                page += 1
+                msg.append(em)
+
+        await menu(ctx, msg, DEFAULT_CONTROLS)
+
+    @spacex.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def launchpads(self, ctx):
+        """Return SpaceX launchpads."""
+        async with ctx.typing():
+            resp = await self._get_data(ctx, "launchpads")
+            if resp is None:
+                return
+
+            msg = []
+            page = 1
+            for data in resp:
+                description = await self._launchpads_texts(data)
+                em = discord.Embed(
+                    color=await ctx.embed_colour(),
+                    title=data["location"]["name"],
+                    description=data["details"]
+                    + "\n**[Wikipedia page]({})**".format(data["wikipedia"]),
+                )
+                em.add_field(name="Infos:", value=description)
+                em.set_footer(text="Page {} of {}".format(page, len(resp)))
+                page += 1
+                msg.append(em)
+
+        await menu(ctx, msg, DEFAULT_CONTROLS)
+
+    @spacex.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def landpads(self, ctx):
+        """Return SpaceX landpads."""
+        async with ctx.typing():
+            resp = await self._get_data(ctx, "landpads")
+            if resp is None:
+                return
+
+            msg = []
+            page = 1
+            for data in resp:
+                description = await self._landpads_texts(data)
+                em = discord.Embed(
+                    color=await ctx.embed_colour(),
+                    title="Name: {name} • ID: {id}".format(name=data["full_name"], id=data["id"]),
+                    description=data["details"]
+                    + "\n**[Wikipedia page]({})**".format(data["wikipedia"]),
+                )
+                em.add_field(name="Infos:", value=description)
+                em.set_footer(text="Page {} of {}".format(page, len(resp)))
+                page += 1
+                msg.append(em)
+
+        await menu(ctx, msg, DEFAULT_CONTROLS)
+
+    @spacex.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def missions(self, ctx):
+        """Returns all missions of SpaceX."""
+        async with ctx.typing():
+            resp = await self._get_data(ctx, "missions")
+            if resp is None:
+                return
+
+            msg = []
+            page = 1
+            for data in resp:
+                description = await self._missions_texts(data)
+                manufacturers = ", ".join(data["manufacturers"])
+                payloads = ", ".join(data["payload_ids"])
+                em = discord.Embed(
+                    color=await ctx.embed_colour(),
+                    title="Name: {name} • ID: {id}".format(
+                        name=data["mission_name"], id=data["mission_id"]
+                    ),
+                    description=description,
+                )
+                em.add_field(
+                    name="Infos:",
+                    value=(
+                        "Manufacturer{s}: **{manufacturers}**\n" "Payloads IDs: **{payloads_ids}**"
+                    ).format(
+                        s="s" if len(data["manufacturers"]) >= 2 else "",
+                        manufacturers=manufacturers,
+                        payloads_ids=payloads,
+                    ),
+                )
+                em.set_footer(text="Page {} of {}".format(page, len(resp)))
+                page += 1
+                msg.append(em)
+
+        await menu(ctx, msg, DEFAULT_CONTROLS)
 
     @spacex.command()
     @commands.bot_has_permissions(embed_links=True)

@@ -43,7 +43,62 @@ class Core:
             data = await resp.json()
             return data
 
-    async def _about(self, ctx, version=None):
+    async def _about(self, ctx):
+        async with ctx.typing():
+            data = await self._get_data(ctx, "info")
+            if data is None:
+                return
+
+            spacex_infos_kwargs = {
+                "founder": data["founder"],
+                "ceo": data["ceo"],
+                "coo": data["coo"],
+                "cto": data["cto"],
+                "founded": data["founded"],
+                "headq_a": data["headquarters"]["address"],
+                "headq_c": data["headquarters"]["city"],
+                "headq_s": data["headquarters"]["state"],
+            }
+            spacex_stats_kwargs = {
+                "employees": data["employees"],
+                "vehicles": data["vehicles"],
+                "launch_s": data["launch_sites"],
+                "test_s": data["test_sites"],
+                "value": data["valuation"],
+                "web": data["links"]["website"],
+                "flickr": data["links"]["flickr"],
+                "twitter": data["links"]["twitter"],
+                "elon_t": data["links"]["elon_twitter"],
+            }
+            spacex_infos = (
+                "Founder: **{founder}**\n"
+                "CEO and CTO: **{ceo}**\n"
+                "COO: **{coo}**\n"
+                "CTO: **{cto}**\n"
+                "Founded: **{founded}**\n"
+                "Headquarters: **{headq_a} {headq_c} {headq_s}**"
+            ).format(**spacex_infos_kwargs)
+            spacex_stats_links = (
+                "Employees: **{employees}**\n"
+                "Vehicles: **{vehicles}**\n"
+                "Launch sites: **{launch_s}**\n"
+                "Test sites: **{test_s}**\n"
+                "Valuation: **{value:,}$**\n\n"
+                "**[Website]({web})** • **[Flickr]({flickr})** • "
+                "**[Twitter]({twitter})** • **[Elon Musk Twitter]({elon_t})**"
+            ).format(**spacex_stats_kwargs)
+
+            em = discord.Embed(
+                color=await ctx.embed_colour(), title=data["name"], description=data["summary"]
+            )
+            em.add_field(name="Informations:", value=spacex_infos)
+            em.add_field(name="Stats:", value=spacex_stats_links)
+            em.set_thumbnail(
+                url="https://cdn.discordapp.com/attachments/514586665730441248/576130134046670869/5842a770a6515b1e0ad75afe.png"
+            )
+            return await ctx.send(embed=em)
+
+    async def _about_cog(self, ctx, version=None):
         async with ctx.typing():
             data = await self._get_data(ctx)
             description = data["description"]
@@ -81,6 +136,90 @@ class Core:
                     + version
                 )
                 return await ctx.send(msg)
+
+    async def _history_texts(self, data):
+        description_kwargs = {
+            "date": data["event_date_utc"].replace("T", " ")[:-1],
+            "flight_num": "Flight number: **{}**\n".format(data["flight_number"])
+            if data["flight_number"] is not None
+            else "",
+            "article": "[Article]({})".format(data["links"]["article"]),
+            "wikipedia": " • [Wikipedia]({})".format(data["links"]["wikipedia"])
+            if data["links"]["wikipedia"] is not None
+            else "",
+            "reddit": " • [Reddit]({})".format(data["links"]["reddit"])
+            if data["links"]["reddit"] is not None
+            else "",
+        }
+        description = (
+            "Date: **{date}**\n" "{flight_num}" "Links: **{article}{wikipedia}{reddit}**"
+        ).format(**description_kwargs)
+        return description
+
+    async def _launchpads_texts(self, data):
+        description_kwargs = {
+            "status": data["status"],
+            "region": data["location"]["region"],
+            "location": "Lat: {lat} • Long: {long}".format(
+                lat=round(data["location"]["latitude"], 2),
+                long=round(data["location"]["longitude"], 2),
+            ),
+            "site_id": data["site_id"],
+            "att_launches": data["attempted_launches"],
+            "succ_launches": data["successful_launches"],
+            "s": "s" if len(data["vehicles_launched"]) >= 2 else "",
+            "vehicles": ", ".join(data["vehicles_launched"]),
+            "site_name_ext": data["site_name_long"],
+        }
+        description = (
+            "Status: **{status}**\n"
+            "Region: **{region}**\n"
+            "Location: **{location}**\n"
+            "Site ID: **{site_id}**\n"
+            "Attempted launches: **{att_launches}**\n"
+            "Success launches: **{succ_launches}**\n"
+            "Vehicle{s} launched: **{vehicles}**\n"
+            "Site name long: **{site_name_ext}**"
+        ).format(**description_kwargs)
+        return description
+
+    async def _landpads_texts(self, data):
+        description_kwargs = {
+            "status": data["status"],
+            "landing_t": data["landing_type"],
+            "att_lands": data["attempted_landings"],
+            "succ_lands": data["successful_landings"],
+            "location": "{name} {region} • Lat: {lat} Long: {long}".format(
+                name=data["location"]["name"],
+                region=data["location"]["region"],
+                lat=data["location"]["latitude"],
+                long=data["location"]["longitude"],
+            ),
+        }
+        description = (
+            "Status: **{status}**\n"
+            "Landing type: **{landing_t}**\n"
+            "Attempted landings: **{att_lands}**\n"
+            "Success landings: **{succ_lands}**\n"
+            "Location: **{location}**"
+        ).format(**description_kwargs)
+        return description
+
+    async def _missions_texts(self, data):
+        description_kwargs = {
+            "website": " • **[Website]({})**".format(data["website"])
+            if data["website"] is not None
+            else "",
+            "twitter": " • **[Twitter]({})**".format(data["twitter"])
+            if data["twitter"] is not None
+            else "",
+        }
+        description = (
+            data["description"]
+            + "\n**[Wikipedia page]({})**".format(data["wikipedia"])
+            + "{website}{twitter}"
+        ).format(**description_kwargs)
+        return description
 
     async def _roadster_texts(self, data):
         date, delta = await self._unix_convert(data["launch_date_unix"])

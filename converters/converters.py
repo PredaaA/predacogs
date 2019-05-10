@@ -79,12 +79,15 @@ class Converters(commands.Cog):
     async def celsius(self, ctx, temperature: float):
         """
             Convert degree Celsius to Fahrenheit or Kelvin.
+            See correct usage bellow.
 
             Usage:
             To Fahrenheit: `[p]convert ctof`
             To Kelvin: `[p]convert ctok`
         """
         if not temperature:
+            return await ctx.send_help()
+        elif not ctx.invoked_with in ["celsiustofahrenheit", "ctof", "celsiustokelvin", "ctok"]:
             return await ctx.send_help()
         elif ctx.invoked_with in ["celsiustofahrenheit", "ctof"]:
             fahrenheit = round((temperature * 1.8) + 32, 1)
@@ -98,12 +101,15 @@ class Converters(commands.Cog):
     async def fahrenheit(self, ctx, temperature: float):
         """
             Convert Fahrenheit degree to Celsius or Kelvin.
+            See correct usage bellow.
 
             Usage:
             To Celsius: `[p]convert ftoc`
             To Kelvin: `[p]convert ftok`
         """
         if not temperature:
+            return await ctx.send_help()
+        elif not ctx.invoked_with in ["fahrenheittocelsius", "ftoc", "fahrenheittokelvin", "ftok"]:
             return await ctx.send_help()
         elif ctx.invoked_with in ["fahrenheittocelsius", "ftoc"]:
             celsius = round((temperature - 32) / 1.8, 1)
@@ -117,12 +123,15 @@ class Converters(commands.Cog):
     async def kelvin(self, ctx, temperature: float):
         """
             Convert Kelvin degree to Fahrenheit or Celsius.
+            See correct usage bellow.
 
             Usage:
             To Fahrenheit: `[p]convert ktof`
             To Celsius: `[p]convert ktoc`
         """
         if not temperature:
+            return await ctx.send_help()
+        elif not ctx.invoked_with in ["kelvintofahrenheit", "ktof", "kelvintocelsius", "ktoc"]:
             return await ctx.send_help()
         elif ctx.invoked_with in ["kelvintofahrenheit", "ktof"]:
             kelvin = round((temperature - 273.15) * (9 / 5) + 32, 1)

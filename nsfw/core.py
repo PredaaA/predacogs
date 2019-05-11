@@ -1,35 +1,40 @@
 import discord
 
 import aiohttp
-import random
+import asyncio
 import json
 
+from redbot.core import Config
 from redbot.core.i18n import Translator, cog_i18n
+from redbot.core.utils.predicates import ReactionPredicate
+from redbot.core.utils.menus import start_adding_reactions
 from redbot.core.utils.chat_formatting import bold, box, inline
 
+from random import choice
 from typing import Optional
 
-from .subs import EMOJIS
-from . import subs
-
-BASE_URL = "https://api.reddit.com/r/"
-ENDPOINT = "/random"
-
-IMGUR_LINKS = "http://imgur.com", "https://m.imgur.com", "https://imgur.com"
-GOOD_EXTENSIONS = ".png", ".jpg", ".jpeg", ".gif"
+from .constants import Stuff
+from .constants import (
+    REDDIT_BASEURL,
+    REDDIT_ENDPOINT,
+    IMGUR_LINKS,
+    GOOD_EXTENSIONS,
+    NEKOBOT_BASEURL,
+)
 
 _ = Translator("Nsfw", __file__)
 
 
 @cog_i18n(_)
-class Core:
+class Core(Stuff):
     def __init__(self, bot):
         self.bot = bot
         self.session = aiohttp.ClientSession()
 
     async def _get_imgs(self, ctx, sub=None, url=None, subr=None):
+        """Get images from Reddit API."""
         try:
-            async with self.session.get(BASE_URL + random.choice(sub) + ENDPOINT) as reddit:
+            async with self.session.get(REDDIT_BASEURL + choice(sub) + REDDIT_ENDPOINT) as reddit:
                 if reddit.status != 200:
                     return None, await self._api_errors_msg(ctx, error_code=reddit.status)
                 else:
@@ -56,10 +61,9 @@ class Core:
             return None, None
 
     async def _get_imgs_others(self, ctx, api_category=None):
+        """Get images from Nekobot API for hentai and porngif commands."""
         try:
-            async with self.session.get(
-                subs.NEKOBOT_BASEURL + random.choice(api_category)
-            ) as others:
+            async with self.session.get(NEKOBOT_BASEURL + choice(api_category)) as others:
                 if others.status != 200:
                     return None, await self._api_errors_msg(ctx, error_code=others.status)
                 else:
@@ -71,16 +75,19 @@ class Core:
             return None
 
     async def _api_errors_msg(self, ctx, error_code=None):
+        """Error message when API calls fail."""
         return await ctx.send(
             _("Error when trying to contact image service, please try again later. ")
-            + "(Code: `{}`)".format(inline(str(error_code)))
+            + "(Code: {})".format(inline(str(error_code)))
         )
 
     async def _version_msg(self, ctx, version=None):
+        """Cog version message."""
         msg = box(_("Nsfw cog version: ") + version, lang="py")
         return await ctx.send(msg)
 
     async def _nsfw_channel_check(self, ctx, embed=None):
+        """Message for non-nsfw channels."""
         if not ctx.message.channel.is_nsfw():
             embed = discord.Embed(
                 title="\N{LOCK} " + _("You can't use that command in a non-NSFW channel !"),
@@ -88,18 +95,13 @@ class Core:
             )
         return embed
 
-    async def _emojis(self):
-        return random.choice(EMOJIS)
-
-    emoji = _emojis
-
     async def _make_embed(self, ctx, sub, subr, name, url):
+        """Function to make the embed for all Reddit API images."""
         url, subr = await self._get_imgs(ctx, sub=sub, url=None, subr=None)
         if url is None:
             return
         if url.endswith(GOOD_EXTENSIONS):
             em = await self._embed(
-                ctx,
                 color=0x891193,
                 title=(_("Here is {name} image ...") + " \N{EYES}").format(name=name),
                 description=bold(_("[Link if you don't see image]({url})")).format(url=url),
@@ -123,11 +125,11 @@ class Core:
         return em
 
     async def _make_embed_others(self, ctx, name, api_category):
+        """Function to make embed for Nekobot API images."""
         url = await self._get_imgs_others(ctx, api_category=api_category)
         if url is None:
             return
         em = await self._embed(
-            ctx,
             color=0x891193,
             title=(_("Here is {name} image ...") + " \N{EYES}").format(name=name),
             description=bold(_("[Link if you don't see image]({url})")).format(url=url),
@@ -139,6 +141,10 @@ class Core:
         return em
 
     async def _maybe_embed(self, ctx, embed):
+        """
+            Function to choose if type of the message is an embed or not
+            and if not send a simple message.
+        """
         try:
             if type(embed) is discord.Embed:
                 await ctx.send(embed=embed)
@@ -148,6 +154,7 @@ class Core:
             return
 
     async def _send_msg(self, ctx, name, sub=None, subr=None):
+        """Main function called in all Reddit API commands."""
         async with ctx.typing():
             if not ctx.guild or ctx.message.channel.is_nsfw():
                 embed = await self._make_embed(ctx, sub, subr, name, url=None)
@@ -161,6 +168,7 @@ class Core:
         )
 
     async def _send_msg_others(self, ctx, name, api_category=None):
+        """Main function called in all Nekobot API commands."""
         async with ctx.typing():
             if not ctx.guild or ctx.message.channel.is_nsfw():
                 embed = await self._make_embed_others(ctx, name, api_category)
@@ -175,7 +183,7 @@ class Core:
 
     @staticmethod
     async def _embed(
-        ctx, color=None, title=None, description=None, image=None, footer: Optional[str] = None
+        color=None, title=None, description=None, image=None, footer: Optional[str] = None
     ):
         em = discord.Embed(color=color, title=title, description=description)
         em.set_image(url=image)

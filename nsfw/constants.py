@@ -1,13 +1,28 @@
-EMOJIS = [
-    "\N{AUBERGINE}",
-    "\N{SMIRKING FACE}",
-    "\N{PEACH}",
-    "\N{SPLASHING SWEAT SYMBOL}",
-    "\N{BANANA}",
-    "\N{KISS MARK}",
-]
-NEKOBOT_BASEURL = "https://nekobot.xyz/api/image?type="
+from random import choice
 
+# Stuff for the cog
+class Stuff:
+    async def emoji(self):
+        """Randomize footer emojis."""
+        EMOJIS = [
+            "\N{AUBERGINE}",
+            "\N{SMIRKING FACE}",
+            "\N{PEACH}",
+            "\N{SPLASHING SWEAT SYMBOL}",
+            "\N{BANANA}",
+            "\N{KISS MARK}",
+        ]
+        emoji = choice(EMOJIS)
+        return emoji
+
+
+REDDIT_BASEURL = "https://api.reddit.com/r/"
+REDDIT_ENDPOINT = "/random"
+NEKOBOT_BASEURL = "https://nekobot.xyz/api/image?type="
+IMGUR_LINKS = "http://imgur.com", "https://m.imgur.com", "https://imgur.com"
+GOOD_EXTENSIONS = ".png", ".jpg", ".jpeg", ".gif"
+
+# Subreddits
 FOUR_K = ["HighResNSFW", "UHDnsfw", "nsfw4k", "nsfw_hd", "NSFW_Wallpapers", "HDnsfw", "closeup"]
 AHEGAO = ["AhegaoGirls", "RealAhegao", "EyeRollOrgasm", "MouthWideOpen", "O_Faces"]
 ASS = [
@@ -44,7 +59,7 @@ ANAL = [
     "AnalGW",
     "analinsertions",
     "assholegonewild",
-    "sodomy"
+    "sodomy",
 ]
 BDSM = ["BDSMGW", "bdsm", "ropeart", "shibari"]
 BLACKCOCK = ["ChurchOfTheBBC", "blackcock", "Blackdick", "bigblackcocks"]
@@ -58,7 +73,7 @@ BLOWJOB = [
     "SuckingItDry",
     "OralCreampie",
     "SwordSwallowers",
-    "fellatio"
+    "fellatio",
 ]
 BOOBS = [
     "boobs",
@@ -96,6 +111,14 @@ BOOBS = [
     "burstingout",
 ]
 BOTTOMLESS = ["upskirt", "Bottomless", "Bottomless_Vixens", "nopanties", "Pantiesdown"]
+COSPLAY = [
+    "nsfwcosplay",
+    "cosplayonoff",
+    "Cosplayheels",
+    "CosplayBoobs",
+    "gwcosplay",
+    "CosplayLewd",
+]
 CUNNI = ["cunnilingus", "eatpussy2015", "CunnilingusSelfie", "Hegoesdown"]
 CUMSHOTS = [
     "cumfetish",
@@ -114,10 +137,16 @@ CUMSHOTS = [
     "ContainTheLoad",
     "bodyshots",
 ]
-DEEPTHROAT = ["deepthroat_gifs", "AmateurDeepthroat", "DeepThroatTears", "deepthroat", "SwordSwallowers"]
-DICK = ["DickPics4Freedom", "MassiveCock", "penis", "cock", "ThickDick"]
+DEEPTHROAT = [
+    "deepthroat_gifs",
+    "AmateurDeepthroat",
+    "DeepThroatTears",
+    "deepthroat",
+    "SwordSwallowers",
+]
+DICK = ["DickPics4Freedom", "MassiveCock", "penis", "cock", "ThickDick", "bulges", "twinks"]
 DOUBLE_P = ["doublepenetration", "dp_porn", "Technical_DP"]
-GAY_P = ["gayporn", "GayPornForStrtGuys", "ladybonersgw"]
+GAY_P = ["gayporn", "ladybonersgw", "bulges", "broslikeus", "gaygifs", "gayporn"]
 GROUPS = ["GroupOfNudeGirls", "GroupOfNudeMILFs", "groupsex"]
 # HENTAI = ["hentai", "thick_hentai", "HQHentai", "AnimeBooty", "thighdeology"]
 # HENTAI_GIFS = ["ecchigifs", "nsfwanimegifs", "oppai_gif"]
@@ -164,6 +193,7 @@ PUBLIC = [
     "NudeInPublic",
     "publicplug",
     "casualnudity",
+    "bitchinbubba",
 ]
 PUSSY = [
     "pussy",
@@ -199,6 +229,7 @@ RULE_34 = [
     "Rule34Overwatch",
     "WesternHentai",
 ]
+SQUIRTS = ["SquatSquirt", "GushingGirls", "squirts", "squirting_gifs", "squirting"]
 THIGHS = ["Thighs", "ThickThighs", "thighhighs", "Thigh", "leggingsgonewild"]
 TRAPS = [
     "Transex",

@@ -87,7 +87,7 @@ class DblTools(commands.Cog):
                 info, stats = await self._get_info(ctx, bot=bot.id, info=None, stats=None)
                 emoji = (
                     discord.utils.get(bot.emojis, id=392249976639455232)
-                    if bot.get_guild(264445053596991498) is not None
+                    if self.bot.get_guild(264445053596991498) is not None
                     else "`\N{WHITE HEAVY CHECK MARK}`"
                 )
                 format_kwargs = {

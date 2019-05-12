@@ -4,8 +4,8 @@ from redbot.core.utils.chat_formatting import humanize_timedelta
 
 import aiohttp
 
-from datetime import datetime
 from typing import Optional
+from datetime import datetime
 
 SPACE_X_API_BASE_URL = "https://api.spacexdata.com/v3/"
 

@@ -18,7 +18,7 @@ class DblTools(commands.Cog):
     """Tools to get bots information from discordbots.org."""
 
     __author__ = "Predä"
-    __version__ = "0.9"
+    __version__ = "1.0"
 
     def __init__(self, bot):
         defaut = {"dbl_key": None}
@@ -31,9 +31,9 @@ class DblTools(commands.Cog):
         """Get info from discordbots.org."""
         key = await self.config.dbl_key()
         headers = {"Authorization": key}
-        async with self.session.get(DBL_BASE_URL + f"{bot}", headers=headers) as r:
+        async with self.session.get(DBL_BASE_URL + str(bot), headers=headers) as r:
             info = await r.json(content_type=None)
-        async with self.session.get(DBL_BASE_URL + f"{bot}" + "/stats", headers=headers) as r:
+        async with self.session.get(DBL_BASE_URL + str(bot) + "/stats", headers=headers) as r:
             stats = await r.json(content_type=None)
         return info, stats
 

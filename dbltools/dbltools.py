@@ -49,7 +49,7 @@ class DblTools(commands.Cog):
         """
             Set your DBL key with this command only in DM.
 
-            Note : You need to have a bot published
+            Note: You need to have a bot published
             on DBL to use API and have a key.
         """
         if ctx.guild:
@@ -57,19 +57,20 @@ class DblTools(commands.Cog):
                 await ctx.message.delete()
             except discord.Forbidden:
                 pass
-            return await ctx.send(_("You need to use this command in DM."))
+            return await ctx.send(_("You need to use this command in DMs !"))
         else:
             await self.config.dbl_key.set(key)
             await ctx.send(_("API key set."))
 
     @commands.command()
-    @commands.bot_has_permissions(embed_links=True)
     @commands.guild_only()
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     async def dblinfo(self, ctx, *, bot: Union[int, discord.Member, discord.User, None] = None):
         """
             Show information of a chosen bot on discordbots.org.
 
-            `[bot]` : Can be a mention or ID of a bot.
+            `[bot]`: Can be a mention or ID of a bot.
         """
         if await self.config.dbl_key() is None:
             return await ctx.send(_("Owner of this bot need to set an API key first !"))
@@ -84,44 +85,47 @@ class DblTools(commands.Cog):
         try:
             async with ctx.typing():
                 info, stats = await self._get_info(ctx, bot=bot.id, info=None, stats=None)
+                emoji = (
+                    discord.utils.get(bot.emojis, id=392249976639455232)
+                    if bot.get_guild(264445053596991498) is not None
+                    else "`\N{WHITE HEAVY CHECK MARK}`"
+                )
                 format_kwargs = {
                     "description": (
-                        bold(_("Description :")) + box("\n{}\n").format(info["shortdesc"])
+                        bold(_("Description:")) + box("\n{}\n").format(info["shortdesc"])
                         if info["tags"]
                         else ""
                     ),
                     "tags": (
-                        bold(_("Tags :")) + box("\n{}\n\n").format(", ".join(info["tags"]))
+                        bold(_("Tags:")) + box("\n{}\n\n").format(", ".join(info["tags"]))
                         if info["tags"]
                         else ""
                     ),
                     "if_cert": (
-                        bold(_("\nCertified !")) + " `\N{WHITE HEAVY CHECK MARK}`\n"
-                        if info["certifiedBot"]
-                        else "\n"
+                        bold(_("\nCertified !")) + f" {emoji}\n" if info["certifiedBot"] else "\n"
                     ),
                     "prefix": (
-                        bold(_("Prefix :")) + " {}\n".format(info["prefix"])
+                        bold(_("Prefix:")) + " {}\n".format(info["prefix"])
                         if info.get("prefix", "")
                         else ""
                     ),
                     "lib": (
-                        bold(_("Library :")) + " {}\n".format(info["lib"])
+                        bold(_("Library:")) + " {}\n".format(info["lib"])
                         if info.get("lib", "")
                         else ""
                     ),
                     "servs": (
-                        bold(_("Server count :")) + " {:,}\n".format(stats["server_count"])
+                        bold(_("Server count:")) + " {:,}\n".format(stats["server_count"])
                         if stats.get("server_count", "")
                         else ""
                     ),
                     "shards": (
-                        bold(_("Shard count :")) + " {:,}\n".format(stats["shard_count"])
+                        bold(_("Shard count:")) + " {:,}\n".format(stats["shard_count"])
                         if stats.get("shard_count", "")
                         else ""
                     ),
                     "m_votes": (
-                        bold(_("Monthly votes :"))
+                        bold(_("Monthly votes:"))
                         + (
                             " {:,}\n".format(info["monthlyPoints"])
                             if info.get("monthlyPoints", "")
@@ -129,7 +133,7 @@ class DblTools(commands.Cog):
                         )
                     ),
                     "t_votes": (
-                        bold(_("Total votes :"))
+                        bold(_("Total votes:"))
                         + (
                             " {:,}\n\n".format(info["points"])
                             if info.get("points", "")
@@ -169,12 +173,12 @@ class DblTools(commands.Cog):
                 ).format(**format_kwargs)
                 em = discord.Embed(color=(await ctx.embed_colour()), description=description)
                 em.set_author(
-                    name=_("DBL Stats of {} :").format(info["username"]),
+                    name=_("DBL Stats of {}:").format(info["username"]),
                     icon_url="https://cdn.discordapp.com/emojis/393548388664082444.gif",
                 )
                 em.set_thumbnail(url=bot.avatar_url_as(static_format="png"))
                 return await ctx.send(embed=em)
-        except:
+        except:  # TODO: Handle better this. For example: Specify when a bot is not on DBL instead of the message bellow.
             return await ctx.send(
                 _("It doesn't seem to be a valid ID. Try again or check if the ID is right.")
             )

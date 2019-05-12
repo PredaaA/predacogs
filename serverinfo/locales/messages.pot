@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2019-03-01 18:40+0100\n"
+"POT-Creation-Date: 2019-05-13 00:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,181 +19,176 @@ msgstr ""
 #, docstring
 msgid ""
 "\n"
-"    Replace serverinfo command with more details.\n"
+"        Replace original Red serverinfo command with more details.\n"
 "    "
 msgstr ""
 
-#: serverinfo.py:35
+#: serverinfo.py:37
 #, docstring
 msgid "Show server information."
 msgstr ""
 
-#: serverinfo.py:50
+#: serverinfo.py:52
 msgid "0 - None"
 msgstr ""
 
-#: serverinfo.py:51
+#: serverinfo.py:53
 msgid "1 - Low"
 msgstr ""
 
-#: serverinfo.py:52
+#: serverinfo.py:54
 msgid "2 - Medium"
 msgstr ""
 
-#: serverinfo.py:53
+#: serverinfo.py:55
 msgid "3 - Hard"
 msgstr ""
 
-#: serverinfo.py:54
+#: serverinfo.py:56
 msgid "4 - Extreme"
 msgstr ""
 
-#: serverinfo.py:57
+#: serverinfo.py:66
 msgid "__VIP__ US East :flag_us:"
 msgstr ""
 
-#: serverinfo.py:58
+#: serverinfo.py:67
 msgid "__VIP__ US West :flag_us:"
 msgstr ""
 
-#: serverinfo.py:59
+#: serverinfo.py:68
 msgid "__VIP__ Amsterdam :flag_nl:"
 msgstr ""
 
-#: serverinfo.py:60
+#: serverinfo.py:69
 msgid "EU West :flag_eu:"
 msgstr ""
 
-#: serverinfo.py:61
+#: serverinfo.py:70
 msgid "EU Central :flag_eu:"
 msgstr ""
 
-#: serverinfo.py:62
+#: serverinfo.py:71
 msgid "London :flag_gb:"
 msgstr ""
 
-#: serverinfo.py:63
+#: serverinfo.py:72
 msgid "Frankfurt :flag_de:"
 msgstr ""
 
-#: serverinfo.py:64
+#: serverinfo.py:73
 msgid "Amsterdam :flag_nl:"
 msgstr ""
 
-#: serverinfo.py:65
+#: serverinfo.py:74
 msgid "US West :flag_us:"
 msgstr ""
 
-#: serverinfo.py:66
+#: serverinfo.py:75
 msgid "US East :flag_us:"
 msgstr ""
 
-#: serverinfo.py:67
+#: serverinfo.py:76
 msgid "US South :flag_us:"
 msgstr ""
 
-#: serverinfo.py:68
+#: serverinfo.py:77
 msgid "US Central :flag_us:"
 msgstr ""
 
-#: serverinfo.py:69
+#: serverinfo.py:78
 msgid "Singapore :flag_sg:"
 msgstr ""
 
-#: serverinfo.py:70
+#: serverinfo.py:79
 msgid "Sydney :flag_au:"
 msgstr ""
 
-#: serverinfo.py:71
+#: serverinfo.py:80
 msgid "Brazil :flag_br:"
 msgstr ""
 
-#: serverinfo.py:72
+#: serverinfo.py:81
 msgid "Hong Kong :flag_hk:"
 msgstr ""
 
-#: serverinfo.py:73
+#: serverinfo.py:82
 msgid "Russia :flag_ru:"
 msgstr ""
 
-#: serverinfo.py:74
+#: serverinfo.py:83
 msgid "Japan :flag_jp:"
 msgstr ""
 
-#: serverinfo.py:75
+#: serverinfo.py:84
 msgid "South Africa :flag_za:"
 msgstr ""
 
-#: serverinfo.py:90
+#: serverinfo.py:101
 msgid "Created on **{date}**. That's over **{num}** days ago !"
 msgstr ""
 
-#: serverinfo.py:96
+#: serverinfo.py:107
 msgid "{bot_name} joined this server on {bot_join}. That's over {since_join} days ago !"
 msgstr ""
 
-#: serverinfo.py:102 serverinfo.py:122
-msgid "Members :"
+#: serverinfo.py:112
+msgid "Members:"
 msgstr ""
 
-#: serverinfo.py:103
+#: serverinfo.py:113
 msgid ""
-"Total users : **{total}**\n"
-"Lurkers : **{lurkers}**\n"
-"Humans : **{hum}** • Bots : **{bots}**\n"
+"Total users: **{total}**\n"
+"{lurkers}Humans: **{hum}** • Bots: **{bots}**\n"
 "📗 `{online}` 📙 `{idle}`\n"
 "📕 `{dnd}` 📓 `{off}`\n"
 "🎥 `{streaming}` 📱 `{mobile}`\n"
 msgstr ""
 
-#: serverinfo.py:123
+#: serverinfo.py:119
 msgid ""
-"Total users : **{total}**\n"
-"Humans : **{hum}** • Bots : **{bots}**\n"
-"📗 `{online}` 📙 `{idle}`\n"
-"📕 `{dnd}` 📓 `{off}`\n"
-"🎥 `{streaming}` 📱 `{mobile}`\n"
+"Lurkers: **{}**\n"
 msgstr ""
 
-#: serverinfo.py:141
-msgid "Channels :"
+#: serverinfo.py:131
+msgid "Channels:"
 msgstr ""
 
-#: serverinfo.py:142
+#: serverinfo.py:132
 msgid ""
-"💬 Text : **{text}**\n"
-"🔊 Voice : **{voice}**"
+"💬 Text: **{text}**\n"
+"🔊 Voice: **{voice}**"
 msgstr ""
 
-#: serverinfo.py:147
-msgid "Utility :"
+#: serverinfo.py:137
+msgid "Utility:"
+msgstr ""
+
+#: serverinfo.py:138
+msgid ""
+"Owner: **{owner}**\n"
+"Region: **{region}**\n"
+"Verif. level: **{verif}**\n"
+"Server ID: **{id}**"
 msgstr ""
 
 #: serverinfo.py:148
+msgid "Misc:"
+msgstr ""
+
+#: serverinfo.py:149
 msgid ""
-"Owner : **{owner}**\n"
-"Region : **{region}**\n"
-"Verif. level : **{verif}**\n"
-"Server ID : **{id}**"
+"AFK channel: **{afk_chan}**\n"
+"AFK Timeout: **{afk_timeout}sec**\n"
+"Custom emojis: **{emojis}**\n"
+"Roles: **{roles}**"
 msgstr ""
 
-#: serverinfo.py:158
-msgid "Misc :"
+#: serverinfo.py:160
+msgid "Special features:"
 msgstr ""
 
-#: serverinfo.py:159
-msgid ""
-"AFK channel : **{afk_chan}**\n"
-"AFK Timeout : **{afk_timeout}sec**\n"
-"Custom emojis : **{emojis}**\n"
-"Roles : **{roles}**"
-msgstr ""
-
-#: serverinfo.py:170
-msgid "Special features :"
-msgstr ""
-
-#: serverinfo.py:171
+#: serverinfo.py:161
 msgid ""
 "{vip} VIP Regions\n"
 "{van} Vanity URL\n"
@@ -202,7 +197,7 @@ msgid ""
 "{verify} Verified"
 msgstr ""
 
-#: serverinfo.py:192
+#: serverinfo.py:182
 msgid "I need the `Embed links` permission to send this."
 msgstr ""
 

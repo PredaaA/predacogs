@@ -1,24 +1,21 @@
 import discord
 
 import aiohttp
-import asyncio
 import json
 
 from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils.predicates import ReactionPredicate
-from redbot.core.utils.menus import start_adding_reactions
 from redbot.core.utils.chat_formatting import bold, box, inline
 
 from random import choice
 from typing import Optional
 
-from .constants import Stuff
 from .constants import (
     REDDIT_BASEURL,
     REDDIT_ENDPOINT,
     IMGUR_LINKS,
     GOOD_EXTENSIONS,
     NEKOBOT_BASEURL,
+    Stuff,
 )
 
 _ = Translator("Nsfw", __file__)

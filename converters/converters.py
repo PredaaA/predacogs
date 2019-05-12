@@ -39,13 +39,13 @@ class Converters(commands.Cog):
         secs = str((curr - g).total_seconds())
         seconds = secs[1:][:-2] if "-" in secs else secs[:-2] if ".0" in secs else secs
         delta = humanize_timedelta(seconds=int(seconds))
-        to = (
+        when = (
             _("It will be in {}.").format(delta) if g > curr else _("It was {} ago.").format(delta)
         )
 
         await ctx.send(
-            _("Successfully converted `{given}` to `{convert}`\n{to}").format(
-                given=given, convert=convert, to=to
+            _("Successfully converted `{given}` to `{convert}`\n{when}").format(
+                given=given, convert=convert, when=when
             )
         )
 
@@ -81,15 +81,15 @@ class Converters(commands.Cog):
         secs = str((curr - given).total_seconds())
         seconds = secs[1:][:-2] if "-" in secs else secs[:-2] if ".0" in secs else secs
         delta = humanize_timedelta(seconds=int(seconds))
-        to = (
+        when = (
             _("It will be in {}.").format(delta)
             if given > curr
             else _("It was {} ago.").format(delta)
         )
 
         await ctx.send(
-            _("Successfully converted `{date}` to `{convert}`\n{to}").format(
-                date=date, convert=convert, to=to
+            _("Successfully converted `{date}` to `{convert}`\n{when}").format(
+                date=date, convert=convert, when=when
             )
         )
 

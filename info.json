@@ -3,11 +3,15 @@
     "install_msg": "Thank you for installing my repository !\n\nUse `[p]cog list preda` command to see all my cogs.",
     "name": "Predä Cogs",
     "short": "Various cogs.",
-    "description": "Various cogs.",
+    "description": "Various cogs, for utility purposes, like Converters, WhoPlays, DblTools and ServerInfo, but also informational like SpaceX cog, and to finish, image purposes with my Nsfw cog.",
     "tags": [
         "utility",
         "information",
         "nsfw",
+        "images",
+        "reddit",
+        "spacex",
+        "converters",
         "various"
     ]
 }

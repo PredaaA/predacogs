@@ -18,7 +18,7 @@ class DblTools(commands.Cog):
     """Tools to get bots information from discordbots.org."""
 
     __author__ = "Predä"
-    __version__ = "1.0"
+    __version__ = "1.0.1"
 
     def __init__(self, bot):
         defaut = {"dbl_key": None}
@@ -31,10 +31,17 @@ class DblTools(commands.Cog):
         """Get info from discordbots.org."""
         key = await self.config.dbl_key()
         headers = {"Authorization": key}
-        async with self.session.get(DBL_BASE_URL + str(bot), headers=headers) as r:
-            info = await r.json(content_type=None)
-        async with self.session.get(DBL_BASE_URL + str(bot) + "/stats", headers=headers) as r:
-            stats = await r.json(content_type=None)
+        async with self.session.get(DBL_BASE_URL + str(bot), headers=headers) as resp:
+            if resp.status != 200:
+                await ctx.send(
+                    "Error when trying to get DBL API. Error code: `{}`".format(resp.status)
+                )
+                return None
+            info = await resp.json(content_type=None)
+        async with self.session.get(DBL_BASE_URL + str(bot) + "/stats", headers=headers) as resp:
+            if resp.status != 200:
+                return None
+            stats = await resp.json(content_type=None)
         return info, stats
 
     @checks.is_owner()
@@ -85,6 +92,9 @@ class DblTools(commands.Cog):
         try:
             async with ctx.typing():
                 info, stats = await self._get_info(ctx, bot=bot.id, info=None, stats=None)
+                if info is None:
+                    return
+
                 emoji = (
                     discord.utils.get(bot.emojis, id=392249976639455232)
                     if self.bot.get_guild(264445053596991498) is not None
@@ -178,9 +188,9 @@ class DblTools(commands.Cog):
                 )
                 em.set_thumbnail(url=bot.avatar_url_as(static_format="png"))
                 return await ctx.send(embed=em)
-        except:  # TODO: Handle better this. For example: Specify when a bot is not on DBL instead of the message bellow.
+        except Exception as error:  # TODO: Handle better this. For example: Specify when a bot is not on DBL instead of the message bellow.
             return await ctx.send(
-                _("It doesn't seem to be a valid ID. Try again or check if the ID is right.")
+                _("It doesn't seem to be a valid ID. Try again or check if the ID is right.\n") + inline(error)
             )
 
     def __unload(self):

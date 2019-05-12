@@ -4,7 +4,6 @@ import aiohttp
 import asyncio
 import json
 
-from redbot.core import Config
 from redbot.core.i18n import Translator, cog_i18n
 from redbot.core.utils.predicates import ReactionPredicate
 from redbot.core.utils.menus import start_adding_reactions
@@ -81,9 +80,14 @@ class Core(Stuff):
             + "(Code: {})".format(inline(str(error_code)))
         )
 
-    async def _version_msg(self, ctx, version=None):
+    async def _version_msg(self, ctx, version, authors):
         """Cog version message."""
-        msg = box(_("Nsfw cog version: ") + version, lang="py")
+        msg = box(
+            _("Nsfw cog version: {version}\n" "Authors: {authors}").format(
+                version=version, authors=", ".join(authors)
+            ),
+            lang="py",
+        )
         return await ctx.send(msg)
 
     async def _nsfw_channel_check(self, ctx, embed=None):
@@ -95,7 +99,7 @@ class Core(Stuff):
             )
         return embed
 
-    async def _make_embed(self, ctx, sub, subr, name, url):
+    async def _make_embed(self, ctx, sub, name, url):
         """Function to make the embed for all Reddit API images."""
         url, subr = await self._get_imgs(ctx, sub=sub, url=None, subr=None)
         if url is None:
@@ -153,11 +157,11 @@ class Core(Stuff):
         except discord.errors.HTTPException:
             return
 
-    async def _send_msg(self, ctx, name, sub=None, subr=None):
+    async def _send_msg(self, ctx, name, sub=None):
         """Main function called in all Reddit API commands."""
         async with ctx.typing():
             if not ctx.guild or ctx.message.channel.is_nsfw():
-                embed = await self._make_embed(ctx, sub, subr, name, url=None)
+                embed = await self._make_embed(ctx, sub, name, url=None)
         return await self._maybe_embed(
             ctx,
             embed=(

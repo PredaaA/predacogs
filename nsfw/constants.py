@@ -50,6 +50,8 @@ ASS = [
     "datass",
     "ILikeLittleButts",
     "datgap",
+    "HungryButts",
+    "Upshorts",
 ]
 ANAL = [
     "MasterOfAnal",
@@ -118,6 +120,7 @@ COSPLAY = [
     "CosplayBoobs",
     "gwcosplay",
     "CosplayLewd",
+    "CosplayBeauties",
 ]
 CUNNI = ["cunnilingus", "eatpussy2015", "CunnilingusSelfie", "Hegoesdown"]
 CUMSHOTS = [
@@ -146,6 +149,15 @@ DEEPTHROAT = [
 ]
 DICK = ["DickPics4Freedom", "MassiveCock", "penis", "cock", "ThickDick", "bulges", "twinks"]
 DOUBLE_P = ["doublepenetration", "dp_porn", "Technical_DP"]
+FUTA = [
+    "FutanariHentai",
+    "FutanariPegging",
+    "HorsecockFuta",
+    "Rule34_Futanari",
+    "rule34futanari",
+    "hugefutanari",
+    "Futadomworld",
+]
 GAY_P = ["gayporn", "ladybonersgw", "bulges", "broslikeus", "gaygifs", "gayporn"]
 GROUPS = ["GroupOfNudeGirls", "GroupOfNudeMILFs", "groupsex"]
 # HENTAI = ["hentai", "thick_hentai", "HQHentai", "AnimeBooty", "thighdeology"]
@@ -194,6 +206,11 @@ PUBLIC = [
     "publicplug",
     "casualnudity",
     "bitchinbubba",
+    "FlashingTheGoods",
+    "Flashing",
+    "girlsflashing",
+    "holdthemoan",
+    "exposedinpublic",
 ]
 PUSSY = [
     "pussy",
@@ -207,6 +224,7 @@ PUSSY = [
     "simps",
     "LabiaGW",
     "grool",
+    "MoundofVenus",
 ]
 REAL_GIRLS = ["RealGirls", "RealGirlsGoneWild", "Nude_Selfie"]
 REDHEADS = [
@@ -230,7 +248,7 @@ RULE_34 = [
     "WesternHentai",
 ]
 SQUIRTS = ["SquatSquirt", "GushingGirls", "squirts", "squirting_gifs", "squirting"]
-THIGHS = ["Thighs", "ThickThighs", "thighhighs", "Thigh", "leggingsgonewild"]
+THIGHS = ["Thighs", "ThickThighs", "thighhighs", "Thigh", "leggingsgonewild", "legsup"]
 TRAPS = [
     "Transex",
     "DeliciousTraps",
@@ -268,3 +286,4 @@ WILD = [
     "Swingersgw",
     "workgonewild",
 ]
+YIFF = ["Yiffbondage", "Hyiff", "femyiff", "yiff", "yiffgif"]

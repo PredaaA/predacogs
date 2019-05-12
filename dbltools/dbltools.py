@@ -111,7 +111,7 @@ class DblTools(commands.Cog):
                     return
 
                 emoji = (
-                    discord.utils.get(bot.emojis, id=392249976639455232)
+                    discord.utils.get(self.bot.emojis, id=392249976639455232)
                     if self.bot.get_guild(264445053596991498) is not None
                     else "`\N{WHITE HEAVY CHECK MARK}`"
                 )
@@ -206,7 +206,7 @@ class DblTools(commands.Cog):
         except Exception as error:
             return await ctx.send(
                 _("It doesn't seem to be a valid ID. Try again or check if the ID is right.\n")
-                + inline(error)
+                + inline(str(error))
             )
 
     def __unload(self):

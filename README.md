@@ -1,4 +1,4 @@
-<h1 align="center">Predä Cogs for Red V3</h1>
+<h1 align="center">Predä Cogs for Red v3</h1>
 
 <p align="center">
   <a href="https://github.com/Cog-Creators/Red-DiscordBot/tree/V3/develop">
@@ -37,8 +37,8 @@
 
 | Name | Description (Click for more details) |
 | ---- | ----------- |
-| Nsfw | <details><summary>Send random NSFW images from random subreddits and Nekobot API.</summary>Send random NSFW images from random subreddits and Nekobot API in NSFW only channels. Important note: As indicated in name of this cog, it contains mature content and is not suited for all audiences, use it responsibly.</details> |
-| SpaceX | <details><summary>Get multiple information about SpaceX using SpaceX-API.</summary></details>
+| Nsfw | <details><summary>Send random NSFW images from random subreddits and Nekobot API.</summary>Send random NSFW images from random subreddits and Nekobot API in NSFW only channels.<br>Important note: As indicated in name of this cog, it contains mature content and is not suited for all audiences, use it responsibly.</details> |
+| SpaceX | <details><summary>Get multiple information about SpaceX using SpaceX-API.</summary>Get multiple information about SpaceX like Rockets, current and passed missions, historical events ... and more. This cog is using SpaceX-API.</details>
 | WhoPlays | <details><summary>Look at what games people in the server are playing. V3 Rewrite of [Stevy's cog](https://github.com/AznStevy/Maybe-Useful-Cogs/blob/master/whoplays/whoplays.py).</summary>Check who's playing certain games or who's playing what on your server.</details> |
 | Converters | <details><summary>Some utility converters.</summary>Some utility converters, for temperatures, mass, but also dates to timestamps.</details> |
 | DblTools | <details><summary>Tools to get bots information from discordbots.org.</summary>Tools to get bots information from discordbots.org, like description, votes, published server count, and more.</details> |
@@ -50,8 +50,8 @@ Feel free to open a PR or an issue for any suggestion about my cogs !
 
 ## Contact
 
-Predä - 梅丽莎。十四#1001 (ID: `332980470650372096`) on Discord.
-Or join my [Discord server](https://discord.gg/TwCNvVz).
+For any suggestions or issues, feel free to join my [Discord server](https://discord.gg/TwCNvVz) or contact me in DM.<br>
+`Predä - 梅丽莎。十四#1001` (ID: `332980470650372096`) on Discord.
 
 ## Credits
 
@@ -62,5 +62,5 @@ Or join my [Discord server](https://discord.gg/TwCNvVz).
 - [Stevy](https://github.com/AznStevy) to authorize me to publish rewritten version of [WhoPlays cog](https://github.com/PredaaA/predacogs/tree/master/whoplays).
 
 <a href="https://github.com/PredaaA/predacogs">
-  <img src="https://img.shields.io/badge/PredaCogs-Red V3-blue.svg?style=popout&logo=Python">
+  <img src="https://img.shields.io/badge/PredaCogs-Red V3-red.svg?style=popout&logo=Python">
 </a>

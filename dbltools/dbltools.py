@@ -34,16 +34,12 @@ class DblTools(commands.Cog):
         async with self.session.get(DBL_BASE_URL + str(bot), headers=headers) as resp:
             if resp.status == 401:
                 await ctx.send(
-                    _("This API key looks wrong, try to set it again. {}").format(
-                        inline(resp.status)
-                    )
+                    _("This API key looks wrong, try to set it again.")
                 )
                 return None
             elif resp.status == 404:
                 await ctx.send(
-                    _("This bot doesn't seem to be validated on Discord Bot List. {}").format(
-                        inline(resp.status)
-                    )
+                    _("This bot doesn't seem to be validated on Discord Bot List.")
                 )
                 return None
             elif resp.status != 200:

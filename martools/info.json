@@ -1,0 +1,14 @@
+{
+    "author": ["Predä"],
+    "install_msg": "Thank you for installing the MartTools cog !\nDon't forget to `[p]load martools` !",
+    "name": "MartTools",
+    "short": "Multiple tools that are originally used on Martine the BOT.",
+    "description": "Multiple tools that are originally used on Martine the BOT.",
+    "tags": [
+        "tools",
+        "utility",
+        "information",
+        "counters",
+        "statistics"
+    ]
+}

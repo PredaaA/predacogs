@@ -14,7 +14,7 @@ class MartTools(commands.Cog):
     """Multiple tools that are originally used on Martine the BOT."""
 
     __author__ = "Predä"
-    __version__ = "1.0"
+    __version__ = "1.0.1"
 
     def __init__(self, bot):
         self.bot = bot
@@ -46,9 +46,15 @@ class MartTools(commands.Cog):
         errors_count = "`{}`".format(self.bot.counter["command_error"])
         messages_read = "`{:,}`".format(self.bot.counter["messages_read"])
         messages_sent = "`{:,}`".format(self.bot.counter["msg_sent"])
-        total_num = "`{:,}/{:,}`".format(
-            len(lavalink.active_players()), len(lavalink.all_players())
-        )
+        try:
+            total_num = "`{:,}/{:,}`".format(
+                len(lavalink.active_players()), len(lavalink.all_players())
+            )
+        except AttributeError:
+            total_num = "`{:,}/{:,}`".format(
+                len([p for p in lavalink.players if p.current is None]),
+                len([p for p in lavalink.players if p.current is not None]),
+            )
         guild_join = "`{:,}`".format(self.bot.counter["guild_join"])
         guild_leave = "`{:,}`".format(self.bot.counter["guild_remove"])
         avatar = self.bot.user.avatar_url_as(static_format="png")
@@ -115,6 +121,7 @@ class MartTools(commands.Cog):
     @commands.command(aliases=["serverc", "serversc"])
     @commands.bot_has_permissions(embed_links=True)
     async def servercount(self, ctx):
+        """Send servers stats of the bot."""
         shards = self.bot.shard_count
         servers = len(self.bot.guilds)
         channels = sum(len(s.channels) for s in self.bot.guilds)

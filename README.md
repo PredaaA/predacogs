@@ -41,6 +41,7 @@
 | SpaceX | <details><summary>Get multiple information about SpaceX using SpaceX-API.</summary>Get multiple information about SpaceX like Rockets, current and passed missions, historical events ... and more. This cog is using SpaceX-API.</details>
 | WhoPlays | <details><summary>Look at what games people in the server are playing. V3 Rewrite of [Stevy's cog](https://github.com/AznStevy/Maybe-Useful-Cogs/blob/master/whoplays/whoplays.py).</summary>Check who's playing certain games or who's playing what on your server.</details> |
 | Converters | <details><summary>Some utility converters.</summary>Some utility converters, for temperatures, mass, but also dates to timestamps.</details> |
+| MartTools | <details><summary>Multiple tools that are originally used on Martine the BOT.</summary></details>
 | DblTools | <details><summary>Tools to get bots information from discordbots.org.</summary>Tools to get bots information from discordbots.org, like description, votes, published server count, and more.</details> |
 | ServerInfo | <details><summary>Replace original Red serverinfo command with more details.</summary>Replace original Red serverinfo command with more details, about users and server.</details> |
 

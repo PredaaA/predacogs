@@ -18,7 +18,7 @@ class DblTools(commands.Cog):
     """Tools to get bots information from discordbots.org."""
 
     __author__ = "Predä"
-    __version__ = "1.0.3"
+    __version__ = "1.1.0"
 
     def __init__(self, bot):
         defaut = {"dbl_key": None}
@@ -27,20 +27,25 @@ class DblTools(commands.Cog):
         self.config = Config.get_conf(self, 3329804706503720961, force_registration=True)
         self.config.register_global(**defaut)
 
+    # This part of code is originally from image.py of Red, I take it because it's amazing:
+    # https://github.com/Cog-Creators/Red-DiscordBot/blob/V3/develop/redbot/cogs/image/image.py#L30
+    async def initialize(self) -> None:
+        """Move the API keys from cog stored config to core bot config if they exist."""
+        dbl_key = await self.config.dbl_key()
+        if dbl_key is not None and "dbl" not in await self.bot.db.api_tokens():
+            await self.bot.db.api_tokens.set_raw("dbl", value={"api_key": dbl_key})
+            await self.config.dbl_key.clear()
+
     async def _get_info(self, ctx, bot=None, info=None, stats=None):
         """Get info from discordbots.org."""
-        key = await self.config.dbl_key()
-        headers = {"Authorization": key}
+        key = await ctx.bot.db.api_tokens.get_raw("dbl", default=None)
+        headers = {"Authorization": key["api_key"]}
         async with self.session.get(DBL_BASE_URL + str(bot), headers=headers) as resp:
             if resp.status == 401:
-                await ctx.send(
-                    _("This API key looks wrong, try to set it again.")
-                )
+                await ctx.send(_("This API key looks wrong, try to set it again."))
                 return None
             elif resp.status == 404:
-                await ctx.send(
-                    _("This bot doesn't seem to be validated on Discord Bot List.")
-                )
+                await ctx.send(_("This bot doesn't seem to be validated on Discord Bot List."))
                 return None
             elif resp.status != 200:
                 await ctx.send(
@@ -55,29 +60,26 @@ class DblTools(commands.Cog):
         return info, stats
 
     @checks.is_owner()
-    @commands.group()
-    async def dblset(self, ctx):
-        """Settings for DblTools cog."""
-        pass
-
-    @checks.is_owner()
-    @dblset.command()
-    async def key(self, ctx, key):
+    @commands.command()
+    async def dblkey(self, ctx):
         """
-            Set your DBL key with this command only in DM.
+            Explain how to set DBL API key.
 
-            Note: You need to have a bot published
-            on DBL to use API and have a key.
+            Note: You need to have a bot published on DBL to use API and have a key.
         """
-        if ctx.guild:
-            try:
-                await ctx.message.delete()
-            except discord.Forbidden:
-                pass
-            return await ctx.send(_("You need to use this command in DMs !"))
-        else:
-            await self.config.dbl_key.set(key)
-            await ctx.send(_("API key set."))
+        message = _(
+            "So first, to get a Discord Bot List API key, you need "
+            "to have a bot on this bot list, otherwise you can't use this cog.\n\n"
+            "To find your API key:\n"
+            "1. Login on DBL [here](https://discordbots.org/login)\n"
+            "2. Go on your [profile](https://discordbots.org/me)\n"
+            "3. Click on `Edit` on one of your bot(s).\n"
+            "4. Scroll to the bottom of the edit page, in `API Options` section, "
+            "then click on `Show token` and copy the token.\n"
+            "5. Use in DM `{}set api dbl api_key,your_api_key_here`\n"
+            "6. There you go! You can now use DblTools cog."
+        ).format(ctx.prefix)
+        await ctx.maybe_send_embed(message)
 
     @commands.command()
     @commands.guild_only()
@@ -89,7 +91,8 @@ class DblTools(commands.Cog):
 
             `[bot]`: Can be a mention or ID of a bot.
         """
-        if await self.config.dbl_key() is None:
+        key = await ctx.bot.db.api_tokens.get_raw("dbl", default=None)
+        if key is None:
             return await ctx.send(_("Owner of this bot need to set an API key first !"))
         if bot is None:
             return await ctx.send_help()

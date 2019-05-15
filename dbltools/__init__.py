@@ -1,5 +1,6 @@
 from .dbltools import DblTools
 
-def setup(bot):
+async def setup(bot):
     n = DblTools(bot)
+    await n.initialize()
     bot.add_cog(n)

@@ -14,22 +14,26 @@ class MartTools(commands.Cog):
     """Multiple tools that are originally used on Martine the BOT."""
 
     __author__ = "Predä"
-    __version__ = "1.0.1"
+    __version__ = "1.1.0"
 
     def __init__(self, bot):
         self.bot = bot
 
-    async def on_command_error(self, error):
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandInvokeError):
             self.bot.counter["command_error"] += 1
 
+    @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.id == self.bot.user.id:
             self.bot.counter["msg_sent"] += 1
 
+    @commands.Cog.listener()
     async def on_guild_join(self, guild: discord.Guild):
         self.bot.counter["guild_join"] += 1
 
+    @commands.Cog.listener()
     async def on_guild_remove(self, guild: discord.Guild):
         self.bot.counter["guild_remove"] += 1
 

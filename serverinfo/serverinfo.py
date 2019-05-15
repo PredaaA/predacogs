@@ -16,6 +16,7 @@ class ServerInfo(commands.Cog):
     """
 
     __author__ = "Predä"
+    __version__ = "1.2.0"
 
     def __init__(self, bot):
         self.bot = bot
@@ -47,11 +48,11 @@ class ServerInfo(commands.Cog):
         }
 
         verif = {
-            0: _("0 - None"),
-            1: _("1 - Low"),
-            2: _("2 - Medium"),
-            3: _("3 - Hard"),
-            4: _("4 - Extreme"),
+            "none": _("0 - None"),
+            "low": _("1 - Low"),
+            "medium": _("2 - Medium"),
+            "high": _("3 - Hard"),
+            "extreme": _("4 - Extreme"),
         }
         region = {
             "vip-us-east": _("__VIP__ US East") + " :flag_us:",
@@ -131,7 +132,7 @@ class ServerInfo(commands.Cog):
             ).format(
                 owner=guild.owner,
                 region=region[str(guild.region)],
-                verif=verif[int(guild.verification_level)],
+                verif=verif[str(guild.verification_level)],
                 id=guild.id,
             ),
         )

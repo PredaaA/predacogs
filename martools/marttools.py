@@ -1,6 +1,6 @@
 import discord
 
-from redbot.core import commands, checks
+from redbot.core import bank, commands, checks
 from redbot.core.i18n import Translator, cog_i18n
 from redbot.core.utils.chat_formatting import bold
 
@@ -32,6 +32,58 @@ class MartTools(commands.Cog):
 
     async def on_guild_remove(self, guild: discord.Guild):
         self.bot.counter["guild_remove"] += 1
+
+    @commands.command()
+    @commands.guild_only()
+    async def bankstats(self, ctx):
+        """Show stats of the bank."""
+        icon = self.bot.user.avatar_url_as(static_format="png")
+        user_bal = await bank.get_balance(ctx.author)
+        credits_name = await bank.get_currency_name(ctx.guild)
+        pos = await bank.get_leaderboard_position(ctx.author)
+        bank_name = await bank.get_bank_name(ctx.guild)
+        if await bank.is_global():
+            all_accounts = len(await bank._conf.all_users())
+            accounts = await bank._conf.all_users()
+        else:
+            all_accounts = len(await bank._conf.all_members(ctx.guild))
+            accounts = await bank._conf.all_members(ctx.guild)
+        member_account = await bank.get_account(ctx.author)
+        created_at = str(member_account.created_at)
+        no = "1970-01-01 00:00:00"
+        overall = 0
+        for key, value in accounts.items():
+            overall += value["balance"]
+
+        em = discord.Embed(color=await ctx.embed_colour())
+        em.set_author(name=_("{} stats:").format(bank_name), icon_url=icon)
+        em.add_field(
+            name=_("{} stats:").format("Global" if await bank.is_global() else "Bank"),
+            value=_(
+                "Total accounts: **{all_accounts}**\nTotal amount: **{overall:,} {credits_name}**"
+            ).format(all_accounts=all_accounts, overall=overall, credits_name=credits_name),
+        )
+        if pos is not None:
+            percent = round((int(user_bal) / overall * 100), 3)
+            em.add_field(
+                name=_("Your stats:"),
+                value=_(
+                    "You have **{bal:,} {currency}**.\n"
+                    "It's **{percent}%** of the {g}amount in the bank.\n"
+                    "You are **{pos:,}/{all_accounts:,}** in the {g}leaderboard."
+                ).format(
+                    bal=user_bal,
+                    currency=credits_name,
+                    percent=percent,
+                    g="global " if await bank.is_global() else "",
+                    pos=pos,
+                    all_accounts=all_accounts,
+                ),
+                inline=False,
+            )
+        if created_at != no:
+            em.set_footer(text=_("Account created on: ") + str(created_at))
+        await ctx.send(embed=em)
 
     @commands.command(aliases=["usagec"])
     @commands.bot_has_permissions(embed_links=True)

@@ -1,6 +1,6 @@
 {
     "author": "Predä",
-    "install_msg": "Thank you for installing my DblTools cog !\nDon't forget to `[p]load dbltools`.\n`[p]help DblTools` to get all commands.",
+    "install_msg": "Thank you for installing my DblTools cog !\nDon't forget to `[p]load dbltools`.\nUse `[p]help DblTools` to get all commands.",
     "name": "DblTools",
     "short": "Tools to get bots information from discordbots.org.",
     "description": "Tools to get bots information from discordbots.org, like description, votes, published server count and more.",

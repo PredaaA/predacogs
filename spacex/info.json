@@ -1,6 +1,6 @@
 {
     "author": ["Predä"],
-    "install_msg": "Thank you for installing the spacex cog !\nDon't forget to `[p]load spacex` !",
+    "install_msg": "Thank you for installing the spacex cog !\nDon't forget to `[p]load spacex` !\nUse `[p]help SpaceX` to get all commands.",
     "name": "SpaceX",
     "short": "Get multiple information about SpaceX using SpaceX-API.",
     "description": "Get multiple information about SpaceX using SpaceX-API.",

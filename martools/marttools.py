@@ -91,7 +91,6 @@ class MartTools(commands.Cog):
 
     @commands.command(aliases=["usagec"])
     @commands.bot_has_permissions(embed_links=True)
-    @commands.guild_only()
     async def usagecount(self, ctx):
         """
             Show the usage count of the bot.
@@ -141,11 +140,13 @@ class MartTools(commands.Cog):
 
     @commands.command(aliases=["prefixes"])
     @commands.bot_has_permissions(embed_links=True)
-    @commands.guild_only()
     async def prefix(self, ctx):
         """Show all prefixes of the bot"""
         default_prefixes = await ctx.bot.db.prefix()
-        guild_prefixes = await ctx.bot.db.guild(ctx.guild).prefix()
+        try:
+            guild_prefixes = await ctx.bot.db.guild(ctx.guild).prefix()
+        except AttributeError:
+            guild_prefixes = False
         bot_name = ctx.bot.user.name
         avatar = self.bot.user.avatar_url_as(static_format="png")
 
@@ -203,7 +204,6 @@ class MartTools(commands.Cog):
         await ctx.send(embed=em)
 
     @commands.command(aliases=["servreg"])
-    @commands.guild_only()
     async def serversregions(self, ctx):
         """Show total of regions where the bot is."""
         regions = {

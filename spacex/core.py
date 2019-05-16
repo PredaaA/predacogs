@@ -322,5 +322,5 @@ class Core:
         ).format(**engines_stats_kwargs)
         return base_stats, stages_stats, payload_weights_stats, engines_stats
 
-    def __unload(self):
+    def cog_unload(self): 
         self.bot.loop.create_task(self.session.close())

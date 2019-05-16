@@ -21,7 +21,7 @@ class ServerInfo(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    def __unload(self):
+    def cog_unload(self): 
         global _old_serverinfo
         if _old_serverinfo:
             try:
@@ -174,7 +174,7 @@ class ServerInfo(commands.Cog):
             await ctx.send(_("I need the `Embed links` permission to send this."))
 
 
-def _unload(bot):
+def cog_unload(self): 
     bot.add_command("serverinfo")
 
 

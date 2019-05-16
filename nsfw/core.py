@@ -192,5 +192,5 @@ class Core(Stuff):
             em.set_footer(text=footer)
         return em
 
-    def __unload(self):
+    def cog_unload(self): 
         self.bot.loop.create_task(self.session.close())

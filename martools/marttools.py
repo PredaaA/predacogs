@@ -108,7 +108,7 @@ class MartTools(commands.Cog):
             )
         except AttributeError:
             total_num = "`{:,}/{:,}`".format(
-                len([p for p in lavalink.players if p.current is None]),
+                len([p for p in lavalink.players]),
                 len([p for p in lavalink.players if p.current is not None]),
             )
         guild_join = "`{:,}`".format(self.bot.counter["guild_join"])

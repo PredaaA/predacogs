@@ -85,7 +85,7 @@ class ServerInfo(commands.Cog):
         mobile = len([m for m in guild.members if m.is_on_mobile()])
         lurkers = len([m for m in guild.members if m.joined_at is None])
         total_users = len(guild.members)
-        humans = len([a for a in ctx.guild.members if a.bot == False])
+        humans = len([a for a in ctx.guild.members if a.bot is False])
         bots = len([a for a in ctx.guild.members if a.bot])
         text_channels = len(guild.text_channels)
         voice_channels = len(guild.voice_channels)

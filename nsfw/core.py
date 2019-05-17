@@ -33,25 +33,24 @@ class Core(Stuff):
             async with self.session.get(REDDIT_BASEURL + choice(sub) + REDDIT_ENDPOINT) as reddit:
                 if reddit.status != 200:
                     return None, await self._api_errors_msg(ctx, error_code=reddit.status)
-                else:
-                    try:
-                        data = await reddit.json(content_type=None)
-                        content = data[0]["data"]["children"][0]["data"]
-                        url = content["url"]
-                        subr = content["subreddit"]
-                    except (KeyError, ValueError, json.decoder.JSONDecodeError):
-                        url, subr = await self._get_imgs(ctx, sub=sub, url=url, subr=subr)
-                    if url.startswith(IMGUR_LINKS):
-                        url = url + ".png"
-                    elif url.endswith(".mp4"):
-                        url = url[:-3] + "gif"
-                    elif url.endswith(".gifv"):
-                        url = url[:-1]
-                    elif not url.endswith(GOOD_EXTENSIONS) and not url.startswith(
-                        "https://gfycat.com"
-                    ):
-                        url, subr = await self._get_imgs(ctx, sub=sub, url=url, subr=subr)
-                    return url, subr
+                try:
+                    data = await reddit.json(content_type=None)
+                    content = data[0]["data"]["children"][0]["data"]
+                    url = content["url"]
+                    subr = content["subreddit"]
+                except (KeyError, ValueError, json.decoder.JSONDecodeError):
+                    url, subr = await self._get_imgs(ctx, sub=sub, url=url, subr=subr)
+                if url.startswith(IMGUR_LINKS):
+                    url = url + ".png"
+                elif url.endswith(".mp4"):
+                    url = url[:-3] + "gif"
+                elif url.endswith(".gifv"):
+                    url = url[:-1]
+                elif not url.endswith(GOOD_EXTENSIONS) and not url.startswith(
+                    "https://gfycat.com"
+                ):
+                    url, subr = await self._get_imgs(ctx, sub=sub, url=url, subr=subr)
+                return url, subr
         except aiohttp.client_exceptions.ClientConnectionError:
             await self._api_errors_msg(ctx, error_code="JSON decode failed")
             return None, None
@@ -62,10 +61,9 @@ class Core(Stuff):
             async with self.session.get(NEKOBOT_BASEURL + choice(api_category)) as others:
                 if others.status != 200:
                     return None, await self._api_errors_msg(ctx, error_code=others.status)
-                else:
-                    data = await others.json(content_type=None)
-                    url = data["message"]
-                    return url
+                data = await others.json(content_type=None)
+                url = data["message"]
+                return url
         except aiohttp.client_exceptions.ClientConnectionError:
             await self._api_errors_msg(ctx, error_code="JSON decode failed")
             return None
@@ -147,7 +145,7 @@ class Core(Stuff):
             and if not send a simple message.
         """
         try:
-            if type(embed) is discord.Embed:
+            if isinstance(embed, discord.Embed):
                 await ctx.send(embed=embed)
             else:
                 await ctx.send(embed)

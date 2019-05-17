@@ -16,7 +16,7 @@ class Nsfw(Core, commands.Cog):
     """Send random NSFW images from random subreddits"""
 
     __author__ = ["Predä", "aikaterna"]
-    __version__ = "2.0.1"
+    __version__ = "2.0.2"
 
     @commands.command()
     async def nsfwversion(self, ctx):

@@ -35,7 +35,7 @@ class Core:
             if resp.status == 404:
                 await ctx.send("It doesn't seem to be a valid request.")
                 return None
-            elif resp.status != 200:
+            if resp.status != 200:
                 await ctx.send(
                     "Error when trying to get SpaceX API. Error code: `{}`".format(resp.status)
                 )
@@ -247,7 +247,7 @@ class Core:
     async def _rockets_texts(self, data):
         base_stats_kwargs = {
             "first_flight": data["first_flight"],
-            "active": "Yes" if data["active"] == True else "No",
+            "active": "Yes" if data["active"] is True else "No",
             "stages": data["stages"],
             "l_legs": data["landing_legs"]["number"],
             "success_rate": data["success_rate_pct"],
@@ -275,17 +275,17 @@ class Core:
             "Engines: **{engines} {e_type} {e_version}**"
         ).format(**base_stats_kwargs)
         stages_stats_kwargs = {
-            "fi_reusable": "Yes" if data["first_stage"]["reusable"] == True else "No",
+            "fi_reusable": "Yes" if data["first_stage"]["reusable"] is True else "No",
             "fi_engines": data["first_stage"]["engines"],
             "fi_fuel_amount": data["first_stage"]["fuel_amount_tons"],
             "fi_burn_time": "N/A"
-            if data["first_stage"]["burn_time_sec"] == None
+            if data["first_stage"]["burn_time_sec"] is None
             else data["first_stage"]["burn_time_sec"],
-            "sec_reusable": "Yes" if data["second_stage"]["reusable"] == True else "No",
+            "sec_reusable": "Yes" if data["second_stage"]["reusable"] is True else "No",
             "sec_engines": data["second_stage"]["engines"],
             "sec_fuel_amount": data["second_stage"]["fuel_amount_tons"],
             "sec_burn_time": "N/A"
-            if data["second_stage"]["burn_time_sec"] == None
+            if data["second_stage"]["burn_time_sec"] is None
             else data["second_stage"]["burn_time_sec"],
         }
         stages_stats = (
@@ -322,5 +322,5 @@ class Core:
         ).format(**engines_stats_kwargs)
         return base_stats, stages_stats, payload_weights_stats, engines_stats
 
-    def cog_unload(self): 
+    def cog_unload(self):
         self.bot.loop.create_task(self.session.close())

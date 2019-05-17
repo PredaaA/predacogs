@@ -18,7 +18,7 @@ class DblTools(commands.Cog):
     """Tools to get bots information from discordbots.org."""
 
     __author__ = "Predä"
-    __version__ = "1.1.0"
+    __version__ = "1.1.1"
 
     def __init__(self, bot):
         defaut = {"dbl_key": None}
@@ -44,10 +44,10 @@ class DblTools(commands.Cog):
             if resp.status == 401:
                 await ctx.send(_("This API key looks wrong, try to set it again."))
                 return None
-            elif resp.status == 404:
+            if resp.status == 404:
                 await ctx.send(_("This bot doesn't seem to be validated on Discord Bot List."))
                 return None
-            elif resp.status != 200:
+            if resp.status != 200:
                 await ctx.send(
                     "Error when trying to get DBL API. Error code: {}".format(inline(resp.status))
                 )
@@ -96,7 +96,7 @@ class DblTools(commands.Cog):
             return await ctx.send(_("Owner of this bot need to set an API key first !"))
         if bot is None:
             return await ctx.send_help()
-        if type(bot) == int:
+        if isinstance(bot, int):
             try:
                 bot = await self.bot.get_user_info(bot)
             except discord.errors.NotFound:
@@ -208,5 +208,5 @@ class DblTools(commands.Cog):
                 + inline(str(error))
             )
 
-    def cog_unload(self): 
+    def cog_unload(self):
         self.bot.loop.create_task(self.session.close())

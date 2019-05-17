@@ -13,7 +13,7 @@ class SpaceX(Core, commands.Cog):
     """Get multiple information about SpaceX using SpaceX-API."""
 
     __author__ = "Predä"
-    __version__ = "0.1.0"
+    __version__ = "0.1.1"
 
     @commands.group()
     async def spacex(self, ctx):

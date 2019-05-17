@@ -16,17 +16,17 @@ class ServerInfo(commands.Cog):
     """
 
     __author__ = "Predä"
-    __version__ = "1.2.0"
+    __version__ = "1.2.1"
 
     def __init__(self, bot):
         self.bot = bot
 
-    def cog_unload(self): 
+    def cog_unload(self):
         global _old_serverinfo
         if _old_serverinfo:
             try:
                 self.bot.remove_command("serverinfo")
-            except:
+            except Exception:
                 pass
             self.bot.add_command(_old_serverinfo)
 
@@ -174,8 +174,8 @@ class ServerInfo(commands.Cog):
             await ctx.send(_("I need the `Embed links` permission to send this."))
 
 
-def cog_unload(self): 
-    bot.add_command("serverinfo")
+def cog_unload(self):
+    self.bot.add_command("serverinfo")
 
 
 def setup(bot):

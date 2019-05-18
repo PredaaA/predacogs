@@ -85,7 +85,7 @@ class Core(Stuff):
         )
         return await ctx.send(msg)
 
-    async def _nsfw_channel_check(self, ctx, embed=None):
+    async def _nsfw_channel_check(self, ctx):
         """Message for non-nsfw channels."""
         if not ctx.message.channel.is_nsfw():
             embed = discord.Embed(

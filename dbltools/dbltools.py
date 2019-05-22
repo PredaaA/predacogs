@@ -159,9 +159,9 @@ class DblTools(commands.Cog):
                     "t_votes": (
                         bold(_("Total votes:"))
                         + (
-                            " {:,}\n\n".format(info["points"])
+                            " {:,}\n".format(info["points"])
                             if info.get("points", "")
-                            else "0\n\n"
+                            else "0\n"
                         )
                     ),
                     "approval_date": (

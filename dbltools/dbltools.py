@@ -101,6 +101,8 @@ class DblTools(commands.Cog):
             async with ctx.typing():
                 try:
                     info = await self._get_data(ctx, bot=bot.id)
+                    if info is None:
+                        return
                     stats = await self._get_data(ctx, endpoint="/stats", bot=bot.id)
                 except TypeError:
                     return

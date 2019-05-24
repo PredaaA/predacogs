@@ -18,7 +18,7 @@ class DblTools(commands.Cog):
     """Tools to get bots information from discordbots.org."""
 
     __author__ = "Predä"
-    __version__ = "1.2.0"
+    __version__ = "1.2.1"
 
     def __init__(self, bot):
         defaut = {"dbl_key": None}
@@ -156,6 +156,13 @@ class DblTools(commands.Cog):
                         bold(_("Total votes:"))
                         + (" {:,}\n".format(info["points"]) if info.get("points", "") else "0\n")
                     ),
+                    "owners": (
+                        bold(_("Owner{}: ").format("s" if len(info["owners"]) > 1 else ""))
+                        + ", ".join(
+                            [str((await self.bot.get_user_info(i))) for i in info["owners"]]
+                        )
+                        + "\n"  # Thanks Slime :ablobcatsipsweats:
+                    ),
                     "approval_date": (
                         bold(_("Approval date:"))
                         + " {}\n\n".format(info["date"].replace("T", " ")[:-5])
@@ -189,12 +196,13 @@ class DblTools(commands.Cog):
                     "{servs}{shards}"
                     "{m_votes}"
                     "{t_votes}"
+                    "{owners}"
                     "{approval_date}"
                     "{dbl_page}{if_inv}{if_supp}{if_gh}{if_wsite}"
                 ).format(**format_kwargs)
                 em = discord.Embed(color=(await ctx.embed_colour()), description=description)
                 em.set_author(
-                    name=_("DBL Stats of {}:").format(info["username"]),
+                    name=_("DBL Infos about {}:").format(info["username"]),
                     icon_url="https://cdn.discordapp.com/emojis/393548388664082444.gif",
                 )
                 em.set_thumbnail(url=bot.avatar_url_as(static_format="png"))

@@ -39,15 +39,15 @@ class DblTools(commands.Cog):
     async def _get_data(self, ctx, bot=None, endpoint: Optional[str] = ""):
         """Get data from discordbots.org."""
         key = await ctx.bot.db.api_tokens.get_raw("dbl", default=None)
-        headers = {"Authorization": key}
+        headers = {"Authorization": key["api_key"]}
         async with self.session.get(DBL_BASE_URL + str(bot) + endpoint, headers=headers) as resp:
             if resp.status == 401:
                 await ctx.send(_("This API key looks wrong, try to set it again."))
                 return None
-            elif resp.status == 404:
+            if resp.status == 404:
                 await ctx.send(_("This bot doesn't seem to be validated on Discord Bot List."))
                 return None
-            elif resp.status != 200:
+            if resp.status != 200:
                 await ctx.send(
                     "Error when trying to get DBL API. Error code: {}".format(inline(resp.status))
                 )

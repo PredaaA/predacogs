@@ -15,16 +15,23 @@ _ = Translator("Nsfw", __file__)
 class Nsfw(Core, commands.Cog):
     """Send random NSFW images from random subreddits"""
 
-    __author__ = ["Predä", "aikaterna"]
-    __version__ = "2.0.2"
+    __author__ = ["Predä", "aikaterna", "Choco"]
+    __version__ = "2.0.3"
 
     @commands.command()
     async def nsfwversion(self, ctx):
-        """Get the version of the installed Nsfw cog."""
+        """Get the version of the installed Nsfw cog"""
 
         await self._version_msg(ctx, self.__version__, self.__author__)
 
     @commands.command()
+    async def nsfwhelp(self, ctx):
+        """How to enable the command"""
+        await ctx.send("You need the \"nsfw\" role to be able to use the commands. Ask the Admins or Moderators to give it to you.")
+
+
+    @commands.command()
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def cleandm(self, ctx, number: int):
         """
@@ -41,6 +48,7 @@ class Nsfw(Core, commands.Cog):
         await ctx.tick()
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(name="4k", aliases=["4K", "fourk"])
     async def four_k(self, ctx):
@@ -49,6 +57,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("4k"), sub=sub.FOUR_K)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["oface", "ofaces"])
     async def ahegao(self, ctx):
@@ -57,6 +66,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("ahegao"), sub=sub.AHEGAO)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["butt", "booty"])
     async def ass(self, ctx):
@@ -65,6 +75,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("ass"), sub=sub.ASS)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["sodomy"])
     async def anal(self, ctx):
@@ -73,6 +84,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("anal"), sub=sub.ANAL)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["shibari"])
     async def bdsm(self, ctx):
@@ -81,6 +93,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("bdsm"), sub=sub.BDSM)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["blackdick", "bcock", "bdick", "blackcocks", "blackdicks"])
     async def blackcock(self, ctx):
@@ -89,6 +102,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("black cock"), sub=sub.BLACKCOCK)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["blowjobs", "blowj", "bjob", "fellatio", "fellation"])
     async def blowjob(self, ctx):
@@ -97,6 +111,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("blowjob"), sub=sub.BLOWJOB)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["boob", "boobies", "tits", "titties", "breasts", "breast"])
     async def boobs(self, ctx):
@@ -105,6 +120,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("boobs"), sub=sub.BOOBS)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["boless", "b_less"])
     async def bottomless(self, ctx):
@@ -113,6 +129,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("bottomless"), sub=sub.BOTTOMLESS)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command()
     async def cosplay(self, ctx):
@@ -121,6 +138,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("nsfw cosplay"), sub=sub.COSPLAY)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["cunni", "pussyeating"])
     async def cunnilingus(self, ctx):
@@ -129,6 +147,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("cunnilingus"), sub=sub.CUNNI)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["cum", "cums", "cumshots"])
     async def cumshot(self, ctx):
@@ -137,6 +156,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("cumshot"), sub=sub.CUMSHOTS)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["deept", "deepthroating"])
     async def deepthroat(self, ctx):
@@ -145,6 +165,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("deepthroat"), sub=sub.DEEPTHROAT)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["cock"])
     async def dick(self, ctx):
@@ -153,6 +174,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("dick"), sub=sub.DICK)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["doublep", "dpenetration", "doublepene", "doublepen"])
     async def doublepenetration(self, ctx):
@@ -161,6 +183,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("double penetration"), sub=sub.DOUBLE_P)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["futanari"])
     async def futa(self, ctx):
@@ -169,6 +192,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("futa"), sub=sub.FUTA)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["gpp"])
     async def gay(self, ctx):
@@ -177,6 +201,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("gay porn"), sub=sub.GAY_P)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["groups", "nudegroup", "nudegroups"])
     async def group(self, ctx):
@@ -185,6 +210,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, "groups nudes", sub=sub.GROUPS)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["hentaigif"])
     async def hentai(self, ctx):
@@ -193,6 +219,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg_others(ctx, _("hentai"), api_category=["hentai_anal", "hentai"])
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["lesbians"])
     async def lesbian(self, ctx):
@@ -201,6 +228,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("lesbian"), sub=sub.LESBIANS)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["milfs"])
     async def milf(self, ctx):
@@ -209,6 +237,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("milf"), sub=sub.MILF)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["oralsex"])
     async def oral(self, ctx):
@@ -217,6 +246,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("oral"), sub=sub.ORAL)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["pgif", "prongif"])
     async def porngif(self, ctx):
@@ -225,6 +255,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg_others(ctx, _("porn gif"), api_category=["pgif"])
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["flashinggirl"])
     async def public(self, ctx):
@@ -233,6 +264,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("public nude"), sub=sub.PUBLIC)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["vagina", "puss"])
     async def pussy(self, ctx):
@@ -241,6 +273,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("pussy"), sub=sub.PUSSY)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command()
     async def realgirls(self, ctx):
@@ -249,6 +282,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("real nudes"), sub=sub.REAL_GIRLS)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["redheads", "ginger", "gingers"])
     async def redhead(self, ctx):
@@ -257,6 +291,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("red head"), sub=sub.REDHEADS)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["r34"])
     async def rule34(self, ctx):
@@ -265,6 +300,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("rule34"), sub=sub.RULE_34)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["squirts"])
     async def squirt(self, ctx):
@@ -273,6 +309,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("squirt"), sub=sub.SQUIRTS)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["thighs", "legs"])
     async def thigh(self, ctx):
@@ -281,6 +318,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("thigh"), sub=sub.THIGHS)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["traps", "trans", "girldick", "girldicks", "shemale", "shemales"])
     async def trap(self, ctx):
@@ -289,6 +327,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("trap"), sub=sub.TRAPS)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["wild", "gwild"])
     async def gonewild(self, ctx):
@@ -297,6 +336,7 @@ class Nsfw(Core, commands.Cog):
         await self._send_msg(ctx, _("gonewild"), sub=sub.WILD)
 
     @commands.bot_has_permissions(embed_links=True)
+    @commands.has_role("nsfw")
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["yiffs"])
     async def yiff(self, ctx):

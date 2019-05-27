@@ -78,7 +78,7 @@ class Core(Stuff):
     async def _version_msg(self, ctx, version, authors):
         """Cog version message."""
         msg = box(
-            _("Nsfw cog version: {version}\n" "Authors: {authors}").format(
+            _("Nsfw cog version: {version}\nAuthors: {authors}").format(
                 version=version, authors=", ".join(authors)
             ),
             lang="py",

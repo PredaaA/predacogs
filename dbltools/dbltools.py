@@ -18,14 +18,14 @@ class DblTools(commands.Cog):
     """Tools to get bots information from discordbots.org."""
 
     __author__ = "Predä"
-    __version__ = "1.2.2"
+    __version__ = "1.2.3"
 
     def __init__(self, bot):
-        defaut = {"dbl_key": None}
         self.bot = bot
         self.session = aiohttp.ClientSession()
         self.config = Config.get_conf(self, 3329804706503720961, force_registration=True)
-        self.config.register_global(**defaut)
+        default = dict(dbl_key=None)
+        self.config.register_global(**default)
 
     # This part of code is originally from image.py of Red, I take it because it's amazing:
     # https://github.com/Cog-Creators/Red-DiscordBot/blob/V3/develop/redbot/cogs/image/image.py#L30

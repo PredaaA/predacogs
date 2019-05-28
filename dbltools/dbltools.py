@@ -18,7 +18,7 @@ class DblTools(commands.Cog):
     """Tools to get bots information from discordbots.org."""
 
     __author__ = "Predä"
-    __version__ = "1.2.3"
+    __version__ = "1.2.4"
 
     def __init__(self, bot):
         self.bot = bot
@@ -93,7 +93,7 @@ class DblTools(commands.Cog):
             return await ctx.send_help()
         if isinstance(bot, int):
             try:
-                bot = await self.bot.get_user_info(bot)
+                bot = await self.bot.fetch_user(bot)
             except discord.errors.NotFound:
                 return await ctx.send(str(bot) + _(" is not a Discord user."))
 
@@ -160,9 +160,7 @@ class DblTools(commands.Cog):
                     ),
                     "owners": (
                         bold(_("Owner{}: ").format("s" if len(info["owners"]) > 1 else ""))
-                        + ", ".join(
-                            [str((await self.bot.get_user_info(i))) for i in info["owners"]]
-                        )
+                        + ", ".join([str((await self.bot.fetch_user(i))) for i in info["owners"]])
                         + "\n"  # Thanks Slime :ablobcatsipsweats:
                     ),
                     "approval_date": (
@@ -211,7 +209,7 @@ class DblTools(commands.Cog):
                 return await ctx.send(embed=em)
         except Exception as error:
             return await ctx.send(
-                _("It doesn't seem to be a valid ID. Try again or check if the ID is right.\n")
+                _("Something went wrong when trying to get bot informations.\n")
                 + inline(str(error))
             )
 
@@ -227,7 +225,7 @@ class DblTools(commands.Cog):
             return await ctx.send_help()
         if isinstance(bot, int):
             try:
-                bot = await self.bot.get_user_info(bot)
+                bot = await self.bot.fetch_user(bot)
             except discord.errors.NotFound:
                 return await ctx.send(str(bot) + _(" is not a Discord user."))
 

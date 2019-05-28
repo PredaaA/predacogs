@@ -1,10 +1,12 @@
 import discord
 
+import lavalink
+
 from redbot.core import bank, commands, checks
 from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils.chat_formatting import bold
+from redbot.core.utils.chat_formatting import bold, humanize_timedelta
 
-import lavalink
+from datetime import datetime
 
 _ = Translator("MartTools", __file__)
 
@@ -14,10 +16,15 @@ class MartTools(commands.Cog):
     """Multiple tools that are originally used on Martine the BOT."""
 
     __author__ = "Predä"
-    __version__ = "1.1.0"
+    __version__ = "1.2.0"
 
     def __init__(self, bot):
         self.bot = bot
+
+    def get_bot_uptime(self):
+        delta = datetime.utcnow() - self.bot.uptime
+        uptime = humanize_timedelta(timedelta=delta)
+        return uptime
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
@@ -96,7 +103,7 @@ class MartTools(commands.Cog):
             Show the usage count of the bot.
             Commands processed, messages received, and music on servers.
         """
-        uptime = str(self.bot.get_cog("Core").get_bot_uptime())
+        uptime = str(self.get_bot_uptime())
         commands_count = "`{:,}`".format(self.bot.counter["processed_commands"])
         errors_count = "`{}`".format(self.bot.counter["command_error"])
         messages_read = "`{:,}`".format(self.bot.counter["messages_read"])

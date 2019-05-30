@@ -105,7 +105,7 @@ class MartTools(commands.Cog):
         """
         uptime = str(self.get_bot_uptime())
         commands_count = "`{:,}`".format(self.bot.counter["processed_commands"])
-        errors_count = "`{}`".format(self.bot.counter["command_error"])
+        errors_count = "`{:,}`".format(self.bot.counter["command_error"])
         messages_read = "`{:,}`".format(self.bot.counter["messages_read"])
         messages_sent = "`{:,}`".format(self.bot.counter["msg_sent"])
         try:

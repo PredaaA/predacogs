@@ -3,6 +3,7 @@ import discord
 import aiohttp
 import json
 
+from redbot.core import commands
 from redbot.core.i18n import Translator, cog_i18n
 from redbot.core.utils.chat_formatting import bold, box, inline
 
@@ -85,15 +86,6 @@ class Core(Stuff):
         )
         return await ctx.send(msg)
 
-    async def _nsfw_channel_check(self, ctx):
-        """Message for non-nsfw channels."""
-        if not ctx.message.channel.is_nsfw():
-            embed = discord.Embed(
-                title="\N{LOCK} " + _("You can't use that command in a non-NSFW channel !"),
-                color=0xAA0000,
-            )
-        return embed
-
     async def _make_embed(self, ctx, sub, name, url):
         """Function to make the embed for all Reddit API images."""
         url, subr = await self._get_imgs(ctx, sub=sub, url=None, subr=None)
@@ -157,28 +149,14 @@ class Core(Stuff):
         async with ctx.typing():
             if not ctx.guild or ctx.message.channel.is_nsfw():
                 embed = await self._make_embed(ctx, sub, name, url=None)
-        return await self._maybe_embed(
-            ctx,
-            embed=(
-                await self._nsfw_channel_check(ctx)
-                if (hasattr(ctx.channel, "is_nsfw") and (not (ctx.channel.is_nsfw())))
-                else embed
-            ),
-        )
+        return await self._maybe_embed(ctx, embed=embed)
 
     async def _send_msg_others(self, ctx, name, api_category=None):
         """Main function called in all Nekobot API commands."""
         async with ctx.typing():
             if not ctx.guild or ctx.message.channel.is_nsfw():
                 embed = await self._make_embed_others(ctx, name, api_category)
-        return await self._maybe_embed(
-            ctx,
-            embed=(
-                await self._nsfw_channel_check(ctx)
-                if (hasattr(ctx.channel, "is_nsfw") and (not (ctx.channel.is_nsfw())))
-                else embed
-            ),
-        )
+        return await self._maybe_embed(ctx, embed=embed)
 
     @staticmethod
     async def _embed(
@@ -190,5 +168,29 @@ class Core(Stuff):
             em.set_footer(text=footer)
         return em
 
-    def cog_unload(self): 
+    def cog_unload(self):
         self.bot.loop.create_task(self.session.close())
+
+
+def nsfwcheck():
+    """
+        Custom check that hide all commands used with it in the help formatter
+        and block usage of them if used in a non-nsfw channel.
+    """
+
+    async def predicate(ctx):
+        if ctx.guild:
+            check = True if ctx.message.channel.is_nsfw() else False
+            if ctx.invoked_with == "help" and not ctx.message.channel.is_nsfw():
+                return
+            if not ctx.message.channel.is_nsfw():
+                embed = discord.Embed(
+                    title="\N{LOCK} " + _("You can't use that command in a non-NSFW channel !"),
+                    color=0xAA0000,
+                )
+                await ctx.send(embed=embed)
+        else:
+            check = True
+        return check
+
+    return commands.check(predicate)

@@ -184,11 +184,12 @@ def nsfwcheck():
             if ctx.invoked_with == "help" and not ctx.message.channel.is_nsfw():
                 return
             if not ctx.message.channel.is_nsfw():
-                embed = discord.Embed(
-                    title="\N{LOCK} " + _("You can't use that command in a non-NSFW channel !"),
-                    color=0xAA0000,
-                )
-                await ctx.send(embed=embed)
+                msg = _("You can't use this command in a non-NSFW channel !")
+                try:
+                    embed = discord.Embed(title="\N{LOCK} " + msg, color=0xAA0000)
+                    await ctx.send(embed=embed)
+                except discord.Forbidden:
+                    await ctx.send(msg)
         else:
             check = True
         return check

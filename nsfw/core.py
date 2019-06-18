@@ -28,7 +28,7 @@ class Core(Stuff):
         self.bot = bot
         self.session = aiohttp.ClientSession()
 
-    async def _get_imgs(self, ctx, sub=None, url=None, subr=None):
+    async def _get_imgs(self, ctx, sub=None):
         """Get images from Reddit API."""
         try:
             async with self.session.get(REDDIT_BASEURL + choice(sub) + REDDIT_ENDPOINT) as reddit:
@@ -40,7 +40,7 @@ class Core(Stuff):
                     url = content["url"]
                     subr = content["subreddit"]
                 except (KeyError, ValueError, json.decoder.JSONDecodeError):
-                    url, subr = await self._get_imgs(ctx, sub=sub, url=url, subr=subr)
+                    url, subr = await self._get_imgs(ctx, sub=sub)
                 if url.startswith(IMGUR_LINKS):
                     url = url + ".png"
                 elif url.endswith(".mp4"):
@@ -50,7 +50,7 @@ class Core(Stuff):
                 elif not url.endswith(GOOD_EXTENSIONS) and not url.startswith(
                     "https://gfycat.com"
                 ):
-                    url, subr = await self._get_imgs(ctx, sub=sub, url=url, subr=subr)
+                    url, subr = await self._get_imgs(ctx, sub=sub)
                 return url, subr
         except aiohttp.client_exceptions.ClientConnectionError:
             await self._api_errors_msg(ctx, error_code="JSON decode failed")
@@ -88,7 +88,7 @@ class Core(Stuff):
 
     async def _make_embed(self, ctx, sub, name, url):
         """Function to make the embed for all Reddit API images."""
-        url, subr = await self._get_imgs(ctx, sub=sub, url=None, subr=None)
+        url, subr = await self._get_imgs(ctx, sub=sub)
         if url is None:
             return
         if url.endswith(GOOD_EXTENSIONS):
@@ -108,7 +108,7 @@ class Core(Stuff):
                 + _("Requested by {req} {emoji} • From {r}\n{url}")
             ).format(
                 name=name,
-                req=bold(f"{ctx.author.display_name}"),
+                req=bold(ctx.author.display_name),
                 emoji=await self.emoji(),
                 r=bold(f"r/{subr}"),
                 url=url,

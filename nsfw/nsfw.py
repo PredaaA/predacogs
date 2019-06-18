@@ -21,7 +21,7 @@ class Nsfw(Core, commands.Cog):
     """
 
     __author__ = ["Predä", "aikaterna"]
-    __version__ = "2.1.0"
+    __version__ = "2.1.1"
 
     @commands.command()
     async def nsfwversion(self, ctx):

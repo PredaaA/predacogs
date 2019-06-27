@@ -33,7 +33,8 @@ class Core(Stuff):
         try:
             async with self.session.get(REDDIT_BASEURL + choice(sub) + REDDIT_ENDPOINT) as reddit:
                 if reddit.status != 200:
-                    return None, await self._api_errors_msg(ctx, error_code=reddit.status)
+                    await self._api_errors_msg(ctx, error_code=reddit.status)
+                    return None, None
                 try:
                     data = await reddit.json(content_type=None)
                     content = data[0]["data"]["children"][0]["data"]
@@ -61,7 +62,8 @@ class Core(Stuff):
         try:
             async with self.session.get(NEKOBOT_BASEURL + choice(api_category)) as others:
                 if others.status != 200:
-                    return None, await self._api_errors_msg(ctx, error_code=others.status)
+                    await self._api_errors_msg(ctx, error_code=others.status)
+                    return None
                 data = await others.json(content_type=None)
                 url = data["message"]
                 return url

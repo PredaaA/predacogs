@@ -16,7 +16,7 @@ class MartTools(commands.Cog):
     """Multiple tools that are originally used on Martine the BOT."""
 
     __author__ = "Predä"
-    __version__ = "1.2.1"
+    __version__ = "1.3.0"
 
     def __init__(self, bot):
         self.bot = bot
@@ -46,6 +46,7 @@ class MartTools(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
+    @commands.bot_has_permissions(embed_links=True)
     async def bankstats(self, ctx):
         """Show stats of the bank."""
         icon = self.bot.user.avatar_url_as(static_format="png")
@@ -93,11 +94,10 @@ class MartTools(commands.Cog):
                 inline=False,
             )
         if created_at != no:
-            em.set_footer(text=_("Account created on: ") + str(created_at))
+            em.set_footer(text=_("Bank account created on: ") + str(created_at))
         await ctx.send(embed=em)
 
     @commands.command(aliases=["usagec"])
-    @commands.bot_has_permissions(embed_links=True)
     async def usagecount(self, ctx):
         """
             Show the usage count of the bot.
@@ -120,33 +120,39 @@ class MartTools(commands.Cog):
         guild_join = "`{:,}`".format(self.bot.counter["guild_join"])
         guild_leave = "`{:,}`".format(self.bot.counter["guild_remove"])
         avatar = self.bot.user.avatar_url_as(static_format="png")
-
-        em = discord.Embed(color=(await ctx.embed_colour()))
-        em.add_field(
-            name=_("Usage count of {} since last restart:").format(ctx.bot.user.name),
-            value=(
-                bold(_("Commands processed: "))
-                + _("{} commands.\n").format(commands_count)
-                + bold(_("Commands errors: "))
-                + _("{} errors.\n").format(errors_count)
-                + bold(_("Messages received: "))
-                + _("{} messages.\n").format(messages_read)
-                + bold(_("Messages sent: "))
-                + _("{} messages.\n").format(messages_sent)
-                + bold(_("Playing music on: "))
-                + _("{} servers.\n\n").format(total_num)
-                + bold(_("Servers joined: "))
-                + _("{} servers.\n").format(guild_join)
-                + bold(_("Servers left: "))
-                + _("{} servers.").format(guild_leave)
-            ),
+        msg = (
+            bold(_("Commands processed: "))
+            + _("{} commands.\n").format(commands_count)
+            + bold(_("Commands errors: "))
+            + _("{} errors.\n").format(errors_count)
+            + bold(_("Messages received: "))
+            + _("{} messages.\n").format(messages_read)
+            + bold(_("Messages sent: "))
+            + _("{} messages.\n").format(messages_sent)
+            + bold(_("Playing music on: "))
+            + _("{} servers.\n\n").format(total_num)
+            + bold(_("Servers joined: "))
+            + _("{} servers.\n").format(guild_join)
+            + bold(_("Servers left: "))
+            + _("{} servers.").format(guild_leave)
         )
-        em.set_thumbnail(url=avatar)
-        em.set_footer(text=_("Since {}").format(uptime))
-        await ctx.send(embed=em)
+        try:
+            em = discord.Embed(color=await ctx.embed_colour())
+            em.add_field(
+                name=_("Usage count of {} since last restart:").format(ctx.bot.user.name),
+                value=msg,
+            )
+            em.set_thumbnail(url=avatar)
+            em.set_footer(text=_("Since {}").format(uptime))
+            await ctx.send(embed=em)
+        except discord.Forbidden:
+            await ctx.send(
+                _("Usage count of {} since last restart:\n").format(ctx.bot.user.name)
+                + msg
+                + _("\n\nSince {}").format(uptime)
+            )
 
     @commands.command(aliases=["prefixes"])
-    @commands.bot_has_permissions(embed_links=True)
     async def prefix(self, ctx):
         """Show all prefixes of the bot"""
         default_prefixes = await ctx.bot.db.prefix()
@@ -159,31 +165,38 @@ class MartTools(commands.Cog):
 
         if not guild_prefixes:
             to_send = [f"`\u200b{p}\u200b`" for p in default_prefixes]
-            prefix_string = " ".join(to_send)
-            em = discord.Embed(color=(await ctx.embed_colour()))
-            em.add_field(
-                name=_("Prefix{es} of {name}:").format(
-                    es="es" if len(default_prefixes) >= 2 else "", name=bot_name
-                ),
-                value=prefix_string,
-            )
-            em.set_thumbnail(url=avatar)
-            await ctx.send(embed=em)
+            plural = _("es") if len(default_prefixes) >= 2 else ""
+            try:
+                em = discord.Embed(color=await ctx.embed_colour())
+                em.add_field(
+                    name=_("Prefix{es} of {name}:").format(es=plural, name=bot_name),
+                    value=" ".join(to_send),
+                )
+                em.set_thumbnail(url=avatar)
+                await ctx.send(embed=em)
+            except discord.Forbidden:
+                await ctx.send(
+                    bold(_("Prefix{es} of {name}:\n")).format(es=plural, name=bot_name)
+                    + " ".join(to_send)
+                )
         else:
             to_send = [f"`\u200b{p}\u200b`" for p in guild_prefixes]
-            prefix_string = " ".join(to_send)
-            em = discord.Embed(color=(await ctx.embed_colour()))
-            em.add_field(
-                name=_("Server prefix{es} of {name}:").format(
-                    es="es" if len(guild_prefixes) >= 2 else "", name=bot_name
-                ),
-                value=prefix_string,
-            )
-            em.set_thumbnail(url=avatar)
-            await ctx.send(embed=em)
+            plural = _("es") if len(guild_prefixes) >= 2 else ""
+            try:
+                em = discord.Embed(color=await ctx.embed_colour())
+                em.add_field(
+                    name=_("Server prefix{es} of {name}:").format(es=plural, name=bot_name),
+                    value=" ".join(to_send),
+                )
+                em.set_thumbnail(url=avatar)
+                await ctx.send(embed=em)
+            except discord.Forbidden:
+                await ctx.send(
+                    bold(_("Server prefix{es} of {name}:\n")).format(es=plural, name=bot_name)
+                    + " ".join(to_send)
+                )
 
     @commands.command(aliases=["serverc", "serversc"])
-    @commands.bot_has_permissions(embed_links=True)
     async def servercount(self, ctx):
         """Send servers stats of the bot."""
         shards = self.bot.shard_count
@@ -192,23 +205,24 @@ class MartTools(commands.Cog):
         total_users = sum(len(s.members) for s in self.bot.guilds)
         unique = len(self.bot.users)
 
-        em = discord.Embed(
-            color=(await ctx.embed_colour()),
-            description=_(
-                "{name} is running on `{shards:,}` shard{s}.\n"
-                "Serving `{servs:,}` servers (`{channels:,}` channels).\n"
-                "For a total of `{users:,}` users (`{unique:,}` unique)."
-            ).format(
-                name=ctx.bot.user.name,
-                shards=shards,
-                s="s" if shards >= 2 else "",
-                servs=servers,
-                channels=channels,
-                users=total_users,
-                unique=unique,
-            ),
+        msg = _(
+            "{name} is running on `{shards:,}` shard{s}.\n"
+            "Serving `{servs:,}` servers (`{channels:,}` channels).\n"
+            "For a total of `{users:,}` users (`{unique:,}` unique)."
+        ).format(
+            name=ctx.bot.user.name,
+            shards=shards,
+            s="s" if shards >= 2 else "",
+            servs=servers,
+            channels=channels,
+            users=total_users,
+            unique=unique,
         )
-        await ctx.send(embed=em)
+        try:
+            em = discord.Embed(color=await ctx.embed_colour(), description=msg)
+            await ctx.send(embed=em)
+        except discord.Forbidden:
+            await ctx.send(msg)
 
     @commands.command(aliases=["servreg"])
     async def serversregions(self, ctx):
@@ -252,8 +266,16 @@ class MartTools(commands.Cog):
         for k, v in new.items():
             msg += regions[str(k)] + f": `{v}`\n"
         guilds = len(self.bot.guilds)
-        em = discord.Embed(
-            color=await ctx.embed_colour(), title=_("Servers regions stats:"), description=msg
-        )
-        em.set_footer(text=_("For a total of {} servers").format(guilds))
-        await ctx.send(embed=em)
+
+        try:
+            em = discord.Embed(
+                color=await ctx.embed_colour(), title=_("Servers regions stats:"), description=msg
+            )
+            em.set_footer(text=_("For a total of {} servers").format(guilds))
+            await ctx.send(embed=em)
+        except discord.Forbidden:
+            await ctx.send(
+                bold(_("Servers regions stats:\n\n"))
+                + msg
+                + bold(_("\nFor a total of {} servers").format(guilds))
+            )

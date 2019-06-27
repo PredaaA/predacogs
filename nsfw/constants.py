@@ -111,6 +111,7 @@ BOOBS = [
     "BoobsBetweenArms",
     "BustyNaturals",
     "burstingout",
+    "boobgifs",
 ]
 BOTTOMLESS = ["upskirt", "Bottomless", "Bottomless_Vixens", "nopanties", "Pantiesdown"]
 COSPLAY = [

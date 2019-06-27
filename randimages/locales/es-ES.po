@@ -40,7 +40,7 @@ msgstr ""
 
 #: core.py:162 core.py:190
 msgid "Here is {name} gif ... "
-msgstr ""
+msgstr "Aqui esta el gif de {name}"
 
 #: core.py:164
 msgid ""
@@ -49,6 +49,10 @@ msgid ""
 "Requested by {req} • From {r}\n"
 "{url}"
 msgstr ""
+"\n"
+"\n"
+"Solicitado por {req} • Desde {r}\n"
+"{url}"
 
 #: core.py:178
 msgid ""
@@ -57,6 +61,10 @@ msgid ""
 "**[Link if you don't see image]({url})\n"
 "[Link of Reddit post]({post})**"
 msgstr ""
+"**Autor del Reddit:** {author}\n"
+"**Titulo:** {title}\n"
+"**[Enlace si no ven la imagen]({url})\n"
+"[Enlace del post de Reddit]({post})**"
 
 #: core.py:192
 msgid ""
@@ -68,52 +76,61 @@ msgid ""
 "Requested by {req} • From r/{r}\n"
 "**Link of Reddit post** {post}"
 msgstr ""
+"\n"
+"{url}\n"
+"\n"
+"**Autor del Reddit:** {author}\n"
+"**Titulo:** {title}\n"
+"Solicitado por {req} • Desde r/{r}\n"
+"**Link of Reddit post** {post}"
 
 #: core.py:214
 msgid "Here is {name} image ... "
-msgstr ""
+msgstr "Aqui esta la imagen de {name}"
 
 #: core.py:219 core.py:239
 msgid "Requested by {req} • From {source}"
-msgstr ""
+msgstr "Solicitado por {req} • Desde {source}"
 
 #: core.py:235
 msgid ""
 "{fact}\n"
 "[Link if you don't see image]({url})"
 msgstr ""
+"{fact}\n"
+"[Enlace si no ven la imagen]({url})"
 
 #: randimages.py:13
 #, docstring
 msgid "Send random images (animals, art ...) from different APIs."
-msgstr ""
+msgstr "Envía imágenes aleatorias (animales, arte ...) desde diferente APIs."
 
 #: randimages.py:19
 #, docstring
 msgid "Send art from random subreddits."
-msgstr ""
+msgstr "Enviar arte de subreddits aleatorios."
 
 #: randimages.py:22
 msgid "art image"
-msgstr ""
+msgstr "imagen del arte"
 
 #: randimages.py:29
 #, docstring
 msgid "Send a random birb image from alexflipnote API."
-msgstr ""
+msgstr "Envía una imagen de birb al azar desde la API de alexflipnote."
 
 #: randimages.py:33
 msgid "birb"
-msgstr ""
+msgstr "birb"
 
 #: randimages.py:45
 #, docstring
 msgid "Send a random cat image some-random-api.ml API."
-msgstr ""
+msgstr "Envia una imagen de un gato al azar desde some-random-api.ml API."
 
 #: randimages.py:49
 msgid "cat"
-msgstr ""
+msgstr "gato"
 
 #: randimages.py:61
 #, docstring
@@ -127,29 +144,29 @@ msgstr ""
 #: randimages.py:79
 #, docstring
 msgid "Send a random coffee image from alexflipnote API."
-msgstr ""
+msgstr "Enviar una imagen de café aleatoria de alexflipnote API."
 
 #: randimages.py:83
 msgid "your coffee"
-msgstr ""
+msgstr "su café"
 
 #: randimages.py:95
 #, docstring
 msgid "Send a random cute images from random subreddits."
-msgstr ""
+msgstr "Enviar un aleatorias imágenes lindas de subreddits aleatorios."
 
 #: randimages.py:98
 msgid "a cute image"
-msgstr ""
+msgstr "un imagen linda"
 
 #: randimages.py:105
 #, docstring
 msgid "Send a random dog image from random.dog API."
-msgstr ""
+msgstr "Envia una imagen de un perro desde el API de random.dog"
 
 #: randimages.py:109
 msgid "dog"
-msgstr ""
+msgstr "perro"
 
 #: randimages.py:121
 #, docstring
@@ -252,7 +269,7 @@ msgstr ""
 
 #: randimages.py:287
 #, docstring
-msgid "Send a random image from a choosen subreddit."
+msgid "Send a random image from that choosen subreddit."
 msgstr ""
 
 #: randimages.py:291

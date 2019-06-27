@@ -253,7 +253,7 @@ msgstr ""
 
 #: randimages.py:287
 #, docstring
-msgid "Send a random image from a choosen subreddit."
+msgid "Send a random image from that chosen subreddit."
 msgstr ""
 
 #: randimages.py:291

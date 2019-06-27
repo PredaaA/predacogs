@@ -287,7 +287,7 @@ class RandImages(Core, commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     @commands.command(aliases=["subr"])
     async def subreddit(self, ctx, *, subreddit):
-        """Send a random image from a choosen subreddit."""
+        """Send a random image from that chosen subreddit."""
 
         await self._send_reddit_msg(
             ctx,

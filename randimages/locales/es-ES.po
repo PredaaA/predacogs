@@ -36,7 +36,7 @@ msgstr "[Enlace si no ve la imagen]({url})"
 
 #: core.py:156 core.py:184
 msgid "Requested by {req} • From r/{r}"
-msgstr ""
+msgstr "Solicitado por {req} • Desde r/{r}"
 
 #: core.py:162 core.py:190
 msgid "Here is {name} gif ... "
@@ -86,7 +86,7 @@ msgstr ""
 
 #: core.py:214
 msgid "Here is {name} image ... "
-msgstr "Aqui esta la imagen de {name}"
+msgstr "Aqui esta la imagen de {name} ..."
 
 #: core.py:219 core.py:239
 msgid "Requested by {req} • From {source}"
@@ -108,7 +108,7 @@ msgstr "Envía imágenes aleatorias (animales, arte ...) desde diferente APIs."
 #: randimages.py:19
 #, docstring
 msgid "Send art from random subreddits."
-msgstr "Enviar arte de subreddits aleatorios."
+msgstr "Envía arte de subreddits aleatorios."
 
 #: randimages.py:22
 msgid "art image"
@@ -135,11 +135,11 @@ msgstr "gato"
 #: randimages.py:61
 #, docstring
 msgid "Send a random cat fact with a random cat image from some-random-api.ml API."
-msgstr ""
+msgstr "Envía un hecho aleatorio sobre gatos con una imagen aleatoria de gatos de la API some-random-api.ml."
 
 #: randimages.py:65
 msgid "a cat fact with a random cat image"
-msgstr ""
+msgstr "un hecho de gato pero con una imagen aleatoria"
 
 #: randimages.py:79
 #, docstring

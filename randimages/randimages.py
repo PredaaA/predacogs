@@ -13,7 +13,7 @@ class RandImages(Core, commands.Cog):
     """Send random images (animals, art ...) from different APIs."""
 
     __author__ = "Predä"
-    __version__ = "1.0"
+    __version__ = "1.0.1"
 
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.bot_has_permissions(embed_links=True)
@@ -287,7 +287,7 @@ class RandImages(Core, commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     @commands.command(aliases=["subr"])
     async def subreddit(self, ctx, *, subreddit):
-        """Send a random image from a choosen subreddit."""
+        """Send a random image from a chosen subreddit."""
 
         await self._send_reddit_msg(
             ctx,

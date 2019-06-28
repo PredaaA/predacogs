@@ -18,7 +18,7 @@ class DblTools(commands.Cog):
     """Tools to get bots information from discordbots.org."""
 
     __author__ = "Predä"
-    __version__ = "1.2.4"
+    __version__ = "1.2.5"
 
     def __init__(self, bot):
         self.bot = bot
@@ -98,6 +98,8 @@ class DblTools(commands.Cog):
                 bot = await self.bot.fetch_user(bot)
             except discord.errors.NotFound:
                 return await ctx.send(str(bot) + _(" is not a Discord user."))
+        if not bot.bot:
+            return await ctx.send(_("This is not a bot user, please try again with a bot."))
 
         try:
             async with ctx.typing():
@@ -230,6 +232,8 @@ class DblTools(commands.Cog):
                 bot = await self.bot.fetch_user(bot)
             except discord.errors.NotFound:
                 return await ctx.send(str(bot) + _(" is not a Discord user."))
+        if not bot.bot:
+            return await ctx.send(_("This is not a bot user, please try again with a bot."))
 
         async with ctx.typing():
             data = await self._get_data(ctx, bot=bot.id)

@@ -143,7 +143,7 @@ class Core(Stuff):
                 await ctx.send(embed=embed)
             else:
                 await ctx.send(embed)
-        except discord.errors.HTTPException:
+        except discord.HTTPException:
             return
 
     async def _send_msg(self, ctx, name, sub=None):

@@ -123,7 +123,7 @@ class Core:
                 em.add_field(name=title_api, value=desc_api)
                 em.add_field(name=title_cog, value=desc_cog)
                 return await ctx.send(embed=em)
-            except discord.errors.Forbidden:
+            except discord.Forbidden:
                 msg = (
                     f"**{title_api}**\n"
                     + description

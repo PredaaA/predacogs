@@ -96,7 +96,7 @@ class DblTools(commands.Cog):
         if isinstance(bot, int):
             try:
                 bot = await self.bot.fetch_user(bot)
-            except discord.errors.NotFound:
+            except discord.NotFound:
                 return await ctx.send(str(bot) + _(" is not a Discord user."))
         if not bot.bot:
             return await ctx.send(_("This is not a bot user, please try again with a bot."))
@@ -230,7 +230,7 @@ class DblTools(commands.Cog):
         if isinstance(bot, int):
             try:
                 bot = await self.bot.fetch_user(bot)
-            except discord.errors.NotFound:
+            except discord.NotFound:
                 return await ctx.send(str(bot) + _(" is not a Discord user."))
         if not bot.bot:
             return await ctx.send(_("This is not a bot user, please try again with a bot."))

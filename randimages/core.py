@@ -252,7 +252,7 @@ class Core:
                 await ctx.send(embed=embed)
             else:
                 await ctx.send(embed)
-        except discord.errors.HTTPException:
+        except discord.HTTPException:
             return
 
     async def _send_reddit_msg(self, ctx, name, emoji, details: bool = False, sub=None):

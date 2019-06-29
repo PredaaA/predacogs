@@ -16,7 +16,7 @@ class Converters(commands.Cog):
     """Some converters."""
 
     __author__ = "Predä"
-    __version__ = "0.2"
+    __version__ = "0.3.0"
 
     def __init__(self, bot):
         self.bot = bot
@@ -52,7 +52,7 @@ class Converters(commands.Cog):
     @convert.command()
     async def tounix(self, ctx, *, date):
         """
-            Convert a date to an unix timestamp.
+            Convert a date to a unix timestamp.
 
             Note: Need to respect this pattern `%Y-%m-%d %H:%M:%S`.
             Year-month-day Hour:minute:second
@@ -93,82 +93,105 @@ class Converters(commands.Cog):
             )
         )
 
-    @convert.command(aliases=["celsiustofahrenheit", "ctof", "celsiustokelvin", "ctok"])
-    async def celsius(self, ctx, temperature: float):
+    @convert.group(aliases=["c"])
+    async def celsius(self, ctx):
         """
             Convert degree Celsius to Fahrenheit or Kelvin.
             See correct usage bellow.
 
             Usage:
-            To Fahrenheit: `[p]convert ctof`
-            To Kelvin: `[p]convert ctok`
+            To Fahrenheit: `[p]convert celsius fahrenheit`
+            To Kelvin: `[p]convert celsius kelvin`
+            (You can also use `[p]convert c f` or `[p]convert c k`)
         """
+        pass
+
+    @celsius.command(name="fahrenheit", aliases=["f"])
+    async def celsius_to_fahrenheit(self, ctx, temperature: float):
+        """Convert degree Celsius to Fahrenheit."""
         if not temperature:
             return await ctx.send_help()
-        elif not ctx.invoked_with in ["celsiustofahrenheit", "ctof", "celsiustokelvin", "ctok"]:
-            return await ctx.send_help()
-        elif ctx.invoked_with in ["celsiustofahrenheit", "ctof"]:
-            fahrenheit = round((temperature * 1.8) + 32, 1)
-            msg = _("{temp:,}° Celsius is equal to {f:,}° Fahrenheit.").format(
-                temp=temperature, f=fahrenheit
-            )
-        elif ctx.invoked_with in ["celsiustokelvin", "ctok"]:
-            kelvin = round((temperature + 273.15), 1)
-            msg = _("{temp:,}° Celsius is equal to {k:,}° Kelvin.").format(
-                temp=temperature, k=kelvin
-            )
+        fahrenheit = round((temperature * 1.8) + 32, 1)
+        msg = _("{temp:,}° Celsius is equal to {f:,}° Fahrenheit.").format(
+            temp=temperature, f=fahrenheit
+        )
         await ctx.send(msg)
 
-    @convert.command(aliases=["fahrenheittocelsius", "ftoc", "fahrenheittokelvin", "ftok"])
-    async def fahrenheit(self, ctx, temperature: float):
+    @celsius.command(name="kelvin", aliases=["k"])
+    async def celsius_to_kelvin(self, ctx, temperature: float):
+        """Convert degree Celsius to Kelvin."""
+        if not temperature:
+            return await ctx.send_help()
+        kelvin = round((temperature + 273.15), 1)
+        msg = _("{temp:,}° Celsius is equal to {k:,}° Kelvin.").format(temp=temperature, k=kelvin)
+        await ctx.send(msg)
+
+    @convert.group(aliases=["f"])
+    async def fahrenheit(self, ctx):
         """
             Convert Fahrenheit degree to Celsius or Kelvin.
             See correct usage bellow.
 
             Usage:
-            To Celsius: `[p]convert ftoc`
-            To Kelvin: `[p]convert ftok`
+            To Celsius: `[p]convert fahrenheit celsius`
+            To Kelvin: `[p]convert fahrenheit kelvin`
+            (You can also use `[p]convert f c` or `[p]convert f k`)
         """
+        pass
+
+    @fahrenheit.command(name="celsius", aliases=["c"])
+    async def fahrenheit_to_celsius(self, ctx, temperature: float):
+        """Convert Fahrenheit degree to Celsius."""
         if not temperature:
             return await ctx.send_help()
-        elif not ctx.invoked_with in ["fahrenheittocelsius", "ftoc", "fahrenheittokelvin", "ftok"]:
-            return await ctx.send_help()
-        elif ctx.invoked_with in ["fahrenheittocelsius", "ftoc"]:
-            celsius = round((temperature - 32) / 1.8, 1)
-            msg = _("{temp:,}° Fahrenheit is equal to {c:,}° Celsius.").format(
-                temp=temperature, c=celsius
-            )
-        elif ctx.invoked_with in ["fahrenheittokelvin", "ftok"]:
-            kelvin = round((temperature - 32) * (5 / 9) + 273.15, 1)
-            msg = _("{temp:,}° Fahrenheit is equal to {k:,}° Kelvin.").format(
-                temp=temperature, k=kelvin
-            )
+        celsius = round((temperature - 32) / 1.8, 1)
+        msg = _("{temp:,}° Fahrenheit is equal to {c:,}° Celsius.").format(
+            temp=temperature, c=celsius
+        )
         await ctx.send(msg)
 
-    @convert.command(aliases=["kelvintofahrenheit", "ktof", "kelvintocelsius", "ktoc"])
-    async def kelvin(self, ctx, temperature: float):
+    @fahrenheit.command(name="kelvin", aliases=["k"])
+    async def fahrenheit_to_kelvin(self, ctx, temperature: float):
+        """Convert Fahrenheit degree to Kelvin."""
+        if not temperature:
+            return await ctx.send_help()
+        kelvin = round((temperature - 32) * (5 / 9) + 273.15, 1)
+        msg = _("{temp:,}° Fahrenheit is equal to {k:,}° Kelvin.").format(
+            temp=temperature, k=kelvin
+        )
+        await ctx.send(msg)
+
+    @convert.group(aliases=["k"])
+    async def kelvin(self, ctx):
         """
-            Convert Kelvin degree to Fahrenheit or Celsius.
+            Convert Kelvin degree to Celsius or Fahrenheit.
             See correct usage bellow.
 
             Usage:
-            To Fahrenheit: `[p]convert ktof`
-            To Celsius: `[p]convert ktoc`
+            To Celsius: `[p]convert kelvin celsius`
+            To Fahrenheit: `[p]convert kelvin fahrenheit`
+            (You can also use `[p]convert f c` or `[p]convert f k`)
         """
+        pass
+
+    @kelvin.command(name="celsius", aliases=["c"])
+    async def kelvin_to_celsius(self, ctx, temperature: float):
+        """Convert Kelvin degree to Celsius."""
         if not temperature:
             return await ctx.send_help()
-        elif not ctx.invoked_with in ["kelvintofahrenheit", "ktof", "kelvintocelsius", "ktoc"]:
+        celsius = round((temperature - 273.15) * (9 / 5) + 32, 1)
+        msg = _("{temp:,}° Kelvin is equal to {c:,}° Celsius.").format(temp=temperature, c=celsius)
+        await ctx.send(msg)
+
+    @kelvin.command(name="fahrenheit", aliases=["f"])
+    async def kelvin_to_fahrenheit(self, ctx, temperature: float):
+        """Convert Kelvin degree to Fahrenheit."""
+        if not temperature:
             return await ctx.send_help()
-        elif ctx.invoked_with in ["kelvintofahrenheit", "ktof"]:
-            fahrenheit = round((temperature - 273.15) * (9 / 5) + 32, 1)
-            msg = _("{temp:,}° Kelvin is equal to {f:,}° Fahrenheit.").format(
-                temp=temperature, f=fahrenheit
-            )
-        elif ctx.invoked_with in ["kelvintocelsius", "ktoc"]:
-            celsius = round((temperature - 273.15), 1)
-            msg = _("{temp:,}° Kelvin is equal to {c:,}° Celsius.").format(
-                temp=temperature, c=celsius
-            )
+        fahrenheit = round((temperature - 273.15), 1)
+        msg = _("{temp:,}° Kelvin is equal to {f:,}° Fahrenheit.").format(
+            temp=temperature, f=fahrenheit
+        )
         await ctx.send(msg)
 
     @convert.command(aliases=["lb"])
@@ -184,13 +207,13 @@ class Converters(commands.Cog):
         await ctx.send(_("{mass:,} kg is equal to {lb:,} lb.").format(mass=mass, lb=lb))
 
     @convert.command(aliases=["mi"])
-    async def miles(self, ctx, lenght: float):
-        """Convert miles to kilometers"""
-        km = round((lenght * 1.609344), 1)
-        await ctx.send(_("{lenght:,} mi is equal to {km:,} km.").format(lenght=lenght, km=km))
+    async def miles(self, ctx, length: float):
+        """Convert miles to kilometers."""
+        km = round((length * 1.609344), 1)
+        await ctx.send(_("{length:,} mi is equal to {km:,} km.").format(length=length, km=km))
 
     @convert.command(aliases=["km"])
-    async def kilometers(self, ctx, lenght: float):
+    async def kilometers(self, ctx, length: float):
         """Convert kilometers to miles."""
-        mi = round((lenght / 1.609344), 1)
-        await ctx.send(_("{lenght:,} km is equal to {mi:,} mi.").format(lenght=lenght, mi=mi))
+        mi = round((length / 1.609344), 1)
+        await ctx.send(_("{length:,} km is equal to {mi:,} mi.").format(length=length, mi=mi))

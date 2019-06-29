@@ -18,7 +18,7 @@ class DblTools(commands.Cog):
     """Tools to get bots information from discordbots.org."""
 
     __author__ = "Predä"
-    __version__ = "1.2.5"
+    __version__ = "1.2.6"
 
     def __init__(self, bot):
         self.bot = bot
@@ -90,7 +90,7 @@ class DblTools(commands.Cog):
         """
         key = await ctx.bot.db.api_tokens.get_raw("dbl", default=None)
         if key is None:
-            return await ctx.send(_("Owner of this bot need to set an API key first !"))
+            return await ctx.send(_("Owner of this bot needs to set an API key first !"))
         if bot is None:
             return await ctx.send_help()
         if isinstance(bot, int):
@@ -206,14 +206,14 @@ class DblTools(commands.Cog):
                 ).format(**format_kwargs)
                 em = discord.Embed(color=(await ctx.embed_colour()), description=description)
                 em.set_author(
-                    name=_("DBL Infos about {}:").format(info["username"]),
+                    name=_("DBL Info about {}:").format(info["username"]),
                     icon_url="https://cdn.discordapp.com/emojis/393548388664082444.gif",
                 )
                 em.set_thumbnail(url=bot.avatar_url_as(static_format="png"))
                 return await ctx.send(embed=em)
         except Exception as error:
             return await ctx.send(
-                _("Something went wrong when trying to get bot informations.\n")
+                _("Something went wrong when trying to get bot information.\n")
                 + inline(str(error))
             )
 

@@ -1,5 +1,5 @@
 {
-    "author": "Predä",
+    "author": ["Predä"],
     "install_msg": "Thank you for installing my RandImages cog !\nUse `[p]help RandImages` to get all commands.",
     "name": "RandImages",
     "short": "Send random images (animals, art ...) from different APIs.",

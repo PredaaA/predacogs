@@ -63,18 +63,18 @@ class ServerInfo(commands.Cog):
 
         format_kwargs = {
             "vip": check_feature("VIP_REGIONS"),
-            "van": f"{check_feature('VANITY_URL')} Vanity URL\n"
+            "van": _("{} Vanity URL\n").format(check_feature("VANITY_URL"))
             if ("VERIFIED" in ctx.guild.features or "PARTNERED" in ctx.guild.features)
             else "",
-            "splash": f"{check_feature('INVITE_SPLASH')} Splash Invite\n"
+            "splash": _("{} Splash Invite\n").format(check_feature("INVITE_SPLASH"))
             if ("VERIFIED" in ctx.guild.features or "PARTNERED" in ctx.guild.features)
             else "",
-            "m_emojis": f"{check_feature('MORE_EMOJI')} More Emojis\n"
+            "m_emojis": _("{} More Emojis\n").format(check_feature("MORE_EMOJI"))
             if "MORE_EMOJI" in ctx.guild.features
             else "",
             "verify": check_feature("VERIFIED"),
             "partner": check_feature("PARTNERED"),
-            "banner": f"{check_feature('BANNER')} Banner Image\n"
+            "banner": _("{} Banner Image\n").format(check_feature("BANNER"))
             if "VERIFIED" in ctx.guild.features
             else "",
         }
@@ -86,13 +86,13 @@ class ServerInfo(commands.Cog):
             "boostlevel": boostlevel,
             "nitroboosters": nitroboosters,
             "elimit": elimit,
-            "banner": f"{check_feature('BANNER')} Banner Image\n"
+            "banner": _("{} Banner Image\n").format(check_feature("BANNER"))
             if "VERIFIED" not in ctx.guild.features
             else "",
-            "van": f"{check_feature('VANITY_URL')} Vanity URL\n"
+            "van": _("{} Vanity URL\n").format(check_feature("VANITY_URL"))
             if ("VERIFIED" not in ctx.guild.features and "PARTNERED" not in ctx.guild.features)
             else "",
-            "splash": f"{check_feature('INVITE_SPLASH')} Splash Invite\n"
+            "splash": _("{} Splash Invite\n").format(check_feature("INVITE_SPLASH"))
             if ("VERIFIED" not in ctx.guild.features and "PARTNERED" not in ctx.guild.features)
             else "",
         }

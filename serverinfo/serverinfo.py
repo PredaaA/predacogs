@@ -48,6 +48,7 @@ class ServerInfo(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
+    @commands.bot_has_permissions(embed_links=True)
     async def serverinfo(self, ctx):
         """Show server information."""
         guild = ctx.guild
@@ -231,10 +232,7 @@ class ServerInfo(commands.Cog):
             )
         data.set_footer(text=joined_on)
 
-        try:
-            await ctx.send(embed=data)
-        except discord.Forbidden:
-            await ctx.send(_("I need the `Embed links` permission to send this."))
+        await ctx.send(embed=data)
 
 
 def cog_unload(self):

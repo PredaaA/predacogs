@@ -16,7 +16,7 @@ class ServerInfo(commands.Cog):
     """
 
     __author__ = "Predä"
-    __version__ = "1.2.2"
+    __version__ = "1.2.1"
 
     def __init__(self, bot):
         self.bot = bot
@@ -30,22 +30,70 @@ class ServerInfo(commands.Cog):
                 print(error)
             self.bot.add_command(_old_serverinfo)
 
+    @staticmethod
+    def _size(num):
+        for unit in ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB"]:
+            if abs(num) < 1024.0:
+                return "{0:.1f}{1}".format(num, unit)
+            num /= 1024.0
+        return "{0:.1f}{1}".format(num, "YB")
+
+    @staticmethod
+    def _bitsize(num):
+        for unit in ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB"]:
+            if abs(num) < 1000.0:
+                return "{0:.1f}{1}".format(num, unit)
+            num /= 1000.0
+        return "{0:.1f}{1}".format(num, "YB")
+
     @commands.command()
     @commands.guild_only()
-    @commands.bot_has_permissions(embed_links=True)
     async def serverinfo(self, ctx):
         """Show server information."""
         guild = ctx.guild
+        filelimit = self._size(guild.filesize_limit)
+        boostlevel = guild.premium_tier
+        nitroboosters = guild.premium_subscription_count
+        elimit = guild.emoji_limit
+        bitrate = self._bitsize(guild.bitrate_limit)
 
         def check_feature(feature):
             return "\N{WHITE HEAVY CHECK MARK}" if feature in guild.features else "\N{CROSS MARK}"
 
         format_kwargs = {
             "vip": check_feature("VIP_REGIONS"),
-            "van": check_feature("VANITY_URL"),
-            "splash": check_feature("INVITE_SPLASH"),
-            "m_emojis": check_feature("MORE_EMOJI"),
+            "van": f"{check_feature('VANITY_URL')} Vanity URL\n"
+            if ("VERIFIED" in ctx.guild.features or "PARTNERED" in ctx.guild.features)
+            else "",
+            "splash": f"{check_feature('INVITE_SPLASH')} Splash Invite\n"
+            if ("VERIFIED" in ctx.guild.features or "PARTNERED" in ctx.guild.features)
+            else "",
+            "m_emojis": f"{check_feature('MORE_EMOJI')} More Emojis\n"
+            if "MORE_EMOJI" in ctx.guild.features
+            else "",
             "verify": check_feature("VERIFIED"),
+            "partner": check_feature("PARTNERED"),
+            "banner": f"{check_feature('BANNER')} Banner Image\n"
+            if "VERIFIED" in ctx.guild.features
+            else "",
+        }
+
+        nitro_kwargs = {
+            "animatedicon": check_feature("ANIMATED_ICON"),
+            "filelimit": filelimit,
+            "bitrate": bitrate,
+            "boostlevel": boostlevel,
+            "nitroboosters": nitroboosters,
+            "elimit": elimit,
+            "banner": f"{check_feature('BANNER')} Banner Image\n"
+            if "VERIFIED" not in ctx.guild.features
+            else "",
+            "van": f"{check_feature('VANITY_URL')} Vanity URL\n"
+            if ("VERIFIED" not in ctx.guild.features and "PARTNERED" not in ctx.guild.features)
+            else "",
+            "splash": f"{check_feature('INVITE_SPLASH')} Splash Invite\n"
+            if ("VERIFIED" not in ctx.guild.features and "PARTNERED" not in ctx.guild.features)
+            else "",
         }
 
         verif = {
@@ -91,14 +139,14 @@ class ServerInfo(commands.Cog):
         text_channels = len(guild.text_channels)
         voice_channels = len(guild.voice_channels)
         passed = (ctx.message.created_at - guild.created_at).days
-        created_at = _("Created on **{date}**. That's over **{num}** days ago !").format(
+        created_at = _("Created on **{date}**. That's over **{num}** days ago!").format(
             date=guild.created_at.strftime("%d %b %Y %H:%M"), num=passed
         )
         joined_at = guild.me.joined_at
         since_joined = (ctx.message.created_at - joined_at).days
         bot_joined = joined_at.strftime("%d %b %Y %H:%M:%S")
         joined_on = _(
-            "{bot_name} joined this server on {bot_join}. That's over {since_join} days ago !"
+            "{bot_name} joined this server on {bot_join}. That's over {since_join} days ago!"
         ).format(bot_name=ctx.bot.user.name, bot_join=bot_joined, since_join=since_joined)
         data = discord.Embed(description=created_at, colour=(await ctx.embed_colour()))
         data.add_field(
@@ -152,14 +200,28 @@ class ServerInfo(commands.Cog):
             data.add_field(
                 name=_("Special features:"),
                 value=_(
-                    "{vip} VIP Regions\n{van} Vanity URL\n{splash} Splash Invite\n{m_emojis} More Emojis\n{verify} Verified"
+                    "{vip} VIP Regions\n{van}{splash}{m_emojis}{banner}{partner} Partnered\n"
+                    "{verify} Verified"
                 ).format(**format_kwargs),
+            )
+        if guild.features:
+            data.add_field(
+                name=_("Nitro Boost Features:"),
+                value=_(
+                    "{animatedicon} Animated Server Icon\n{banner}{van}{splash} File Size Limit **{filelimit}**\nNitro Boost Tier **{boostlevel}** with **{nitroboosters}** boosters\n"
+                    "Emoji Limit **{elimit}**\n Max Bitrate **{bitrate}**"
+                ).format(**nitro_kwargs),
             )
         data.set_author(name=guild.name)
         if "VERIFIED" in guild.features:
             data.set_author(
                 name=guild.name,
                 icon_url="https://cdn.discordapp.com/emojis/457879292152381443.png",
+            )
+        if "PARTNERED" in guild.features:
+            data.set_author(
+                name=guild.name,
+                icon_url="https://www.discordia.me/uploads/icons/partner.png",
             )
         if guild.icon_url:
             data.set_thumbnail(url=guild.icon_url)
@@ -169,7 +231,10 @@ class ServerInfo(commands.Cog):
             )
         data.set_footer(text=joined_on)
 
-        await ctx.send(embed=data)
+        try:
+            await ctx.send(embed=data)
+        except discord.Forbidden:
+            await ctx.send(_("I need the `Embed links` permission to send this."))
 
 
 def cog_unload(self):

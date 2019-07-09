@@ -186,6 +186,13 @@ def nsfwcheck():
             if ctx.invoked_with == "help" and not ctx.message.channel.is_nsfw():
                 return
             if not ctx.message.channel.is_nsfw():
+                if ctx.invoked_with not in [k for k in ctx.bot.all_commands]:
+                    # For this weird issue with last version of discord.py (1.2.3) with non-existing commands.
+                    # So this check is only for dev version of Red.
+                    # https://discordapp.com/channels/133049272517001216/133251234164375552/598149067268292648 for reference.
+                    # It probably need to check in d.py to see what is happening, looks like an issue somewhere.
+                    # It will probably removed in the future, it's a temporary check.
+                    return
                 msg = _("You can't use this command in a non-NSFW channel !")
                 try:
                     embed = discord.Embed(title="\N{LOCK} " + msg, color=0xAA0000)

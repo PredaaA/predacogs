@@ -58,44 +58,49 @@ class Core:
             return None, None
 
     async def _get_reddit_imgs_details(self, ctx, sub=None):
-        async with self.session.get(REDDIT_BASEURL + choice(sub) + REDDIT_ENDPOINT) as reddit:
-            if reddit.status == 404:
-                await ctx.send(_("This is not a valid subreddit."))
-                return None, None, None, None, None
-            if reddit.status != 200:
-                await self._api_errors_msg(ctx, error_code=reddit.status)
-                return None, None, None, None, None
-            try:
-                data = await reddit.json(content_type=None)
-                content = data[0]["data"]["children"][0]["data"]
-                author = content["author"]
-                title = content["title"]
-                url = content["url"]
-                subr = content["subreddit"]
-                nsfw = content["over_18"]
-                permalink = content["permalink"]
-                text = content["selftext"]
-                post = f"https://www.reddit.com{permalink}"
-                if ctx.guild and nsfw and not ctx.message.channel.is_nsfw():
-                    await ctx.send(embed=await self._nsfw_channel_check(ctx))
+        """Get images from Reddit API with more details."""
+        try:
+            async with self.session.get(REDDIT_BASEURL + choice(sub) + REDDIT_ENDPOINT) as reddit:
+                if reddit.status == 404:
+                    await ctx.send(_("This is not a valid subreddit."))
                     return None, None, None, None, None
-            except (KeyError, ValueError, json.decoder.JSONDecodeError):
-                author, title, url, subr, nsfw, text = await self._get_reddit_imgs_details(
-                    ctx, sub=sub
-                )
-            if url.startswith(IMGUR_LINKS):
-                url = url + ".png"
-            if url.endswith(".mp4"):
-                url = url[:-3] + "gif"
-            if url.endswith(".gifv"):
-                url = url[:-1]
-            if (
-                text
-                or not url.endswith(GOOD_EXTENSIONS)
-                and not url.startswith("https://gfycat.com")
-            ):
-                author, title, url, subr, nsfw = await self._get_reddit_imgs_details(ctx, sub=sub)
-        return url, subr, author, title, post
+                if reddit.status != 200:
+                    await self._api_errors_msg(ctx, error_code=reddit.status)
+                    return None, None, None, None, None
+                try:
+                    data = await reddit.json(content_type=None)
+                    content = data[0]["data"]["children"][0]["data"]
+                    author = content["author"]
+                    title = content["title"]
+                    url = content["url"]
+                    subr = content["subreddit"]
+                    nsfw = content["over_18"]
+                    permalink = content["permalink"]
+                    text = content["selftext"]
+                    post = f"https://www.reddit.com{permalink}"
+                    if ctx.guild and nsfw and not ctx.message.channel.is_nsfw():
+                        await ctx.send(embed=await self._nsfw_channel_check(ctx))
+                        return None, None, None, None, None
+                except (KeyError, ValueError, json.decoder.JSONDecodeError):
+                    author, title, url, subr, nsfw, text = await self._get_reddit_imgs_details(
+                        ctx, sub=sub
+                    )
+                if url.startswith(IMGUR_LINKS):
+                    url = url + ".png"
+                if url.endswith(".mp4"):
+                    url = url[:-3] + "gif"
+                if url.endswith(".gifv"):
+                    url = url[:-1]
+                if (
+                    text
+                    or not url.endswith(GOOD_EXTENSIONS)
+                    and not url.startswith("https://gfycat.com")
+                ):
+                    author, title, url, subr, nsfw = await self._get_reddit_imgs_details(ctx, sub=sub)
+            return url, subr, author, title, post
+        except aiohttp.client_exceptions.ClientConnectionError:
+            await self._api_errors_msg(ctx, error_code="JSON decode failed")
+            return None, None, None, None, None
 
     async def _get_others_imgs(self, ctx, facts: bool, img_url=None, facts_url=Optional[str]):
         """Get images from all other images APIs and facts if needed."""

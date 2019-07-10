@@ -134,7 +134,6 @@ CUMSHOTS = [
     "gwcumsluts",
     "ImpresssedByCum",
     "GirlsFinishingTheJob",
-    "cumshot",
     "amateurcumsluts",
     "unexpectedcum",
     "bodyshots",
@@ -248,7 +247,7 @@ RULE_34 = [
     "Rule34Overwatch",
     "WesternHentai",
 ]
-SQUIRTS = ["SquatSquirt", "GushingGirls", "squirts", "squirting_gifs", "squirting"]
+SQUIRTS = ["SquatSquirt", "GushingGirls", "squirting_gifs", "squirting"]
 THIGHS = ["Thighs", "ThickThighs", "thighhighs", "Thigh", "leggingsgonewild", "legsup"]
 TRAPS = [
     "Transex",

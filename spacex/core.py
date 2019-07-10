@@ -112,30 +112,22 @@ class Core:
                 docs = "https://documenter.getpostman.com/view/2025350/RWaEzAiG"
                 project_link = "https://github.com/r-spacex/SpaceX-API"
                 return
-            try:
-                title_api = "About SpaceX-API:\n"
-                title_cog = "About this cog:\n"
-                desc_api = (
-                    description + "\n**[Docs]({docs})** • **[Project Link]({project})**"
-                ).format(docs=docs, project=project_link)
-                desc_cog = "Cog version: " + version
-                em = discord.Embed(color=await ctx.embed_colour())
-                em.add_field(name=title_api, value=desc_api)
-                em.add_field(name=title_cog, value=desc_cog)
-                return await ctx.send(embed=em)
-            except discord.Forbidden:
-                msg = (
-                    f"**{title_api}**\n"
-                    + description
-                    + "\n\nDocs:\n"
-                    + docs
-                    + "\nProject Link:\n"
-                    + project_link
-                    + f"\n\n**{title_cog}**\n"
-                    + "Cog version: "
-                    + version
-                )
-                return await ctx.send(msg)
+
+            title_api = "About SpaceX-API:\n"
+            title_cog = "About this cog:\n"
+            desc_api = (
+                description + "\n**[Docs]({docs})** • **[Project Link]({project})**"
+            ).format(docs=docs, project=project_link)
+            desc_cog = (
+                f"Cog version: {version}\nYou can also use "
+                "[Space cog from kennnyshiwa](https://github.com/kennnyshiwa/kennnyshiwa-cogs) "
+                "for more about space in general, space pics, Astronomy Picture of the Day from Nasa, "
+                "ISS location ..."
+            )
+            em = discord.Embed(color=await ctx.embed_colour())
+            em.add_field(name=title_api, value=desc_api)
+            em.add_field(name=title_cog, value=desc_cog)
+        return await ctx.send(embed=em)
 
     async def _history_texts(self, data):
         description_kwargs = {

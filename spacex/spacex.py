@@ -13,7 +13,7 @@ class SpaceX(Core, commands.Cog):
     """Get multiple information about SpaceX using SpaceX-API."""
 
     __author__ = "Predä"
-    __version__ = "0.1.1"
+    __version__ = "0.1.2"
 
     @commands.group()
     async def spacex(self, ctx):
@@ -28,6 +28,7 @@ class SpaceX(Core, commands.Cog):
         await self._about(ctx)
 
     @spacex.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def aboutcog(self, ctx):
         """Send information about the cog and SpaceX-API."""
 

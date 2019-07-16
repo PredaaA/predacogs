@@ -10,7 +10,7 @@ from redbot.core.utils.chat_formatting import bold, box, inline
 from random import choice
 from typing import Optional
 
-from .constants import REDDIT_BASEURL, REDDIT_ENDPOINT, IMGUR_LINKS, GOOD_EXTENSIONS
+from .constants import REDDIT_BASEURL, IMGUR_LINKS, GOOD_EXTENSIONS
 
 _ = Translator("Image", __file__)
 
@@ -24,7 +24,7 @@ class Core:
     async def _get_reddit_imgs_simple(self, ctx, sub=None):
         """Get images from Reddit API."""
         try:
-            async with self.session.get(REDDIT_BASEURL + choice(sub) + REDDIT_ENDPOINT) as reddit:
+            async with self.session.get(REDDIT_BASEURL.format(choice(sub))) as reddit:
                 if reddit.status == 404:
                     await ctx.send(_("This is not a valid subreddit."))
                     return None, None
@@ -60,7 +60,7 @@ class Core:
     async def _get_reddit_imgs_details(self, ctx, sub=None):
         """Get images from Reddit API with more details."""
         try:
-            async with self.session.get(REDDIT_BASEURL + choice(sub) + REDDIT_ENDPOINT) as reddit:
+            async with self.session.get(REDDIT_BASEURL.format(choice(sub))) as reddit:
                 if reddit.status == 404:
                     await ctx.send(_("This is not a valid subreddit."))
                     return None, None, None, None, None

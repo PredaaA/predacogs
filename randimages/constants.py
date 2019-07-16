@@ -1,6 +1,4 @@
-REDDIT_BASEURL = "https://api.reddit.com/r/"
-REDDIT_ENDPOINT = "/random"
-NEKOBOT_BASEURL = "https://nekobot.xyz/api/image?type="
+REDDIT_BASEURL = "https://api.reddit.com/r/{}/random"
 IMGUR_LINKS = "http://imgur.com", "https://m.imgur.com", "https://imgur.com"
 GOOD_EXTENSIONS = ".png", ".jpg", ".jpeg", ".gif"
 

@@ -12,7 +12,6 @@ from typing import Optional
 
 from .constants import (
     REDDIT_BASEURL,
-    REDDIT_ENDPOINT,
     IMGUR_LINKS,
     GOOD_EXTENSIONS,
     NEKOBOT_BASEURL,
@@ -31,7 +30,7 @@ class Core(Stuff):
     async def _get_imgs(self, ctx, sub=None):
         """Get images from Reddit API."""
         try:
-            async with self.session.get(REDDIT_BASEURL + choice(sub) + REDDIT_ENDPOINT) as reddit:
+            async with self.session.get(REDDIT_BASEURL.format(choice(sub))) as reddit:
                 if reddit.status != 200:
                     await self._api_errors_msg(ctx, error_code=reddit.status)
                     return None, None
@@ -60,7 +59,7 @@ class Core(Stuff):
     async def _get_imgs_others(self, ctx, api_category=None):
         """Get images from Nekobot API for hentai and porngif commands."""
         try:
-            async with self.session.get(NEKOBOT_BASEURL + choice(api_category)) as others:
+            async with self.session.get(NEKOBOT_BASEURL.format(choice(api_category))) as others:
                 if others.status != 200:
                     await self._api_errors_msg(ctx, error_code=others.status)
                     return None

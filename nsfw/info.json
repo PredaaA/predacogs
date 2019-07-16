@@ -1,6 +1,6 @@
 {
     "author": ["Predä", "aikaterna"],
-    "install_msg": "Thank you for installing my Nsfw cog !\nImportant note: As indicated in name of this cog, it contains mature content and is not suited for all audiences, use it responsibly.\nUse `[p]help Nsfw` to get all commands.",
+    "install_msg": "Thank you for installing my Nsfw cog!\nImportant note: As indicated in name of this cog, it contains mature content and is not suited for all audiences, use it responsibly.\nUse `[p]help Nsfw` to get all commands.",
     "name": "Nsfw",
     "short": "Send random NSFW images from random subreddits and Nekobot API.",
     "description": "Send random NSFW images from random subreddits and Nekobot API in NSFW only channels.",

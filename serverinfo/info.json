@@ -1,6 +1,6 @@
 {
     "author": ["Predä"],
-    "install_msg": "Thank you for installing the serverinfo cog !",
+    "install_msg": "Thank you for installing the serverinfo cog!",
     "name": "ServerInfo",
     "short": "Replace original Red serverinfo command with more details.",
     "description": "Replace original Red serverinfo command with more details, about users and server.",

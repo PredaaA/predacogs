@@ -1,0 +1,398 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2019-07-22 12:43+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: redgettext 2.2\n"
+
+
+#: core.py:76
+msgid "Error when trying to contact image service, please try again later. "
+msgstr "Fout bij het proberen contact te maken met de beeldservice. Probeer het later opnieuw.""
+
+#: core.py:83
+msgid ""
+"Nsfw cog version: {version}\n"
+"Authors: {authors}"
+msgstr ""
+"Nsfw cog versie: {version}\n"
+"Auteurs: {authors}"
+
+#: core.py:98 core.py:126
+msgid "Here is {name} image ..."
+msgstr "Hier is {name} afbeelding ..."
+
+#: core.py:99 core.py:127
+msgid "[Link if you don't see image]({url})"
+msgstr "[Link als je geen afbeelding ziet]({url})"
+
+#: core.py:101
+msgid "Requested by {req} {emoji} • From r/{r}"
+msgstr "Aangevraagd door {req} {emoji} • Van r/{r}"
+
+#: core.py:107
+msgid "Here is {name} gif ..."
+msgstr "Hier is {name} gif ..."
+
+#: core.py:109
+msgid ""
+"Requested by {req} {emoji} • From {r}\n"
+"{url}"
+msgstr ""
+"Aangevraagd door {req} {emoji} • Van {r}\n"
+"{url}"
+
+#: core.py:129
+msgid "Requested by {req} {emoji} • From Nekobot API"
+msgstr "Aangevraagd door {req} {emoji} • Van Nekobot API"
+
+#: core.py:195
+msgid "You can't use this command in a non-NSFW channel !"
+msgstr "Je kunt die opdracht niet gebruiken in een niet-NSFW-kanaal!"
+
+#: nsfw.py:16
+#, docstring
+msgid ""
+"\n"
+"        Send random NSFW images from random subreddits\n"
+"\n"
+"        If `[p]help Nsfw` or any other Nsfw commands are used in a non-nsfw channel,\n"
+"        you will not be able to see the list of commands for this category.\n"
+"    "
+msgstr ""
+"\n"
+"        Stuur willekeurige NSFW-afbeeldingen van willekeurige subreddits\n"
+"\n"
+"        Typ `DP!help Nsfw`of een adnere nsfw command in niet-nsfw-kanalen,\n"
+"        dan zal je de lijst met opdrachten voor deze categorie niet kunnen zien.\n"
+"    "
+
+#: nsfw.py:28
+#, docstring
+msgid "Get the version of the installed Nsfw cog."
+msgstr "Download de versie van het geïnstalleerde Nsfw-cog."
+
+#: nsfw.py:36
+#, docstring
+msgid ""
+"\n"
+"            Delete a number specified of DM's from the bot.\n"
+"\n"
+"            `<number>`: Number of messages from the bot you want\n"
+"            to delete in your DM's.\n"
+"        "
+msgstr ""
+"\n"
+"            Verwijder een aantal opgegeven DM's uit de bot.\n"
+"\n"
+"            `<number>`: Aantal berichten die je wilt verwijderen\n"
+"            van de bot in je DM's.\n"
+"        "
+
+
+#: nsfw.py:43
+msgid "This command works only for DM's messages !"
+msgstr "Deze command werkt alleen in privé berichten!"
+
+#: nsfw.py:54
+#, docstring
+msgid "Show some 4k images from random subreddits."
+msgstr "Toon een aantal 4k-afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:56
+msgid "4k"
+msgstr "4k"
+
+#: nsfw.py:63
+#, docstring
+msgid "Show some ahegao images from random subreddits."
+msgstr "Toon enkele ahegao-afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:65
+msgid "ahegao"
+msgstr "ahego"
+
+#: nsfw.py:72
+#, docstring
+msgid "Show some ass images from random subreddits."
+msgstr "Toon enkele bibs-afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:74
+msgid "ass"
+msgstr "bips"
+
+#: nsfw.py:81
+#, docstring
+msgid "Show some anal images/gifs from random subreddits."
+msgstr "Toon enkele bips afbeeldingen / gifs van willekeurige subreddits."
+
+#: nsfw.py:83
+msgid "anal"
+msgstr "anaal"
+
+#: nsfw.py:90
+#, docstring
+msgid "Show some bdsm from random subreddits."
+msgstr "Toon enkele bdsm afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:92
+msgid "bdsm"
+msgstr "bdsm"
+
+#: nsfw.py:99
+#, docstring
+msgid "Show some blackcock images from random subreddits."
+msgstr "Toon enkele donkere piemels van willekeurige subreddits."
+
+#: nsfw.py:101
+msgid "black cock"
+msgstr "donkere piemels"
+
+#: nsfw.py:108
+#, docstring
+msgid "Show some blowjob images/gifs from random subreddits."
+msgstr "Toon enkele blowjob van willekeurige subreddits."
+
+#: nsfw.py:110
+msgid "blowjob"
+msgstr "blowjob"
+
+#: nsfw.py:117
+#, docstring
+msgid "Show some boobs images from random subreddits."
+msgstr "Toon enkele tieten van willekeurige subreddits."
+
+#: nsfw.py:119
+msgid "boobs"
+msgstr "tieten"
+
+#: nsfw.py:126
+#, docstring
+msgid "Show some bottomless images from random subreddits."
+msgstr "Toon enkele bottomless afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:128
+msgid "bottomless"
+msgstr "bottomless"
+
+#: nsfw.py:135
+#, docstring
+msgid "Show some nsfw cosplay images from random subreddits."
+msgstr "Toon enkele nsfw cosplay afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:137
+msgid "nsfw cosplay"
+msgstr "nsfw cosplay"
+
+#: nsfw.py:144
+#, docstring
+msgid "Show some cunnilingus images from random subreddits."
+msgstr "Toon enkele cunnilingus afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:146
+msgid "cunnilingus"
+msgstr "cunnilingus"
+
+#: nsfw.py:153
+#, docstring
+msgid "Show some cumshot images/gifs from random subreddits."
+msgstr "Toon enkele bdsm afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:155
+msgid "cumshot"
+msgstr ""
+
+#: nsfw.py:162
+#, docstring
+msgid "Show some deepthroat images from random subreddits."
+msgstr "Toon enkele feest-in-je-mond afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:164
+msgid "deepthroat"
+msgstr "feest-in-je-mond"
+
+#: nsfw.py:171
+#, docstring
+msgid "Show some dicks images from random subreddits."
+msgstr "Toon enkele piemels van willekeurige subreddits."
+
+#: nsfw.py:173
+msgid "dick"
+msgstr "piemels"
+
+#: nsfw.py:180
+#, docstring
+msgid "Show some double penetration images/gifs from random subreddits."
+msgstr "Toon enkele dubbel-feestje afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:182
+msgid "double penetration"
+msgstr "dubbel-feestje"
+
+#: nsfw.py:189
+#, docstring
+msgid "Show some futa images from random subreddits."
+msgstr "Toon enkele futa afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:191
+msgid "futa"
+msgstr "futa"
+
+#: nsfw.py:198
+#, docstring
+msgid "Show some gay porn from random subreddits."
+msgstr "Toon enkele homo porno afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:200
+msgid "gay porn"
+msgstr "homo porno"
+
+#: nsfw.py:207
+#, docstring
+msgid "Show some groups nudes from random subreddits."
+msgstr "Toon enkele afbeeldingen van naakte groepen van willekeurige subreddits."
+
+#: nsfw.py:216
+#, docstring
+msgid "Show some hentai images/gifs from Nekobot API."
+msgstr "Toon enkele hentai afbeeldingen van Nekobot API."
+
+#: nsfw.py:218
+msgid "hentai"
+msgstr "hentai"
+
+#: nsfw.py:225
+#, docstring
+msgid "Show some lesbian gifs or images from random subreddits."
+msgstr "Toon enkele lesbo afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:227
+msgid "lesbian"
+msgstr "lesbo"
+
+#: nsfw.py:234
+#, docstring
+msgid "Show some milf images from random subreddits."
+msgstr "Toon enkele milf afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:236
+msgid "milf"
+msgstr "milf"
+
+#: nsfw.py:243
+#, docstring
+msgid "Show some oral gifs or images from random subreddits."
+msgstr "Toon enkele orale afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:245
+msgid "oral"
+msgstr "oraal"
+
+#: nsfw.py:252
+#, docstring
+msgid "Show some porn gifs from Nekobot API."
+msgstr "Toon enkele porno gifjes van Nekobot API."
+
+#: nsfw.py:254
+msgid "porn gif"
+msgstr "porno gifjes"
+
+#: nsfw.py:261
+#, docstring
+msgid "Show some public nude images from random subreddits."
+msgstr "Toon enkele afbeeldingen van publiekelijk naakte mensen van willekeurige subreddits."
+
+#: nsfw.py:263
+msgid "public nude"
+msgstr "publiekelijk naakt"
+
+#: nsfw.py:270
+#, docstring
+msgid "Show some pussy nude images from random subreddits."
+msgstr "Toon enkele kutjes van willekeurige subreddits."
+
+#: nsfw.py:272
+msgid "pussy"
+msgstr "kutjes"
+
+#: nsfw.py:279
+#, docstring
+msgid "Show some real girls images from random subreddits."
+msgstr "Toon enkele naakte dames van willekeurige subreddits."
+
+#: nsfw.py:281
+msgid "real nudes"
+msgstr "echte naaktfoto's"
+
+#: nsfw.py:288
+#, docstring
+msgid "Show some red heads images from random subreddits."
+msgstr "Toon enkele roodharigen van willekeurige subreddits."
+
+#: nsfw.py:290
+msgid "red head"
+msgstr "roodharigen"
+
+#: nsfw.py:297
+#, docstring
+msgid "Show some rule34 images from random subreddits."
+msgstr "Toon enkele rule34 afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:299
+msgid "rule34"
+msgstr "rule34"
+
+#: nsfw.py:306
+#, docstring
+msgid "Show some squirts images from random subreddits."
+msgstr "Toon enkele squirt afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:308
+msgid "squirt"
+msgstr "squirts"
+
+#: nsfw.py:315
+#, docstring
+msgid "Show some thighs images from random subreddits."
+msgstr "Toon enkele thigh afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:317
+msgid "thigh"
+msgstr "thigh"
+
+#: nsfw.py:324
+#, docstring
+msgid "Show some traps from random subreddits."
+msgstr "Toon enkele trap afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:326
+msgid "trap"
+msgstr "trap"
+
+#: nsfw.py:333
+#, docstring
+msgid "Show some gonewild images from random subreddits."
+msgstr "Toon enkele gonewild afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:335
+msgid "gonewild"
+msgstr "gonewild"
+
+#: nsfw.py:342
+#, docstring
+msgid "Show some yiff images from random subreddits."
+msgstr "Toon enkele yiff afbeeldingen van willekeurige subreddits."
+
+#: nsfw.py:344
+msgid "yiff"
+msgstr "yiff"
+

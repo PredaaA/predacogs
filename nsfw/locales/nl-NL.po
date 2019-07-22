@@ -72,7 +72,7 @@ msgstr ""
 "\n"
 "        Stuur willekeurige NSFW-afbeeldingen van willekeurige subreddits\n"
 "\n"
-"        Typ `[p]help Nsfw`of een adnere nsfw command in niet-nsfw-kanalen,\n"
+"        Typ `[p]help Nsfw`of een andere nsfw command in niet-nsfw-kanalen,\n"
 "        dan zal je de lijst met opdrachten voor deze categorie niet kunnen zien.\n"
 "    "
 
@@ -205,11 +205,11 @@ msgstr "cunnilingus"
 #: nsfw.py:153
 #, docstring
 msgid "Show some cumshot images/gifs from random subreddits."
-msgstr "Toon enkele bdsm afbeeldingen van willekeurige subreddits."
+msgstr "Toon enkele cumshot afbeeldingen van willekeurige subreddits."
 
 #: nsfw.py:155
 msgid "cumshot"
-msgstr ""
+msgstr "cumshot"
 
 #: nsfw.py:162
 #, docstring

@@ -20,12 +20,12 @@ class MartTools(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        lavalink.register_event_listener(self.event_handler)
+        lavalink.register_event_listener(self.event_handler)  # To delete at next audio update.
 
-    def cog_unload(self):
+    def cog_unload(self):  # To delete at next audio update.
         lavalink.unregister_event_listener(self.event_handler)
 
-    async def event_handler(self, player, event_type, extra):
+    async def event_handler(self, player, event_type, extra):  # To delete at next audio update.
         # Thanks Draper#6666
         if event_type == lavalink.LavalinkEvents.TRACK_START:
             self.bot.counter["tracks_played"] += 1
@@ -52,6 +52,11 @@ class MartTools(commands.Cog):
     @commands.Cog.listener()
     async def on_guild_remove(self, guild: discord.Guild):
         self.bot.counter["guild_remove"] += 1
+
+    # Planned for next audio update.
+    # @commands.Cog.listener()
+    # async def on_track_start(self, guild: discord.Guild, track, reuester):
+    #     self.bot.counter["tracks_played"] += 1
 
     @commands.command()
     @commands.guild_only()

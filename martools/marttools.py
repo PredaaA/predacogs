@@ -16,10 +16,19 @@ class MartTools(commands.Cog):
     """Multiple tools that are originally used on Martine the BOT."""
 
     __author__ = "Predä"
-    __version__ = "1.3.0"
+    __version__ = "1.4.0"
 
     def __init__(self, bot):
         self.bot = bot
+        lavalink.register_event_listener(self.event_handler)
+
+    def cog_unload(self):
+        lavalink.unregister_event_listener(self.event_handler)
+
+    async def event_handler(self, player, event_type, extra):
+        # Thanks Draper#6666
+        if event_type == lavalink.LavalinkEvents.TRACK_START:
+            self.bot.counter["tracks_played"] += 1
 
     def get_bot_uptime(self):
         delta = datetime.utcnow() - self.bot.uptime
@@ -117,6 +126,7 @@ class MartTools(commands.Cog):
                 len([p for p in lavalink.players if p.current is not None]),
                 len([p for p in lavalink.players]),
             )
+        tracks_played = "`{:,}`".format(self.bot.counter["tracks_played"])
         guild_join = "`{:,}`".format(self.bot.counter["guild_join"])
         guild_leave = "`{:,}`".format(self.bot.counter["guild_remove"])
         avatar = self.bot.user.avatar_url_as(static_format="png")
@@ -130,7 +140,9 @@ class MartTools(commands.Cog):
             + bold(_("Messages sent: "))
             + _("{} messages.\n").format(messages_sent)
             + bold(_("Playing music on: "))
-            + _("{} servers.\n\n").format(total_num)
+            + _("{} servers.\n").format(total_num)
+            + bold(_("Tracks played: "))
+            + _("{} tracks.\n\n").format(tracks_played)
             + bold(_("Servers joined: "))
             + _("{} servers.\n").format(guild_join)
             + bold(_("Servers left: "))

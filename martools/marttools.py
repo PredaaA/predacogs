@@ -5,6 +5,7 @@ import lavalink
 from redbot.core import bank, commands, checks
 from redbot.core.i18n import Translator, cog_i18n
 from redbot.core.utils.chat_formatting import bold, humanize_timedelta
+# from redbot.cogs.audio.localtracks import Query <- Will be probably changed
 
 from datetime import datetime
 
@@ -55,8 +56,25 @@ class MartTools(commands.Cog):
 
     # Planned for next audio update.
     # @commands.Cog.listener()
-    # async def on_track_start(self, guild: discord.Guild, track, reuester):
+    # async def on_track_start(self, guild, track, requester):
     #     self.bot.counter["tracks_played"] += 1
+    #     query = Query.process_input(track.uri)
+    #     if track.__dict__["_info"]["isStream"]:
+    #         self.bot.counter["streams_played"] += 1
+    #     if query.is_youtube:
+    #         self.bot.counter["youtube_tracks"] += 1
+    #     if query.is_soundcloud:
+    #         self.bot.counter["soundcloud_tracks"] += 1
+    #     if query.is_bandcamp:
+    #         self.bot.counter["bandcamp_tracks"] += 1
+    #     if query.is_vimeo:
+    #         self.bot.counter["vimeo_tracks"] += 1
+    #     if query.is_mixer:
+    #         self.bot.counter["mixer_tracks"] += 1
+    #     if query.is_twitch:
+    #         self.bot.counter["twitch_tracks"] += 1
+    #     if query.is_other:
+    #         self.bot.counter["other_tracks"] += 1
 
     @commands.command()
     @commands.guild_only()

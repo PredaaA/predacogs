@@ -59,8 +59,16 @@ class MartTools(commands.Cog):
     # async def on_track_start(self, guild, track, requester):
     #     self.bot.counter["tracks_played"] += 1
     #     query = Query.process_input(track.uri)
-    #     if track.__dict__["_info"]["isStream"]:
+    #     if track.is_stream:
     #         self.bot.counter["streams_played"] += 1
+    #     if track.is_stream and query.is_youtube:
+    #         self.bot.counter["yt_streams_played"] += 1
+    #     if track.is_stream and query.is_mixer:
+    #         self.bot.counter["mixer_streams_played"] += 1
+    #     if track.is_stream and query.is_twitch:
+    #         self.bot.counter["ttv_streams_played"] += 1
+    #     if track.is_stream and query.is_other:
+    #         self.bot.counter["other_streams_played"] += 1
     #     if query.is_youtube:
     #         self.bot.counter["youtube_tracks"] += 1
     #     if query.is_soundcloud:

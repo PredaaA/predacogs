@@ -150,7 +150,7 @@ class Core:
     async def _make_embed_reddit_simple(self, ctx, sub, name, emoji, url):
         """Function to make the embed for all Reddit API images."""
         url, subr = await self._get_reddit_imgs_simple(ctx, sub=sub)
-        if url is None:
+        if not url:
             return
         if url.endswith(GOOD_EXTENSIONS):
             em = await self._embed(
@@ -173,7 +173,7 @@ class Core:
     async def _make_embed_reddit_details(self, ctx, sub, name, emoji, url):
         """Function to make the embed for all Reddit API images with details."""
         url, subr, author, title, post = await self._get_reddit_imgs_details(ctx, sub=sub)
-        if url is None:
+        if not url:
             return
         if url.endswith(GOOD_EXTENSIONS):
             em = await self._embed(
@@ -212,7 +212,7 @@ class Core:
     async def _make_embed_others_simple(self, ctx, name, emoji, url, img_arg, source):
         """Function to make the embed for all others APIs images."""
         data = await self._get_others_imgs(ctx, facts=False, img_url=url)
-        if data["img"] is None:
+        if not data:
             return
         em = await self._embed(
             color=await ctx.embed_colour(),
@@ -232,7 +232,7 @@ class Core:
     ):
         """Function to make the embed for all others APIs images."""
         data = await self._get_others_imgs(ctx, facts=True, img_url=img_url, facts_url=facts_url)
-        if data["img"] is None:
+        if not data:
             return
         em = await self._embed(
             color=await ctx.embed_colour(),

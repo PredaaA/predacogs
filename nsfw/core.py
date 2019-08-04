@@ -10,13 +10,7 @@ from redbot.core.utils.chat_formatting import bold, box, inline
 from random import choice
 from typing import Optional
 
-from .constants import (
-    REDDIT_BASEURL,
-    IMGUR_LINKS,
-    GOOD_EXTENSIONS,
-    NEKOBOT_BASEURL,
-    Stuff,
-)
+from .constants import REDDIT_BASEURL, IMGUR_LINKS, GOOD_EXTENSIONS, Stuff
 
 _ = Translator("Nsfw", __file__)
 
@@ -56,16 +50,20 @@ class Core(Stuff):
             await self._api_errors_msg(ctx, error_code="JSON decode failed")
             return None, None
 
-    async def _get_imgs_others(self, ctx, api_category=None):
-        """Get images from Nekobot API for hentai and porngif commands."""
+    async def _get_others_imgs(self, ctx, url=None):
+        """Get images from all other images APIs."""
         try:
-            async with self.session.get(NEKOBOT_BASEURL.format(choice(api_category))) as others:
-                if others.status != 200:
-                    await self._api_errors_msg(ctx, error_code=others.status)
+            async with self.session.get(url) as resp:
+                if resp.status != 200:
+                    await self._api_errors_msg(ctx, error_code=resp.status)
                     return None
-                data = await others.json(content_type=None)
-                url = data["message"]
-                return url
+                try:
+                    data = await resp.json(content_type=None)
+                except json.decoder.JSONDecodeError as exception:
+                    await self._api_errors_msg(ctx, error_code=exception)
+                    return None
+            data = dict(img=data)
+            return data
         except aiohttp.client_exceptions.ClientConnectionError:
             await self._api_errors_msg(ctx, error_code="JSON decode failed")
             return None
@@ -87,10 +85,10 @@ class Core(Stuff):
         )
         return await ctx.send(msg)
 
-    async def _make_embed(self, ctx, sub, name, url):
+    async def _make_embed(self, ctx, sub, name):
         """Function to make the embed for all Reddit API images."""
         url, subr = await self._get_imgs(ctx, sub=sub)
-        if url is None:
+        if not url:
             return
         if url.endswith(GOOD_EXTENSIONS):
             em = await self._embed(
@@ -116,18 +114,20 @@ class Core(Stuff):
             )
         return em
 
-    async def _make_embed_others(self, ctx, name, api_category):
-        """Function to make embed for Nekobot API images."""
-        url = await self._get_imgs_others(ctx, api_category=api_category)
-        if url is None:
+    async def _make_embed_other(self, ctx, name, url, arg, source):
+        """Function to make the embed for all others APIs images."""
+        data = await self._get_others_imgs(ctx, url=url)
+        if not data:
             return
         em = await self._embed(
-            color=0x891193,
+            color=await ctx.embed_colour(),
             title=(_("Here is {name} image ...") + " \N{EYES}").format(name=name),
-            description=bold(_("[Link if you don't see image]({url})")).format(url=url),
-            image=url,
-            footer=_("Requested by {req} {emoji} • From Nekobot API").format(
-                req=ctx.author.display_name, emoji=await self.emoji()
+            description=bold(_("[Link if you don't see image]({url})")).format(
+                url=data["img"][arg]
+            ),
+            image=data["img"][arg],
+            footer=_("Requested by {req} {emoji} • From {source}").format(
+                req=ctx.author.display_name, emoji=await self.emoji(), source=source
             ),
         )
         return em
@@ -148,16 +148,14 @@ class Core(Stuff):
     async def _send_msg(self, ctx, name, sub=None):
         """Main function called in all Reddit API commands."""
         async with ctx.typing():
-            if not ctx.guild or ctx.message.channel.is_nsfw():
-                embed = await self._make_embed(ctx, sub, name, url=None)
+            embed = await self._make_embed(ctx, sub, name)
         return await self._maybe_embed(ctx, embed=embed)
 
-    async def _send_msg_others(self, ctx, name, api_category=None):
-        """Main function called in all Nekobot API commands."""
+    async def _send_other_msg(self, ctx, name, arg, source, url=None):
+        """Main function called in all others APIs commands."""
         async with ctx.typing():
-            if not ctx.guild or ctx.message.channel.is_nsfw():
-                embed = await self._make_embed_others(ctx, name, api_category)
-        return await self._maybe_embed(ctx, embed=embed)
+            embed = await self._make_embed_other(ctx, name, url, arg, source)
+        return await self._maybe_embed(ctx, embed)
 
     @staticmethod
     async def _embed(

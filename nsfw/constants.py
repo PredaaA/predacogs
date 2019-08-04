@@ -17,7 +17,6 @@ class Stuff:
 
 
 REDDIT_BASEURL = "https://api.reddit.com/r/{}/random"
-NEKOBOT_BASEURL = "https://nekobot.xyz/api/image?type={}"
 IMGUR_LINKS = "http://imgur.com", "https://m.imgur.com", "https://imgur.com"
 GOOD_EXTENSIONS = ".png", ".jpg", ".jpeg", ".gif"
 
@@ -286,3 +285,10 @@ WILD = [
     "workgonewild",
 ]
 YIFF = ["Yiffbondage", "Hyiff", "femyiff", "yiff", "yiffgif"]
+
+# Other APIs
+NEKOBOT_HENTAI = choice(["hentai_anal", "hentai"])
+NEKOBOT_URL = "https://nekobot.xyz/api/image?type={}"
+
+NEKOS_LIFE_HOLO = choice(["holoero", "holo", "hololewd"])
+NEKOS_LIFE_URL = "https://nekos.life/api/v2/img/{}"

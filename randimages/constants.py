@@ -12,6 +12,7 @@ CUTE = [
     "FromKittenToCat",
     "cutecats",
 ]
+DUCKS = ["duck", "babyduckgifs"]
 FERRETS = ["ferret", "ferrets", "FerretsGoneWild"]
 MEMES = [
     "MemeEconomy",

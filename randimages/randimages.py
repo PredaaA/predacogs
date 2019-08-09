@@ -13,7 +13,7 @@ class RandImages(Core, commands.Cog):
     """Send random images (animals, art ...) from different APIs."""
 
     __author__ = "Predä"
-    __version__ = "1.0.2"
+    __version__ = "1.0.3"
 
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.bot_has_permissions(embed_links=True)
@@ -139,16 +139,10 @@ class RandImages(Core, commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def duck(self, ctx):
-        """Send a random fox image from random-d.uk API"""
+        """Send a random duck image from random subreddits."""
 
-        await self._send_other_msg(
-            ctx,
-            name=_("duck"),
-            emoji="\N{DUCK}",
-            source="random-d.uk",
-            img_url="https://random-d.uk/api/v1/random",
-            img_arg="url",
-            facts=False,
+        await self._send_reddit_msg(
+            ctx, name=_("a duck image"), emoji="\N{DUCK}", sub=sub.DUCKS, details=False
         )
 
     @commands.cooldown(1, 0.5, commands.BucketType.user)

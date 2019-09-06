@@ -13,24 +13,8 @@ class Listeners:
             if ctx.cog:
                 if commands.Cog._get_overridden_method(ctx.cog.cog_command_error) is not None:
                     return
-        if isinstance(
-            error,
-            (
-                commands.MissingRequiredArgument,
-                commands.ConversionFailure,
-                commands.UserInputError,
-                commands.DisabledCommand,
-                commands.CommandNotFound,
-                commands.BotMissingPermissions,
-                commands.UserFeedbackCheckFailure,
-                commands.CheckFailure,
-                commands.NoPrivateMessage,
-                commands.CommandOnCooldown,
-                getattr(commands, "ArgParserFailure", commands.UserInputError),
-            ),
-        ):
-            return
-        self.update_counters("command_error")
+        if isinstance(error, commands.CommandInvokeError):
+            self.update_counters("command_error")
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):

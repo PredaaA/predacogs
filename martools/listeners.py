@@ -89,7 +89,7 @@ class Listeners:
         self.update_counters("roles_removed")
 
     @commands.Cog.listener()
-    async def on_guild_role_update(self, role):
+    async def on_guild_role_update(self, before, after):
         self.update_counters("roles_updated")
 
     @commands.Cog.listener()

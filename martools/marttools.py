@@ -14,10 +14,10 @@ _ = Translator("MartTools", __file__)
 
 @cog_i18n(_)
 class MartTools(commands.Cog):
-    """Multiple tools that are originally used on Martine the BOT."""
+    """Multiple tools that are originally used on Martine."""
 
     __author__ = "Predä"
-    __version__ = "1.4.0"
+    __version__ = "1.4.1"
 
     def __init__(self, bot):
         self.bot = bot

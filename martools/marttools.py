@@ -29,6 +29,7 @@ class MartTools(Listeners, commands.Cog):
         self.counter = Counter()
         self.sticky_counter = Counter()
         self.config = Config.get_conf(self, 64481875498, force_registration=True)
+        self._monitor_time = datetime.utcnow().timestamp()
         global_defauls = dict(
             command_error=0,
             msg_sent=0,
@@ -82,14 +83,16 @@ class MartTools(Listeners, commands.Cog):
         await self.bot.wait_until_ready()
         with contextlib.suppress(asyncio.CancelledError):
             while True:
-                _date = datetime.utcnow().timestamp()
                 users_data = copy(self.sticky_counter)
                 self.sticky_counter = Counter()
                 async with self.config.all() as new_data:
                     for key, value in users_data.items():
-                        new_data[key] += value
+                        if key in new_data:
+                            new_data[key] += value
+                        else:
+                            new_data[key] = value
                     if "start_date" not in new_data:
-                        new_data["start_date"] = _date
+                        new_data["start_date"] = self._monitor_time
                 await asyncio.sleep(60)
 
     async def _clean_up(self):
@@ -97,7 +100,10 @@ class MartTools(Listeners, commands.Cog):
             self._task.cancel()
         async with self.config.all() as new_data:
             for key, value in self.sticky_counter.items():
-                new_data[key] += value
+                if key in new_data:
+                    new_data[key] += value
+                else:
+                    new_data[key] = value
 
     @commands.command()
     @commands.guild_only()

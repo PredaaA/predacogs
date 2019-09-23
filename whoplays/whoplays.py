@@ -11,6 +11,9 @@ class WhoPlays(commands.Cog):
         Rewritten for V3, from https://github.com/AznStevy/Maybe-Useful-Cogs/blob/master/whoplays/whoplays.py
     """
 
+    __author__ = ["Stevy", "Predä"]
+    __version__ = "0.5"
+
     def __init__(self, bot):
         self.bot = bot
 

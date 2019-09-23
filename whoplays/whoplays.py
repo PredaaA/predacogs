@@ -1,8 +1,8 @@
 import discord
-
-from redbot.core import commands
-
 import operator
+from redbot.core import commands
+from redbot.core.utils.chat_formatting import pagify
+from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
 
 
 class WhoPlays(commands.Cog):
@@ -22,13 +22,9 @@ class WhoPlays(commands.Cog):
             await ctx.send("You need at least 3 characters.")
             return
 
-        user = ctx.author
-        guild = ctx.guild
-        members = guild.members
-
-        playing_game = ""
+        member_list = []
         count_playing = 0
-        for member in members:
+        for member in ctx.guild.members:
             if not member:
                 continue
             if not member.activity or not member.activity.name:
@@ -36,34 +32,38 @@ class WhoPlays(commands.Cog):
             if member.bot:
                 continue
             if game.lower() in member.activity.name.lower():
+                member_list.append(member)
                 count_playing += 1
-                if count_playing <= 15:
-                    playing_game += "▸ {} ({})\n".format(member.name, member.activity.name)
 
-        if playing_game == "":
+        if count_playing == 0:
             await ctx.send("No one is playing that game.")
         else:
-            msg = playing_game
-            em = discord.Embed(description=msg, colour=user.colour)
-            if count_playing > 15:
-                showing = "(Showing 15/{})".format(count_playing)
-            else:
-                showing = "({})".format(count_playing)
-            text = "These are the people who are playing"
-            text += " {}:\n{}".format(game, showing)
-            em.set_author(name=text)
-            await ctx.send(embed=em)
+            sorted_list = sorted(member_list, key=lambda x: getattr(x, "name").lower())
+            playing_game = ""
+            for member in sorted_list:
+                playing_game += "▸ {} ({})\n".format(member.name, member.activity.name)
+            embed_list = []
+            in_pg_count = 0
+
+            for page in pagify(playing_game, delims=["\n"], page_length=400):
+                in_page = page.count("▸")
+                in_pg_count = in_pg_count + in_page
+                title = f"These are the people who are playing {game}:\n"
+                em = discord.Embed(description=page, colour=ctx.author.colour)
+                em.set_footer(text=f"Showing {in_pg_count}/{count_playing}")
+                em.set_author(name=title)
+                embed_list.append(em)
+
+            if len(embed_list) == 1:
+                return await ctx.send(embed=em)
+            await menu(ctx, embed_list, DEFAULT_CONTROLS)
 
     @commands.command()
     @commands.guild_only()
     async def cgames(self, ctx):
         """Shows the currently most played games"""
-        user = ctx.author
-        guild = ctx.guild
-        members = guild.members
-
         freq_list = {}
-        for member in members:
+        for member in ctx.guild.members:
             if not member:
                 continue
             if not member.activity or not member.activity.name:
@@ -86,6 +86,6 @@ class WhoPlays(commands.Cog):
                 game, freq = sorted_list[i]
                 msg += "▸ {}: __{}__\n".format(game, freq_list[game])
 
-            em = discord.Embed(description=msg, colour=user.colour)
+            em = discord.Embed(description=msg, colour=ctx.author.colour)
             em.set_author(name="These are the server's most played games at the moment:")
             await ctx.send(embed=em)

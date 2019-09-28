@@ -22,7 +22,7 @@ class MartTools(Listeners, commands.Cog):
     """Multiple tools that are originally used on Martine."""
 
     __author__ = "Predä"
-    __version__ = "1.5.0"
+    __version__ = "1.5.1"
 
     def __init__(self, bot):
         self.bot = bot
@@ -297,6 +297,7 @@ class MartTools(Listeners, commands.Cog):
             "vip-amsterdam": ":flag_nl:" + _(" __VIP__ Amsterdam"),
             "eu-west": ":flag_eu:" + _(" EU West"),
             "eu-central": ":flag_eu:" + _(" EU Central"),
+            "europe": ":flag_eu:" + _(" Europe"),
             "london": ":flag_gb:" + _(" London"),
             "frankfurt": ":flag_de:" + _(" Frankfurt"),
             "amsterdam": ":flag_nl:" + _(" Amsterdam"),

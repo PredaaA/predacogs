@@ -21,7 +21,7 @@ class Nsfw(Core, commands.Cog):
     """
 
     __author__ = ["Predä", "aikaterna"]
-    __version__ = "2.2.2"
+    __version__ = "2.2.3"
 
     @commands.command()
     async def nsfwversion(self, ctx):
@@ -180,6 +180,33 @@ class Nsfw(Core, commands.Cog):
         """Show some double penetration images/gifs from random subreddits."""
 
         await self._send_msg(ctx, _("double penetration"), sub=sub.DOUBLE_P)
+
+    @nsfwcheck()
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.cooldown(1, 0.5, commands.BucketType.user)
+    @commands.command(aliases=["facial"])
+    async def facials(self, ctx):
+        """Show some facials images from random subreddits."""
+
+        await self._send_msg(ctx, _("facials"), sub=sub.FACIALS)
+
+    @nsfwcheck()
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.cooldown(1, 0.5, commands.BucketType.user)
+    @commands.command(aliases=["feets", "feetish"])
+    async def feet(self, ctx):
+        """Show some feet images from random subreddits."""
+
+        await self._send_msg(ctx, _("feets"), sub=sub.FEET)
+
+    @nsfwcheck()
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.cooldown(1, 0.5, commands.BucketType.user)
+    @commands.command()
+    async def femdom(self, ctx):
+        """Show some femdom images from random subreddits."""
+
+        await self._send_msg(ctx, _("femdom"), sub=sub.FEMDOM)
 
     @nsfwcheck()
     @commands.bot_has_permissions(embed_links=True)

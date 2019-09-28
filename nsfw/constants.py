@@ -147,6 +147,9 @@ DEEPTHROAT = [
 ]
 DICK = ["DickPics4Freedom", "MassiveCock", "penis", "cock", "ThickDick", "bulges", "twinks"]
 DOUBLE_P = ["doublepenetration", "dp_porn", "Technical_DP"]
+FACIALS = ["facial", "EthnicGirlFacials", "facialcumshots", "FacialFun"]
+FEET = ["ButtsAndBareFeet", "Feet_NSFW", "feetish", "Feetup", "rule34feet", "StomachDownFeetUp"]
+FEMDOM = ["Femdom", "femdom", "FemdomHumiliation", "hentaifemdom"]
 FUTA = [
     "FutanariHentai",
     "FutanariPegging",

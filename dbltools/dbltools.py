@@ -18,28 +18,21 @@ class DblTools(commands.Cog):
     """Tools to get bots information from discordbots.org."""
 
     __author__ = "Predä"
-    __version__ = "1.2.6"
+    __version__ = "1.3"
 
     def __init__(self, bot):
         self.bot = bot
         self.session = aiohttp.ClientSession()
-        self.config = Config.get_conf(self, 3329804706503720961, force_registration=True)
-        default = dict(dbl_key=None)
-        self.config.register_global(**default)
-
-    # This part of code is originally from image.py of Red, I take it because it's amazing:
-    # https://github.com/Cog-Creators/Red-DiscordBot/blob/V3/develop/redbot/cogs/image/image.py#L30
-    async def initialize(self) -> None:
-        """Move the API keys from cog stored config to core bot config if they exist."""
-        dbl_key = await self.config.dbl_key()
-        if dbl_key is not None and "dbl" not in await self.bot.db.api_tokens():
-            await self.bot.db.api_tokens.set_raw("dbl", value={"api_key": dbl_key})
-            await self.config.dbl_key.clear()
 
     async def _get_data(self, ctx, bot=None, endpoint: Optional[str] = ""):
         """Get data from discordbots.org."""
-        key = await ctx.bot.db.api_tokens.get_raw("dbl", default=None)
-        headers = {"Authorization": key["api_key"]}
+        if hasattr(self.bot, "get_shared_api_tokens"):  # Red > 3.2
+            api = await self.bot.get_shared_api_tokens("dbl")
+            key = api.get("api_key")
+        else:  # Red < 3.2
+            api = await self.bot.db.api_tokens.get_raw("dbl", default=None)
+            key = api["api_key"]
+        headers = {"Authorization": key}
         async with self.session.get(DBL_BASE_URL + str(bot) + endpoint, headers=headers) as resp:
             if resp.status == 401:
                 await ctx.send(_("This API key looks wrong, try to set it again."))

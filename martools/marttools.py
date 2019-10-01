@@ -22,7 +22,7 @@ class MartTools(Listeners, commands.Cog):
     """Multiple tools that are originally used on Martine."""
 
     __author__ = "Predä"
-    __version__ = "1.5.1"
+    __version__ = "1.5.2"
 
     def __init__(self, bot):
         self.bot = bot
@@ -219,11 +219,18 @@ class MartTools(Listeners, commands.Cog):
     @commands.command(aliases=["prefixes"])
     async def prefix(self, ctx):
         """Show all prefixes of the bot"""
-        default_prefixes = await ctx.bot.db.prefix()
-        try:
-            guild_prefixes = await ctx.bot.db.guild(ctx.guild).prefix()
-        except AttributeError:
-            guild_prefixes = False
+        if hasattr(self.bot, "_config"):  # Red > 3.2
+            default_prefixes = await self.bot._config.prefix()
+            try:
+                guild_prefixes = await self.bot._config.guild(ctx.guild).prefix()
+            except AttributeError:
+                guild_prefixes = False
+        else:  # Red < 3.2
+            default_prefixes = await self.bot.db.prefix()
+            try:
+                guild_prefixes = await self.bot.db.guild(ctx.guild).prefix()
+            except AttributeError:
+                guild_prefixes = False
         bot_name = ctx.bot.user.name
         avatar = self.bot.user.avatar_url_as(static_format="png")
 

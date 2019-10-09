@@ -18,7 +18,7 @@ class DblTools(commands.Cog):
     """Tools to get bots information from Top.gg."""
 
     __author__ = "Predä"
-    __version__ = "1.3.1"
+    __version__ = "1.3.2"
 
     def __init__(self, bot):
         self.bot = bot

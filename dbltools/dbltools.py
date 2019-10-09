@@ -81,7 +81,12 @@ class DblTools(commands.Cog):
 
             `[bot]`: Can be a mention or ID of a bot.
         """
-        key = await ctx.bot.db.api_tokens.get_raw("dbl", default=None)
+        if hasattr(self.bot, "get_shared_api_tokens"):  # Red > 3.2
+            api = await self.bot.get_shared_api_tokens("dbl")
+            key = api.get("api_key")
+        else:  # Red < 3.2
+            api = await self.bot.db.api_tokens.get_raw("dbl", default=None)
+            key = api["api_key"]
         if key is None:
             return await ctx.send(_("Owner of this bot needs to set an API key first !"))
         if bot is None:
@@ -215,7 +220,12 @@ class DblTools(commands.Cog):
     @commands.cooldown(1, 1, commands.BucketType.user)
     async def dblwidget(self, ctx, *, bot: Union[int, discord.Member, discord.User, None] = None):
         """Send the widget of a chosen bot on Top.gg."""
-        key = await ctx.bot.db.api_tokens.get_raw("dbl", default=None)
+        if hasattr(self.bot, "get_shared_api_tokens"):  # Red > 3.2
+            api = await self.bot.get_shared_api_tokens("dbl")
+            key = api.get("api_key")
+        else:  # Red < 3.2
+            api = await self.bot.db.api_tokens.get_raw("dbl", default=None)
+            key = api["api_key"]
         if key is None:
             return await ctx.send(_("Owner of this bot need to set an API key first !"))
         if bot is None:

@@ -228,11 +228,11 @@ class MartTools(Listeners, commands.Cog):
         counters = defaultdict(int, self.counter)
         uptime = str(self.get_bot_uptime())
         try:
-            total_num = "`{:,}/{:,}`".format(
+            total_num = "{:,}/{:,}".format(
                 len(lavalink.active_players()), len(lavalink.all_players())
             )
         except AttributeError:  # Remove at 3.2
-            total_num = "`{:,}/{:,}`".format(
+            total_num = "{:,}/{:,}".format(
                 len([p for p in lavalink.players if p.current is not None]),
                 len([p for p in lavalink.players]),
             )

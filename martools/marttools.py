@@ -24,7 +24,7 @@ class MartTools(Listeners, commands.Cog):
     """Multiple tools that are originally used on Martine."""
 
     __author__ = "Predä"
-    __version__ = "1.5.3"
+    __version__ = "1.5.4"
 
     def __init__(self, bot):
         self.bot = bot

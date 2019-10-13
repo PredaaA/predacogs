@@ -7,16 +7,26 @@ import contextlib
 from copy import copy
 from datetime import datetime
 from collections import Counter, defaultdict
+from typing import Union  # <- Remove this at 3.2
+from babel.numbers import format_decimal  # <- Remove this at 3.2
 
 from redbot.core import Config, bank, commands
 from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils.chat_formatting import bold, box, humanize_number, humanize_timedelta
+from redbot.core.utils.chat_formatting import (
+    bold,
+    box,
+    humanize_timedelta,
+)  # , humanize_number <- Will be for 3.2
 
 # from redbot.cogs.audio.dataclasses import Query
 
 from .listeners import Listeners
 
 _ = Translator("MartTools", __file__)
+
+
+def humanize_number(val: Union[int, float]):  # <- Remove this at 3.2
+    return format_decimal(val, locale="en_US")
 
 
 @cog_i18n(_)
@@ -135,24 +145,28 @@ class MartTools(Listeners, commands.Cog):
         em.add_field(
             name=_("{} stats:").format("Global" if await bank.is_global() else "Bank"),
             value=_(
-                "Total accounts: **{all_accounts}**\nTotal amount: **{overall:,} {credits_name}**"
-            ).format(all_accounts=all_accounts, overall=overall, credits_name=credits_name),
+                "Total accounts: **{all_accounts}**\nTotal amount: **{overall} {credits_name}**"
+            ).format(
+                all_accounts=all_accounts,
+                overall=humanize_number(overall),
+                credits_name=credits_name,
+            ),
         )
         if pos is not None:
             percent = round((int(user_bal) / overall * 100), 3)
             em.add_field(
                 name=_("Your stats:"),
                 value=_(
-                    "You have **{bal:,} {currency}**.\n"
+                    "You have **{bal} {currency}**.\n"
                     "It's **{percent}%** of the {g}amount in the bank.\n"
-                    "You are **{pos:,}/{all_accounts:,}** in the {g}leaderboard."
+                    "You are **{pos}/{all_accounts}** in the {g}leaderboard."
                 ).format(
-                    bal=user_bal,
+                    bal=humanize_number(user_bal),
                     currency=credits_name,
                     percent=percent,
                     g="global " if await bank.is_global() else "",
-                    pos=pos,
-                    all_accounts=all_accounts,
+                    pos=humanize_number(pos),
+                    all_accounts=humanize_number(all_accounts),
                 ),
                 inline=False,
             )
@@ -167,22 +181,23 @@ class MartTools(Listeners, commands.Cog):
             Commands processed, messages received, and music on servers.
         """
         uptime = str(self.get_bot_uptime())
-        commands_count = "`{:,}`".format(self.counter["processed_commands"])
-        errors_count = "`{:,}`".format(self.counter["command_error"])
-        messages_read = "`{:,}`".format(self.counter["messages_read"])
-        messages_sent = "`{:,}`".format(self.counter["msg_sent"])
+        commands_count = "`{}`".format(humanize_number(self.counter["processed_commands"]))
+        errors_count = "`{}`".format(humanize_number(self.counter["command_error"]))
+        messages_read = "`{}`".format(humanize_number(self.counter["messages_read"]))
+        messages_sent = "`{}`".format(humanize_number(self.counter["msg_sent"]))
         try:
-            total_num = "`{:,}/{:,}`".format(
-                len(lavalink.active_players()), len(lavalink.all_players())
+            total_num = "`{}/{}`".format(
+                humanize_number(len(lavalink.active_players())),
+                humanize_number(len(lavalink.all_players())),
             )
-        except AttributeError:
-            total_num = "`{:,}/{:,}`".format(
-                len([p for p in lavalink.players if p.current is not None]),
-                len([p for p in lavalink.players]),
+        except AttributeError:  # Remove at 3.2
+            total_num = "`{}/{}`".format(
+                humanize_number(len([p for p in lavalink.players if p.current is not None])),
+                humanize_number(len([p for p in lavalink.players])),
             )
-        tracks_played = "`{:,}`".format(self.counter["tracks_played"])
-        guild_join = "`{:,}`".format(self.counter["guild_join"])
-        guild_leave = "`{:,}`".format(self.counter["guild_remove"])
+        tracks_played = "`{}`".format(humanize_number(self.counter["tracks_played"]))
+        guild_join = "`{}`".format(humanize_number(self.counter["guild_join"]))
+        guild_leave = "`{}`".format(humanize_number(self.counter["guild_remove"]))
         avatar = self.bot.user.avatar_url_as(static_format="png")
         msg = (
             bold(_("Commands processed: "))
@@ -228,13 +243,14 @@ class MartTools(Listeners, commands.Cog):
         counters = defaultdict(int, self.counter)
         uptime = str(self.get_bot_uptime())
         try:
-            total_num = "{:,}/{:,}".format(
-                len(lavalink.active_players()), len(lavalink.all_players())
+            total_num = "{}/{}".format(
+                humanize_number(len(lavalink.active_players())),
+                humanize_number(len(lavalink.all_players())),
             )
         except AttributeError:  # Remove at 3.2
-            total_num = "{:,}/{:,}".format(
-                len([p for p in lavalink.players if p.current is not None]),
-                len([p for p in lavalink.players]),
+            total_num = "{}/{}".format(
+                humanize_number(len([p for p in lavalink.players if p.current is not None])),
+                humanize_number(len([p for p in lavalink.players])),
             )
 
         em = discord.Embed(
@@ -245,11 +261,11 @@ class MartTools(Listeners, commands.Cog):
             name=_("Message Stats"),
             value=box(
                 _(
-                    "Messages Read:       {messages_read}\n"
-                    "Messages Sent:       {msg_sent}\n"
-                    "Messages Deleted:    {messages_deleted}\n"
-                    "Messages Edited      {messages_edited}\n"
-                    "DMs Received:        {dms_received}\n"
+                    "Messages Read       : {messages_read:,}\n"
+                    "Messages Sent       : {msg_sent:,}\n"
+                    "Messages Deleted    : {messages_deleted:,}\n"
+                    "Messages Edited     : {messages_edited:,}\n"
+                    "DMs Received        : {dms_received:,}\n"
                 ).format_map(counters),
                 lang="prolog",
             ),
@@ -259,9 +275,9 @@ class MartTools(Listeners, commands.Cog):
             name=_("Commands Stats"),
             value=box(
                 _(
-                    "Commands Processed:  {processed_commands}\n"
-                    "Errors Occured:      {command_error}\n"
-                    "Sessions Resumed:    {sessions_resumed}\n"
+                    "Commands Processed  : {processed_commands:,}\n"
+                    "Errors Occured      : {command_error:,}\n"
+                    "Sessions Resumed    : {sessions_resumed:,}\n"
                 ).format_map(counters),
                 lang="prolog",
             ),
@@ -271,7 +287,8 @@ class MartTools(Listeners, commands.Cog):
             name=_("Guild Stats"),
             value=box(
                 _(
-                    "Guilds Joined:       {guild_join}\n" "Guilds Left:         {guild_remove}\n"
+                    "Guilds Joined       : {guild_join:,}\n"
+                    "Guilds Left         : {guild_remove:,}\n"
                 ).format_map(counters),
                 lang="prolog",
             ),
@@ -281,10 +298,10 @@ class MartTools(Listeners, commands.Cog):
             name=_("User Stats"),
             value=box(
                 _(
-                    "New Users:           {new_members}\n"
-                    "Left Users:          {members_left}\n"
-                    "Banned Users:        {members_banned}\n"
-                    "Unbanned Users:      {members_unbanned}\n"
+                    "New Users           : {new_members:,}\n"
+                    "Left Users          : {members_left:,}\n"
+                    "Banned Users        : {members_banned:,}\n"
+                    "Unbanned Users      : {members_unbanned:,}\n"
                 ).format_map(counters),
                 lang="prolog",
             ),
@@ -294,9 +311,9 @@ class MartTools(Listeners, commands.Cog):
             name=_("Role Stats"),
             value=box(
                 _(
-                    "Roles Added:         {roles_added}\n"
-                    "Roles Removed:       {roles_removed}\n"
-                    "Roles Updated:       {roles_updated}\n"
+                    "Roles Added         : {roles_added:,}\n"
+                    "Roles Removed       : {roles_removed:,}\n"
+                    "Roles Updated       : {roles_updated:,}\n"
                 ).format_map(counters),
                 lang="prolog",
             ),
@@ -306,11 +323,11 @@ class MartTools(Listeners, commands.Cog):
             name=_("Emoji Stats"),
             value=box(
                 _(
-                    "Reacts Added:        {reactions_added}\n"
-                    "Reacts Removed:      {reactions_removed}\n"
-                    "Emoji Added:         {emojis_added}\n"
-                    "Emoji Removed:       {emojis_removed}\n"
-                    "Emoji Updated:       {emojis_updated}\n"
+                    "Reacts Added        : {reactions_added:,}\n"
+                    "Reacts Removed      : {reactions_removed:,}\n"
+                    "Emoji Added         : {emojis_added:,}\n"
+                    "Emoji Removed       : {emojis_removed:,}\n"
+                    "Emoji Updated       : {emojis_updated:,}\n"
                 ).format_map(counters),
                 lang="prolog",
             ),
@@ -320,9 +337,9 @@ class MartTools(Listeners, commands.Cog):
             name=_("Audio Stats"),
             value=box(
                 _(
-                    "Users Who Joined VC: {users_joined_bot_music_room}\n"
-                    "Tracks Played:       {tracks_played}\n"
-                    "Number Of Players:   {total_num}"
+                    "Users Who Joined VC : {users_joined_bot_music_room:,}\n"
+                    "Tracks Played       : {tracks_played:,}\n"
+                    "Number Of Players   : {total_num}"
                 ).format(
                     users_joined_bot_music_room=counters["users_joined_bot_music_room"],
                     tracks_played=counters["tracks_played"],
@@ -390,24 +407,18 @@ class MartTools(Listeners, commands.Cog):
     @commands.command(aliases=["serverc", "serversc"])
     async def servercount(self, ctx):
         """Send servers stats of the bot."""
-        shards = self.bot.shard_count
-        servers = len(self.bot.guilds)
-        channels = sum(len(s.channels) for s in self.bot.guilds)
-        total_users = sum(len(s.members) for s in self.bot.guilds)
-        unique = len(self.bot.users)
-
         msg = _(
-            "{name} is running on `{shards:,}` shard{s}.\n"
-            "Serving `{servs:,}` servers (`{channels:,}` channels).\n"
-            "For a total of `{users:,}` users (`{unique:,}` unique)."
+            "{name} is running on `{shards}` shard{s}.\n"
+            "Serving `{servs}` servers (`{channels}` channels).\n"
+            "For a total of `{users}` users (`{unique}` unique)."
         ).format(
             name=ctx.bot.user.name,
-            shards=shards,
-            s="s" if shards >= 2 else "",
-            servs=servers,
-            channels=channels,
-            users=total_users,
-            unique=unique,
+            shards=humanize_number(self.bot.shard_count),
+            s="s" if self.bot.shard_count >= 2 else "",
+            servs=humanize_number(len(self.bot.guilds)),
+            channels=humanize_number(sum(len(s.channels) for s in self.bot.guilds)),
+            users=humanize_number(sum(len(s.members) for s in self.bot.guilds)),
+            unique=humanize_number(len(self.bot.users)),
         )
         try:
             em = discord.Embed(color=await ctx.embed_colour(), description=msg)
@@ -456,18 +467,18 @@ class MartTools(Listeners, commands.Cog):
             new[entry[0]] = entry[1]
         msg = ""
         for k, v in new.items():
-            msg += regions[str(k)] + f": `{v}`\n"
+            msg += regions[str(k)] + f": `{v:,}`\n"
         guilds = len(self.bot.guilds)
 
         try:
             em = discord.Embed(
                 color=await ctx.embed_colour(), title=_("Servers regions stats:"), description=msg
             )
-            em.set_footer(text=_("For a total of {} servers").format(guilds))
+            em.set_footer(text=_("For a total of {:,} servers").format(guilds))
             await ctx.send(embed=em)
         except discord.Forbidden:
             await ctx.send(
                 bold(_("Servers regions stats:\n\n"))
                 + msg
-                + bold(_("\nFor a total of {} servers").format(guilds))
+                + bold(_("\nFor a total of {:,} servers").format(guilds))
             )

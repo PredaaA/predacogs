@@ -1,15 +1,17 @@
+import discord
+
 import asyncio
+import lavalink
 import contextlib
-from collections import Counter
+
 from copy import copy
 from datetime import datetime
-
-import discord
-import lavalink
+from collections import Counter, defaultdict
 
 from redbot.core import Config, bank, commands
 from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils.chat_formatting import bold, humanize_timedelta, box
+from redbot.core.utils.chat_formatting import bold, box, humanize_number, humanize_timedelta
+
 # from redbot.cogs.audio.dataclasses import Query
 
 from .listeners import Listeners
@@ -219,131 +221,116 @@ class MartTools(Listeners, commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     @commands.command(aliases=["advusagec"])
     async def advusagecount(self, ctx):
+        """
+        Same as [p]usagecount command but with more stats.
+        """
         avatar = self.bot.user.avatar_url_as(static_format="png")
+        counters = defaultdict(int, self.counter)
         uptime = str(self.get_bot_uptime())
-        errors_count = "{:,}".format(self.counter["command_error"])
-        messages_read = "{:,}".format(self.counter["messages_read"])
-        messages_sent = "{:,}".format(self.counter["msg_sent"])
-        dms_received = "{:,}".format(self.counter["dms_received"])
-        guild_join = "{:,}".format(self.counter["guild_join"])
-        guild_leave = "{:,}".format(self.counter["guild_remove"])
-        resumed_sessions = "{:,}".format(self.counter["sessions_resumed"])
-        commands_count = "{:,}".format(self.counter["processed_commands"])
-        new_mem = "{:,}".format(self.counter["new_members"])
-        left_mem = "{:,}".format(self.counter["members_left"])
-        msg_deleted = "{:,}".format(self.counter["messages_deleted"])
-        msg_edited = "{:,}".format(self.counter["messages_edited"])
-        react_added = "{:,}".format(self.counter["reactions_added"])
-        react_removed = "{:,}".format(self.counter["reactions_removed"])
-        roles_add = "{:,}".format(self.counter["roles_added"])
-        roles_rem = "{:,}".format(self.counter["roles_removed"])
-        roles_up = "{:,}".format(self.counter["roles_updated"])
-        mem_ban = "{:,}".format(self.counter["members_banned"])
-        mem_unban = "{:,}".format(self.counter["members_unbanned"])
-        emoji_add = "{:,}".format(self.counter["emojis_added"])
-        emoji_rem = "{:,}".format(self.counter["emojis_removed"])
-        emoji_up = "{:,}".format(self.counter["emojis_updated"])
-        vc_joins = "{:,}".format(self.counter["users_joined_bot_music_room"])
-        tracks_played = "{:,}".format(self.counter["tracks_played"])
-        #streams_played = "{:,}".format(self.counter["streams_played"])
-        #yt_streams = "{:,}".format(self.counter["yt_streams_played"])
-        #mixer_streams = "{:,}".format(self.counter["mixer_streams_played"])
-        #ttv_streams = "{:,}".format(self.counter["ttv_streams_played"])
-        #other_streams = "{:,}".format(self.counter["other_streams_played"])
-        #youtube_tracks = "{:,}".format(self.counter["youtube_tracks"])
-        #soundcloud_tracks = "{:,}".format(self.counter["soundcloud_tracks"])
-        #bandcamp_tracks = "{:,}".format(self.counter["bandcamp_tracks"])
-        #vimeo_tracks = "{:,}".format(self.counter["vimeo_tracks"])
-        #mixer_tracks = "{:,}".format(self.counter["mixer_tracks"])
-        #twitch_tracks = "{:,}".format(self.counter["twitch_tracks"])
-        #other_tracks = "{:,}".format(self.counter["other_tracks"])
         try:
-            total_num = "{:,}/{:,}".format(
+            total_num = "`{:,}/{:,}`".format(
                 len(lavalink.active_players()), len(lavalink.all_players())
             )
-        except AttributeError:
-            total_num = "{:,}/{:,}".format(
+        except AttributeError:  # Remove at 3.2
+            total_num = "`{:,}/{:,}`".format(
                 len([p for p in lavalink.players if p.current is not None]),
                 len([p for p in lavalink.players]),
             )
 
         em = discord.Embed(
             title=_("Usage count of {} since last restart:").format(ctx.bot.user.name),
-            color=await ctx.embed_colour()
+            color=await ctx.embed_colour(),
         )
         em.add_field(
             name=_("Message Stats"),
-            value=box(_(
-                """
-Messages Read:       {}
-Messages Sent:       {}
-Messages Deleted:    {}
-Messages Edited      {}
-DMs Recieved:        {}"""
-            ).format(messages_read, messages_sent, msg_deleted, msg_edited, dms_received),lang="prolog"),
-            inline=False
+            value=box(
+                _(
+                    "Messages Read:       {messages_read}\n"
+                    "Messages Sent:       {msg_sent}\n"
+                    "Messages Deleted:    {messages_deleted}\n"
+                    "Messages Edited      {messages_edited}\n"
+                    "DMs Received:        {dms_received}\n"
+                ).format_map(counters),
+                lang="prolog",
+            ),
+            inline=False,
         )
         em.add_field(
             name=_("Commands Stats"),
-            value=box(_(
-                """
-Commands Processed:  {}
-Errors Occured:      {}
-Sessions Resumed:    {}"""
-            ).format(commands_count, errors_count, resumed_sessions),lang="prolog"),
-            inline=False
+            value=box(
+                _(
+                    "Commands Processed:  {processed_commands}\n"
+                    "Errors Occured:      {command_error}\n"
+                    "Sessions Resumed:    {sessions_resumed}\n"
+                ).format_map(counters),
+                lang="prolog",
+            ),
+            inline=False,
         )
         em.add_field(
             name=_("Guild Stats"),
-            value=box(_(
-                """
-Guilds Joined:       {}
-Guilds Left:         {}"""
-            ).format(guild_join, guild_leave),lang="prolog"),
-            inline=False
+            value=box(
+                _(
+                    "Guilds Joined:       {guild_join}\n" "Guilds Left:         {guild_remove}\n"
+                ).format_map(counters),
+                lang="prolog",
+            ),
+            inline=False,
         )
         em.add_field(
             name=_("User Stats"),
-            value=box(_(
-                """
-New Users:           {}
-Left Users:          {}
-Banned Users:        {}
-Unbanned Users:      {}"""
-            ).format(new_mem, left_mem, mem_ban, mem_unban),lang="prolog"),
-            inline=False
+            value=box(
+                _(
+                    "New Users:           {new_members}\n"
+                    "Left Users:          {members_left}\n"
+                    "Banned Users:        {members_banned}\n"
+                    "Unbanned Users:      {members_unbanned}\n"
+                ).format_map(counters),
+                lang="prolog",
+            ),
+            inline=False,
         )
         em.add_field(
             name=_("Role Stats"),
-            value=box(_(
-                """
-Roles Added:         {}
-Roles Removed:       {}
-Roles Updated:       {}"""
-            ).format(roles_add, roles_rem, roles_up),lang="prolog"),
-            inline=False
+            value=box(
+                _(
+                    "Roles Added:         {roles_added}\n"
+                    "Roles Removed:       {roles_removed}\n"
+                    "Roles Updated:       {roles_updated}\n"
+                ).format_map(counters),
+                lang="prolog",
+            ),
+            inline=False,
         )
         em.add_field(
             name=_("Emoji Stats"),
-            value=box(_(
-                """
-Reacts Added:        {}
-Reacts Removed:      {}
-Emoji Added:         {}
-Emoji Removed:       {}
-Emoji Updated:       {}"""
-            ).format(react_added, react_removed, emoji_add, emoji_rem, emoji_up),lang="prolog"),
-            inline=False
+            value=box(
+                _(
+                    "Reacts Added:        {reactions_added}\n"
+                    "Reacts Removed:      {reactions_removed}\n"
+                    "Emoji Added:         {emojis_added}\n"
+                    "Emoji Removed:       {emojis_removed}\n"
+                    "Emoji Updated:       {emojis_updated}\n"
+                ).format_map(counters),
+                lang="prolog",
+            ),
+            inline=False,
         )
         em.add_field(
             name=_("Audio Stats"),
-            value=box(_(
-                """
-Users Who Joined VC: {}
-Tracks Played:       {}
-Number Of Players:   {}"""
-            ).format(vc_joins, tracks_played, total_num),lang="prolog"),
-            inline=False
+            value=box(
+                _(
+                    "Users Who Joined VC: {users_joined_bot_music_room}\n"
+                    "Tracks Played:       {tracks_played}\n"
+                    "Number Of Players:   {total_num}"
+                ).format(
+                    users_joined_bot_music_room=counters["users_joined_bot_music_room"],
+                    tracks_played=counters["tracks_played"],
+                    total_num=total_num,
+                ),
+                lang="prolog",
+            ),
+            inline=False,
         )
         em.set_thumbnail(url=avatar)
         em.set_footer(text=_("Since {}").format(uptime))

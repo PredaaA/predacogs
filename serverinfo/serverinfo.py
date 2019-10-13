@@ -16,7 +16,7 @@ class ServerInfo(commands.Cog):
     """
 
     __author__ = "Predä"
-    __version__ = "1.2.3"
+    __version__ = "1.2.4"
 
     def __init__(self, bot):
         self.bot = bot
@@ -210,8 +210,8 @@ class ServerInfo(commands.Cog):
             data.add_field(
                 name=_("Nitro Boost Features:"),
                 value=_(
-                    "{animatedicon} Animated Server Icon\n{splash}{banner}{van} File Size Limit **{filelimit}**\nNitro Boost Tier **{boostlevel}** with **{nitroboosters}** boosters\n"
-                    "Emoji Limit **{elimit}**\n Max Bitrate **{bitrate}**"
+                    "{animatedicon} Animated Server Icon\n{splash}{banner}{van}File Size Limit **{filelimit}**\nNitro Boost Tier **{boostlevel}** with **{nitroboosters}** boosters\n"
+                    "Emoji Limit **{elimit}**\nMax Bitrate **{bitrate}**"
                 ).format(**nitro_kwargs),
             )
         data.set_author(name=guild.name)

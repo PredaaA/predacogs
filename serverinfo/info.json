@@ -9,5 +9,8 @@
         "utility",
         "information",
         "replacement"
+    ],
+    "requirements": [
+        "babel"
     ]
 }

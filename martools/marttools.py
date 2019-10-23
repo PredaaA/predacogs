@@ -34,7 +34,7 @@ class MartTools(Listeners, commands.Cog):
     """Multiple tools that are originally used on Martine."""
 
     __author__ = "Predä"
-    __version__ = "1.5.6"
+    __version__ = "1.5.7"
 
     def __init__(self, bot):
         self.bot = bot
@@ -427,8 +427,13 @@ class MartTools(Listeners, commands.Cog):
             await ctx.send(msg)
 
     @commands.command(aliases=["servreg"])
-    async def serversregions(self, ctx):
-        """Show total of regions where the bot is."""
+    async def serversregions(self, ctx, sort="guilds"):
+        """
+        Show total of regions where the bot is.
+
+        You can also sort by number of users by using `[p]serversregions users`
+        By default it sort by guilds.
+        """
         regions_dict = {
             "vip-us-east": ":flag_us:" + _(" __VIP__ US East"),
             "vip-us-west": ":flag_us:" + _(" __VIP__ US West"),
@@ -460,9 +465,16 @@ class MartTools(Listeners, commands.Cog):
                 regions[region] = {"guilds": 0, "users": 0}
             regions[region]["users"] += guild.member_count
             regions[region]["guilds"] += 1
-        regions_stats = dict(
-            sorted(regions.items(), key=lambda x: (x[1]["guilds"], x[1]["users"]), reverse=True)
-        )
+
+        def sort_keys(key):
+            keys = (
+                (key[1]["guilds"], key[1]["users"])
+                if sort != "users"
+                else (key[1]["users"], key[1]["guilds"])
+            )
+            return keys
+
+        regions_stats = dict(sorted(regions.items(), key=lambda x: sort_keys(x), reverse=True))
 
         msg = [
             _("{flag}: {guilds_len} and {users_len}").format(

@@ -125,6 +125,7 @@ class ServerInfo(commands.Cog):
             "japan": _("Japan ") + "\U0001F1EF\U0001F1F5",
             "southafrica": _("South Africa ") + "\U0001F1FF\U0001F1E6",
             "india": _("India ") + "\U0001F1EE\U0001F1F3",
+            "dubai": _("Dubai ") + "\U0001F1E6\U0001F1EA",
         }  # Unicode is needed because bold() is escaping emojis for some reason in this case.
         verif = {
             "none": _("0 - None"),

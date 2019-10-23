@@ -23,7 +23,7 @@ class ServerInfo(commands.Cog):
     """Replace original Red serverinfo command with more details."""
 
     __author__ = "Predä"
-    __version__ = "1.3"
+    __version__ = "1.3.1"
 
     def __init__(self, bot):
         self.bot = bot

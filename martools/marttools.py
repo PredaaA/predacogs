@@ -429,7 +429,7 @@ class MartTools(Listeners, commands.Cog):
     @commands.command(aliases=["servreg"])
     async def serversregions(self, ctx):
         """Show total of regions where the bot is."""
-        regions = {
+        regions_dict = {
             "vip-us-east": ":flag_us:" + _(" __VIP__ US East"),
             "vip-us-west": ":flag_us:" + _(" __VIP__ US West"),
             "vip-amsterdam": ":flag_nl:" + _(" __VIP__ Amsterdam"),
@@ -451,34 +451,48 @@ class MartTools(Listeners, commands.Cog):
             "japan": ":flag_jp:" + _(" Japan"),
             "southafrica": ":flag_za:" + _(" South Africa"),
             "india": ":flag_in:" + _(" India"),
+            "dubai": ":flag_ae:" + _(" Dubai"),
         }
-        region = {}
+        regions = {}
         for guild in self.bot.guilds:
-            if str(guild.region):
-                if str(guild.region) not in region:
-                    region[str(guild.region)] = 0
-                region[str(guild.region)] += 1
-        divided = []
-        for k, v in region.items():
-            divided.append([k, v])
-        divided = sorted(divided, key=lambda x: x[1], reverse=True)
-        new = {}
-        for entry in divided:
-            new[entry[0]] = entry[1]
-        msg = ""
-        for k, v in new.items():
-            msg += regions[str(k)] + f": `{v:,}`\n"
-        guilds = len(self.bot.guilds)
+            region = str(guild.region)
+            if region not in regions:
+                regions[region] = {"guilds": 0, "users": 0}
+            regions[region]["users"] += guild.member_count
+            regions[region]["guilds"] += 1
+        regions_stats = dict(
+            sorted(regions.items(), key=lambda x: (x[1]["guilds"], x[1]["users"]), reverse=True)
+        )
+
+        msg = [
+            _("{flag}: {guilds_len} and {users_len}").format(
+                flag=regions_dict[region_name],
+                guilds_len=(
+                    f"`{values['guilds']:,} {_('server') if values['guilds'] < 2 else _('servers')}`"
+                ),
+                users_len=(
+                    f"`{values['users']:,} {_('user') if values['users'] < 2 else _('users')}`"
+                ),
+            )
+            for region_name, values in regions_stats.items()
+        ]
+        guilds_word = _("server") if len(self.bot.guilds) < 2 else _("servers")
+        users_word = (
+            _("user") if sum(k["users"] for k in regions_stats.values()) < 2 else _("users")
+        )
+        footer = _("For a total of {guilds} and {users}").format(
+            guilds=f"{len(self.bot.guilds):,} {guilds_word}",
+            users=f"{sum(k['users'] for k in regions_stats.values()):,} {users_word}",
+        )
 
         try:
             em = discord.Embed(
-                color=await ctx.embed_colour(), title=_("Servers regions stats:"), description=msg
+                color=await ctx.embed_colour(),
+                title=_("Servers regions stats:"),
+                description="\n".join(msg),
             )
-            em.set_footer(text=_("For a total of {:,} servers").format(guilds))
+            em.set_footer(text=footer)
             await ctx.send(embed=em)
         except discord.Forbidden:
-            await ctx.send(
-                bold(_("Servers regions stats:\n\n"))
-                + msg
-                + bold(_("\nFor a total of {:,} servers").format(guilds))
-            )
+            msg = bold(_("Servers regions stats:\n\n")) + "\n".join(msg) + "\n" + bold(footer)
+            await ctx.send(msg)

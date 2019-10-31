@@ -292,6 +292,3 @@ YIFF = ["Yiffbondage", "Hyiff", "femyiff", "yiff", "yiffgif"]
 # Other APIs
 NEKOBOT_HENTAI = choice(["hentai_anal", "hentai"])
 NEKOBOT_URL = "https://nekobot.xyz/api/image?type={}"
-
-NEKOS_LIFE_HOLO = choice(["holoero", "holo", "hololewd"])
-NEKOS_LIFE_URL = "https://nekos.life/api/v2/img/{}"

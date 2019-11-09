@@ -1,10 +1,13 @@
 import discord
 
 from redbot.core import commands, Config, checks
-from redbot.core.utils.chat_formatting import box, inline
+from redbot.core.utils.menus import DEFAULT_CONTROLS, menu
+from redbot.core.utils.chat_formatting import box, inline, pagify
 
 import aiohttp
 import asyncio
+
+FIVEM_BASE_URL = "https://servers.fivem.net/servers/detail/{}"
 
 
 class FiveM(commands.Cog):
@@ -33,6 +36,15 @@ class FiveM(commands.Cog):
     def cog_unload(self):
         self.bot.loop.create_task(self.session.close())
         self.status_task.cancel()
+
+    @staticmethod
+    def _check(check: str):
+        check = "\N{WHITE HEAVY CHECK MARK}" if check else "\N{CROSS MARK}"
+        return check
+
+    @staticmethod
+    def _clean_ip(ip: str):
+        return ip.replace("http://", "").replace("/", "")
 
     @staticmethod
     def _status(key: str):
@@ -309,3 +321,108 @@ class FiveM(commands.Cog):
         elif streamer is None or streamtitle is None:
             await ctx.send_help()
             return
+
+    @commands.group()
+    async def fivem(self, ctx):
+        """Multiple checks for a FiveM server."""
+        pass
+
+    @fivem.command(name="players")
+    async def fivem_players(self, ctx, *, ip: str):
+        """
+        Get players connected on a server with their ping.
+
+        <ip>: IP address of the server.
+        """
+        async with ctx.typing():
+            data_players = await self._get_data(self._clean_ip(ip), "players")
+            data_server = await self._get_data(self._clean_ip(ip), "info")
+            if data_players is None or data_server is None:
+                await ctx.send(
+                    f"Something went wrong while trying to get the data from: {inline(self._clean_ip(ip))}"
+                )
+                return
+            all_players = [(data["name"], data["ping"]) for data in data_players]
+            if not all_players:
+                await ctx.send(content="Anyone is connected on this server.")
+                return
+
+            header = "{name:33}{ping:19}".format(name="Name", ping="Ping")
+            msg = ""
+            for names, pings in all_players:
+                if len(names) > 25:
+                    names = f"{names[:19]}..."
+                msg += f"{names:33}{pings}\n"
+
+            players_embed = []
+            pages = 1
+            for page in pagify(msg, delims=["\n"], page_length=800):
+                box_header = box(header, lang="prolog")
+                box_page = box(page, lang="glsl")
+                em = discord.Embed(
+                    color=await ctx.embed_colour(),
+                    title=f"{len(data_players)}/{data_server['vars']['sv_maxClients']} players are connected:",
+                    description=f"{box_header}{box_page}\n"
+                    f"[**FiveM Page**]({FIVEM_BASE_URL.format(self._clean_ip(ip))})",
+                )
+                em.set_footer(
+                    text=f"IP: {self._clean_ip(ip)} - Page {pages}/{round((len(msg) / 800) + 1)}"
+                )
+                pages += 1
+                players_embed.append(em)
+        return await menu(ctx, players_embed, DEFAULT_CONTROLS)
+
+    @fivem.command(name="server")
+    async def fivem_info_server(self, ctx, *, ip: str):
+        """
+        Get some informations about a FiveM server.
+
+        <ip>: IP address of the server.
+        """
+        async with ctx.typing():
+            data_players = await self._get_data(self._clean_ip(ip), "players")
+            data_server = await self._get_data(self._clean_ip(ip), "info")
+            if data_players is None or data_server is None:
+                await ctx.send(
+                    f"Something went wrong while trying to get the data from: {inline(self._clean_ip(ip))}"
+                )
+                return
+
+            async def page_one():
+                em = discord.Embed(color=await ctx.embed_colour())
+                em.add_field(
+                    name="Players:",
+                    value=f"{len(data_players) if data_players else 0}/{data_server['vars']['sv_maxClients']}",
+                )
+                em.add_field(
+                    name="Misc:",
+                    value=(
+                        "**Server Version:** {version_server}\n"
+                        "**Server:** {server}\n"
+                        "**ScriptHook:** {scripthook}\n"
+                        "**OneSync:** {onesync}\n"
+                    ).format(
+                        version_server=inline(str(data_server["version"])),
+                        server=inline(data_server["server"]),
+                        scripthook=self._check(
+                            "true" in data_server["vars"]["sv_scriptHookAllowed"]
+                        ),
+                        onesync=self._check("true" in data_server["vars"]["onesync_enabled"]),
+                    ),
+                )
+                em.add_field(name="FiveM page:", value=FIVEM_BASE_URL.format(self._clean_ip(ip)))
+                em.set_footer(text=f"Page 1/2 • IP: {self._clean_ip(ip)}")
+                return em
+
+            async def page_two():
+                em = discord.Embed(
+                    color=await ctx.embed_colour(),
+                    title="Ressources:",
+                    description=", ".join(data_server["resources"]),
+                )
+                if data_server["vars"].get("tags"):
+                    em.add_field(name="Tags:", value=data_server["vars"]["tags"])
+                em.set_footer(text=f"Page 2/2 • IP: {self._clean_ip(ip)}")
+                return em
+
+        return await menu(ctx, [await page_one(), await page_two()], DEFAULT_CONTROLS)

@@ -14,7 +14,7 @@ class FiveM(commands.Cog):
     """Tools for FiveM servers."""
 
     __author__ = "Predä"
-    __version__ = "0.1"
+    __version__ = "0.1.1"
 
     def __init__(self, bot):
         self.bot = bot

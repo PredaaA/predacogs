@@ -225,9 +225,8 @@ class FiveM(commands.Cog):
         This needs to be an IP address with a port.
         Example: `1.2.3.4:30122`
         """
-        ip = ip.replace("http://", "").replace("/", "")
-        await self.config.ip.set(ip)
-        await ctx.send(f"FiveM server set to: {inline(ip)}")
+        await self.config.ip.set(self._clean_ip(ip))
+        await ctx.send(f"FiveM server set to: {inline(self._clean_ip(ip))}")
 
     @fivemset.command()
     async def toggle(self, ctx: commands.Context):

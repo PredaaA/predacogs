@@ -23,7 +23,7 @@ class ServerInfo(commands.Cog):
     """Replace original Red serverinfo command with more details."""
 
     __author__ = "Predä"
-    __version__ = "1.3.1"
+    __version__ = "1.3.2"
 
     def __init__(self, bot):
         self.bot = bot
@@ -235,6 +235,8 @@ class ServerInfo(commands.Cog):
                 bitrate=bold(self._bitsize(guild.bitrate_limit)),
             )
             em.add_field(name=_("Nitro Boost:"), value=nitro_boost)
+        if guild.splash:
+            em.set_image(url=guild.splash_url_as(format="png"))
         em.set_footer(text=joined_on)
         await ctx.send(embed=em)
 

@@ -14,7 +14,7 @@ class FiveM(commands.Cog):
     """Tools for FiveM servers."""
 
     __author__ = "Predä"
-    __version__ = "0.1.1"
+    __version__ = "0.1.2"
 
     def __init__(self, bot):
         self.bot = bot
@@ -322,12 +322,12 @@ class FiveM(commands.Cog):
             return
 
     @commands.group()
-    async def fivem(self, ctx):
+    async def fivem(self, ctx: commands.Context):
         """Multiple checks for a FiveM server."""
         pass
 
     @fivem.command(name="players")
-    async def fivem_players(self, ctx, *, ip: str):
+    async def fivem_players(self, ctx: commands.Context, *, ip: str):
         """
         Get players connected on a server with their ping.
 
@@ -372,7 +372,7 @@ class FiveM(commands.Cog):
         return await menu(ctx, players_embed, DEFAULT_CONTROLS)
 
     @fivem.command(name="server")
-    async def fivem_info_server(self, ctx, *, ip: str):
+    async def fivem_info_server(self, ctx: commands.Context, *, ip: str):
         """
         Get some informations about a FiveM server.
 
@@ -414,10 +414,13 @@ class FiveM(commands.Cog):
                 return em
 
             async def page_two():
+                description = ", ".join(data_server["resources"])
+                if len(description) > 2040:
+                    description = description[:2040] + " ..."
                 em = discord.Embed(
                     color=await ctx.embed_colour(),
-                    title="Ressources:",
-                    description=", ".join(data_server["resources"]),
+                    title=f"{len(data_server['resources']):,} resources:",
+                    description=description,
                 )
                 if data_server["vars"].get("tags"):
                     em.add_field(name="Tags:", value=data_server["vars"]["tags"])

@@ -23,7 +23,7 @@ class ServerInfo(commands.Cog):
     """Replace original Red serverinfo command with more details."""
 
     __author__ = "Predä"
-    __version__ = "1.3.2"
+    __version__ = "1.3.3"
 
     def __init__(self, bot):
         self.bot = bot
@@ -153,7 +153,7 @@ class ServerInfo(commands.Cog):
             "MEMBER_LIST_DISABLED": _("Member list disabled"),
         }
         guild_features_list = [
-            f"`\N{WHITE HEAVY CHECK MARK}` {name}"
+            f"\✅ {name}"
             for feature, name in features.items()
             if feature in set(guild.features)
         ]
@@ -208,6 +208,7 @@ class ServerInfo(commands.Cog):
                 verif=bold(verif[str(guild.verification_level)]),
                 id=bold(str(guild.id)),
             ),
+            inline=False,
         )
         em.add_field(
             name=_("Misc:"),
@@ -219,6 +220,7 @@ class ServerInfo(commands.Cog):
                 emojis=bold(humanize_number(len(guild.emojis))),
                 roles=bold(humanize_number(len(guild.roles))),
             ),
+            inline=False,
         )
         if guild_features_list:
             em.add_field(name=_("Server features:"), value="\n".join(guild_features_list))

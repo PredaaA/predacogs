@@ -34,7 +34,7 @@ class MartTools(Listeners, commands.Cog):
     """Multiple tools that are originally used on Martine."""
 
     __author__ = "Predä"
-    __version__ = "1.5.7"
+    __version__ = "1.5.8"
 
     def __init__(self, bot):
         self.bot = bot
@@ -457,6 +457,7 @@ class MartTools(Listeners, commands.Cog):
             "southafrica": ":flag_za:" + _(" South Africa"),
             "india": ":flag_in:" + _(" India"),
             "dubai": ":flag_ae:" + _(" Dubai"),
+            "south-korea": ":flag_kr:" + _(" South Korea"),
         }
         regions = {}
         for guild in self.bot.guilds:

@@ -34,7 +34,7 @@ class MartTools(Listeners, commands.Cog):
     """Multiple tools that are originally used on Martine."""
 
     __author__ = "Predä"
-    __version__ = "1.5.8"
+    __version__ = "1.5.9"
 
     def __init__(self, bot):
         self.bot = bot
@@ -218,10 +218,10 @@ class MartTools(Listeners, commands.Cog):
             + _("{} servers.").format(guild_leave)
         )
         try:
-            em = discord.Embed(color=await ctx.embed_colour())
-            em.add_field(
-                name=_("Usage count of {} since last restart:").format(ctx.bot.user.name),
-                value=msg,
+            em = discord.Embed(
+                color=await ctx.embed_colour(),
+                title=_("Usage count of {} since last restart:").format(ctx.bot.user.name),
+                description=msg,
             )
             em.set_thumbnail(url=avatar)
             em.set_footer(text=_("Since {}").format(uptime))
@@ -375,10 +375,10 @@ class MartTools(Listeners, commands.Cog):
             to_send = [f"`\u200b{p}\u200b`" for p in default_prefixes]
             plural = _("es") if len(default_prefixes) >= 2 else ""
             try:
-                em = discord.Embed(color=await ctx.embed_colour())
-                em.add_field(
-                    name=_("Prefix{es} of {name}:").format(es=plural, name=bot_name),
-                    value=" ".join(to_send),
+                em = discord.Embed(
+                    color=await ctx.embed_colour(),
+                    title=_("Prefix{es} of {name}:").format(es=plural, name=bot_name),
+                    description=" ".join(to_send),
                 )
                 em.set_thumbnail(url=avatar)
                 await ctx.send(embed=em)
@@ -391,10 +391,10 @@ class MartTools(Listeners, commands.Cog):
             to_send = [f"`\u200b{p}\u200b`" for p in guild_prefixes]
             plural = _("es") if len(guild_prefixes) >= 2 else ""
             try:
-                em = discord.Embed(color=await ctx.embed_colour())
-                em.add_field(
-                    name=_("Server prefix{es} of {name}:").format(es=plural, name=bot_name),
-                    value=" ".join(to_send),
+                em = discord.Embed(
+                    color=await ctx.embed_colour(),
+                    title=_("Server prefix{es} of {name}:").format(es=plural, name=bot_name),
+                    description=" ".join(to_send),
                 )
                 em.set_thumbnail(url=avatar)
                 await ctx.send(embed=em)

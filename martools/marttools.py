@@ -24,6 +24,7 @@ except ImportError:
     def humanize_number(val: Union[int, float]):
         return format_decimal(val, locale="en_US")
 
+
 from .listeners import Listeners
 from .statements import *
 from .utils import rgetattr
@@ -64,8 +65,8 @@ class MartTools(Listeners, commands.Cog):
         else:
             query = SELECT_PERMA_SINGLE
             condition = {"event": key, "guild_id": id}
-        result = self.cursor.execute(query, condition)
-        return humanize_number(result[0] if result else 0)
+        result = list(self.cursor.execute(query, condition))
+        return humanize_number(result[0][0] if result else 0)
 
     def get(self, key, id=None) -> str:
         if id is None:
@@ -74,8 +75,8 @@ class MartTools(Listeners, commands.Cog):
         else:
             query = SELECT_TEMP_SINGLE
             condition = {"event": key, "guild_id": id}
-        result = self.cursor.execute(query, condition)
-        return humanize_number(result[0] if result else 0)
+        result = list(self.cursor.execute(query, condition))
+        return humanize_number(result[0][0] if result else 0)
 
     def cog_unload(self):  # To delete at next audio update.
         if not Query:
@@ -238,13 +239,15 @@ class MartTools(Listeners, commands.Cog):
                     "Messages Deleted    : {messages_deleted}\n"
                     "Messages Edited     : {messages_edited}\n"
                     "DMs Received        : {dms_received}\n"
-                ).format_map({"messages_read": self.fetch("messages_read"),
-                              "msg_sent": self.fetch("msg_sent"),
-                              "messages_deleted": self.fetch("messages_deleted"),
-                              "messages_edited": self.fetch("messages_edited"),
-                              "dms_received": self.fetch("dms_received"),
-
-                              }),
+                ).format_map(
+                    {
+                        "messages_read": self.fetch("messages_read"),
+                        "msg_sent": self.fetch("msg_sent"),
+                        "messages_deleted": self.fetch("messages_deleted"),
+                        "messages_edited": self.fetch("messages_edited"),
+                        "dms_received": self.fetch("dms_received"),
+                    }
+                ),
                 lang="prolog",
             ),
             inline=False,
@@ -256,10 +259,13 @@ class MartTools(Listeners, commands.Cog):
                     "Commands Processed  : {processed_commands}\n"
                     "Errors Occured      : {command_error}\n"
                     "Sessions Resumed    : {sessions_resumed}\n"
-                ).format_map({"processed_commands": self.fetch("processed_commands"),
-                              "command_error": self.fetch("command_error"),
-                              "sessions_resumed": self.fetch("sessions_resumed"),
-                              }),
+                ).format_map(
+                    {
+                        "processed_commands": self.fetch("processed_commands"),
+                        "command_error": self.fetch("command_error"),
+                        "sessions_resumed": self.fetch("sessions_resumed"),
+                    }
+                ),
                 lang="prolog",
             ),
             inline=False,
@@ -268,11 +274,13 @@ class MartTools(Listeners, commands.Cog):
             name=_("Guild Stats"),
             value=box(
                 _(
-                    "Guilds Joined       : {guild_join}\n"
-                    "Guilds Left         : {guild_remove}\n"
-                ).format_map({"guild_join": self.fetch("guild_join"),
-                              "guild_remove": self.fetch("guild_remove"),
-                              }),
+                    "Guilds Joined       : {guild_join}\n" "Guilds Left         : {guild_remove}\n"
+                ).format_map(
+                    {
+                        "guild_join": self.fetch("guild_join"),
+                        "guild_remove": self.fetch("guild_remove"),
+                    }
+                ),
                 lang="prolog",
             ),
             inline=False,
@@ -285,11 +293,14 @@ class MartTools(Listeners, commands.Cog):
                     "Left Users          : {members_left}\n"
                     "Banned Users        : {members_banned}\n"
                     "Unbanned Users      : {members_unbanned}\n"
-                ).format_map({"new_members": self.fetch("new_members"),
-                              "members_left": self.fetch("members_left"),
-                              "members_banned": self.fetch("members_banned"),
-                              "members_unbanned": self.fetch("members_unbanned"),
-                              }),
+                ).format_map(
+                    {
+                        "new_members": self.fetch("new_members"),
+                        "members_left": self.fetch("members_left"),
+                        "members_banned": self.fetch("members_banned"),
+                        "members_unbanned": self.fetch("members_unbanned"),
+                    }
+                ),
                 lang="prolog",
             ),
             inline=False,
@@ -301,10 +312,13 @@ class MartTools(Listeners, commands.Cog):
                     "Roles Added         : {roles_added}\n"
                     "Roles Removed       : {roles_removed}\n"
                     "Roles Updated       : {roles_updated}\n"
-                ).format_map({"roles_added": self.fetch("roles_added"),
-                              "roles_removed": self.fetch("roles_removed"),
-                              "roles_updated": self.fetch("roles_updated"),
-                              }),
+                ).format_map(
+                    {
+                        "roles_added": self.fetch("roles_added"),
+                        "roles_removed": self.fetch("roles_removed"),
+                        "roles_updated": self.fetch("roles_updated"),
+                    }
+                ),
                 lang="prolog",
             ),
             inline=False,
@@ -318,12 +332,15 @@ class MartTools(Listeners, commands.Cog):
                     "Emoji Added         : {emojis_added}\n"
                     "Emoji Removed       : {emojis_removed}\n"
                     "Emoji Updated       : {emojis_updated}\n"
-                ).format_map({"reactions_added": self.fetch("reactions_added"),
-                              "reactions_removed": self.fetch("reactions_removed"),
-                              "emojis_added": self.fetch("emojis_added"),
-                              "emojis_removed": self.fetch("emojis_removed"),
-                              "emojis_updated": self.fetch("emojis_updated"),
-                              }),
+                ).format_map(
+                    {
+                        "reactions_added": self.fetch("reactions_added"),
+                        "reactions_removed": self.fetch("reactions_removed"),
+                        "emojis_added": self.fetch("emojis_added"),
+                        "emojis_removed": self.fetch("emojis_removed"),
+                        "emojis_updated": self.fetch("emojis_updated"),
+                    }
+                ),
                 lang="prolog",
             ),
             inline=False,
@@ -337,7 +354,6 @@ class MartTools(Listeners, commands.Cog):
                     "Number Of Players   : {total_num}"
                 ).format(
                     users_joined_bot_music_room=self.fetch("users_joined_bot_music_room"),
-
                     tracks_played=self.fetch("tracks_played"),
                     total_num=total_num,
                 ),

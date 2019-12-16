@@ -123,7 +123,7 @@ class Listeners:
             self.upsert(rgetattr(member, "guild.id", -1), "users_joined_bot_music_room")
 
     @commands.Cog.listener()
-    async def on_track_start(self, guild, track, requester):
+    async def on_red_audio_track_start(self, guild, track, requester):
         if not Query:
             return
         self.upsert(rgetattr(guild, "id", -1), "tracks_played")

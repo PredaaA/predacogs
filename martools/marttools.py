@@ -233,7 +233,7 @@ class MartTools(Listeners, commands.Cog):
             )
 
         em = discord.Embed(
-            title=_("Usage count of {} since last restart:").format(ctx.bot.user.name),
+            title=_("Usage count of {}:").format(ctx.bot.user.name),
             color=await ctx.embed_colour(),
         )
         em.add_field(

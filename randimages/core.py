@@ -96,7 +96,9 @@ class Core:
                     or not url.endswith(GOOD_EXTENSIONS)
                     and not url.startswith("https://gfycat.com")
                 ):
-                    author, title, url, subr, nsfw = await self._get_reddit_imgs_details(ctx, sub=sub)
+                    author, title, url, subr, nsfw = await self._get_reddit_imgs_details(
+                        ctx, sub=sub
+                    )
             return url, subr, author, title, post
         except aiohttp.client_exceptions.ClientConnectionError:
             await self._api_errors_msg(ctx, error_code="JSON decode failed")

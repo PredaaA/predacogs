@@ -169,9 +169,7 @@ class DblTools(commands.Cog):
                         bold(_("Approval date:"))
                         + " {}\n\n".format(info["date"].replace("T", " ")[:-5])
                     ),
-                    "dbl_page": (
-                        _("[Top.gg Page]({})").format(f"https://top.gg/bot/{bot.id}")
-                    ),
+                    "dbl_page": (_("[Top.gg Page]({})").format(f"https://top.gg/bot/{bot.id}")),
                     "if_inv": (
                         _(" • [Invitation link]({})").format(info["invite"])
                         if info["invite"]
@@ -244,9 +242,7 @@ class DblTools(commands.Cog):
                 return
             em = discord.Embed(
                 color=discord.Color.blurple(),
-                description=bold(_("[Top.gg Page]({})")).format(
-                    f"https://top.gg/bot/{bot.id}"
-                ),
+                description=bold(_("[Top.gg Page]({})")).format(f"https://top.gg/bot/{bot.id}"),
             )
             em.set_image(url=f"https://top.gg/api/widget/{bot.id}.png")
         await ctx.send(embed=em)

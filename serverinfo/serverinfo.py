@@ -153,7 +153,9 @@ class ServerInfo(commands.Cog):
             "MEMBER_LIST_DISABLED": _("Member list disabled"),
         }
         guild_features_list = [
-            f"\✅ {name}" for feature, name in features.items() if feature in set(guild.features)
+            f"\✅ {name}"
+            for feature, name in features.items()
+            if feature in set(guild.features)
         ]
 
         since_joined = (ctx.message.created_at - guild.me.joined_at).days

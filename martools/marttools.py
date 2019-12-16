@@ -20,7 +20,8 @@ try:
 except ImportError:
     from typing import Union
     from babel.numbers import format_decimal
-    def humanize_number(val: Union[int, float]):  # <- Remove this at 3.2
+
+    def humanize_number(val: Union[int, float]):
         return format_decimal(val, locale="en_US")
 
 from .listeners import Listeners
@@ -28,9 +29,6 @@ from .statements import *
 from .utils import rgetattr
 
 _ = Translator("MartTools", __file__)
-
-
-
 
 
 @cog_i18n(_)
@@ -44,7 +42,9 @@ class MartTools(Listeners, commands.Cog):
         self.bot = bot
         self._connection = apsw.Connection(str(cog_data_path(self) / "MartTools.db"))
         self.cursor = self._connection.cursor()
-        self.cursor.execute(PRAGMA)
+        self.cursor.execute(PRAGMA_journal_mode)
+        self.cursor.execute(PRAGMA_wal_autocheckpoint)
+        self.cursor.execute(PRAGMA_read_uncommitted)
         self.cursor.execute(CREATE_TABLE_PERMA)
         self.cursor.execute(DROP_TEMP)
         self.cursor.execute(CREATE_TABLE_TEMP)

@@ -1,9 +1,12 @@
-PRAGMA = """
+PRAGMA_journal_mode = """
 PRAGMA journal_mode = wal;
+"""
+PRAGMA_wal_autocheckpoint = """
 PRAGMA wal_autocheckpoint;
+"""
+PRAGMA_read_uncommitted = """
 PRAGMA read_uncommitted = 1;
 """
-
 CREATE_TABLE_PERMA = """CREATE TABLE IF NOT EXISTS
    bot_stats_perma 
         (

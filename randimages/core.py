@@ -87,11 +87,11 @@ class Core:
                     )
                 if url.startswith(IMGUR_LINKS):
                     url = url + ".png"
-                if url.endswith(".mp4"):
+                elif url.endswith(".mp4"):
                     url = url[:-3] + "gif"
-                if url.endswith(".gifv"):
+                elif url.endswith(".gifv"):
                     url = url[:-1]
-                if (
+                elif (
                     text
                     or not url.endswith(GOOD_EXTENSIONS)
                     and not url.startswith("https://gfycat.com")
@@ -162,7 +162,7 @@ class Core:
                     req=ctx.author.display_name, r=subr
                 ),
             )
-        if url.startswith("https://gfycat.com"):
+        elif url.startswith("https://gfycat.com"):
             em = (
                 _("Here is {name} gif ... ")
                 + emoji
@@ -190,7 +190,7 @@ class Core:
                     req=ctx.author.display_name, r=subr
                 ),
             )
-        if url.startswith("https://gfycat.com"):
+        elif url.startswith("https://gfycat.com"):
             em = (
                 _("Here is {name} gif ... ")
                 + emoji

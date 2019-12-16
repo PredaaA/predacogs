@@ -12,6 +12,7 @@
         "statistics"
     ],
     "requirements": [
-        "apsw-wheels"
+        "apsw-wheels",
+        "babel"
     ]
 }

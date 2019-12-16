@@ -8,38 +8,31 @@ from typing import Optional, Union
 
 import aiohttp
 
-DBL_BASE_URL = "https://discordbots.org/api/bots/"
+DBL_BASE_URL = "https://top.gg/api/bots/"
 
 _ = Translator("DblTools", __file__)
 
 
 @cog_i18n(_)
 class DblTools(commands.Cog):
-    """Tools to get bots information from discordbots.org."""
+    """Tools to get bots information from Top.gg."""
 
     __author__ = "Predä"
-    __version__ = "1.2.6"
+    __version__ = "1.3.2"
 
     def __init__(self, bot):
         self.bot = bot
         self.session = aiohttp.ClientSession()
-        self.config = Config.get_conf(self, 3329804706503720961, force_registration=True)
-        default = dict(dbl_key=None)
-        self.config.register_global(**default)
-
-    # This part of code is originally from image.py of Red, I take it because it's amazing:
-    # https://github.com/Cog-Creators/Red-DiscordBot/blob/V3/develop/redbot/cogs/image/image.py#L30
-    async def initialize(self) -> None:
-        """Move the API keys from cog stored config to core bot config if they exist."""
-        dbl_key = await self.config.dbl_key()
-        if dbl_key is not None and "dbl" not in await self.bot.db.api_tokens():
-            await self.bot.db.api_tokens.set_raw("dbl", value={"api_key": dbl_key})
-            await self.config.dbl_key.clear()
 
     async def _get_data(self, ctx, bot=None, endpoint: Optional[str] = ""):
-        """Get data from discordbots.org."""
-        key = await ctx.bot.db.api_tokens.get_raw("dbl", default=None)
-        headers = {"Authorization": key["api_key"]}
+        """Get data from Top.gg."""
+        if hasattr(self.bot, "get_shared_api_tokens"):  # Red > 3.2
+            api = await self.bot.get_shared_api_tokens("dbl")
+            key = api.get("api_key")
+        else:  # Red < 3.2
+            api = await self.bot.db.api_tokens.get_raw("dbl", default=None)
+            key = api["api_key"]
+        headers = {"Authorization": key}
         async with self.session.get(DBL_BASE_URL + str(bot) + endpoint, headers=headers) as resp:
             if resp.status == 401:
                 await ctx.send(_("This API key looks wrong, try to set it again."))
@@ -49,7 +42,7 @@ class DblTools(commands.Cog):
                 return None
             if resp.status != 200:
                 await ctx.send(
-                    _("Error when trying to get DBL API. Error code: {}").format(
+                    _("Error when trying to get Top.gg API. Error code: {}").format(
                         inline(resp.status)
                     )
                 )
@@ -61,16 +54,16 @@ class DblTools(commands.Cog):
     @commands.command()
     async def dblkey(self, ctx):
         """
-            Explain how to set DBL API key.
+            Explain how to set Top.gg API key.
 
-            Note: You need to have a bot published on DBL to use API and have a key.
+            Note: You need to have a bot published on Top.gg to use API and have a key.
         """
         message = _(
             "So first, to get a Discord Bot List API key, you need "
             "to have a bot on this bot list, otherwise you can't use this cog.\n\n"
             "To find your API key:\n"
-            "1. Login on DBL [here](https://discordbots.org/login)\n"
-            "2. Go on your [profile](https://discordbots.org/me)\n"
+            "1. Login on Top.gg [here](https://top.gg/login)\n"
+            "2. Go on your [profile](https://top.gg/me)\n"
             "3. Click on `Edit` on one of your bot(s).\n"
             "4. Scroll to the bottom of the edit page, in `API Options` section, "
             "then click on `Show token` and copy the token.\n"
@@ -84,11 +77,16 @@ class DblTools(commands.Cog):
     @commands.cooldown(1, 1, commands.BucketType.user)
     async def dblinfo(self, ctx, *, bot: Union[int, discord.Member, discord.User, None] = None):
         """
-            Show information of a chosen bot on discordbots.org.
+            Show information of a chosen bot on Top.gg.
 
             `[bot]`: Can be a mention or ID of a bot.
         """
-        key = await ctx.bot.db.api_tokens.get_raw("dbl", default=None)
+        if hasattr(self.bot, "get_shared_api_tokens"):  # Red > 3.2
+            api = await self.bot.get_shared_api_tokens("dbl")
+            key = api.get("api_key")
+        else:  # Red < 3.2
+            api = await self.bot.db.api_tokens.get_raw("dbl", default=None)
+            key = api["api_key"]
         if key is None:
             return await ctx.send(_("Owner of this bot needs to set an API key first !"))
         if bot is None:
@@ -172,7 +170,7 @@ class DblTools(commands.Cog):
                         + " {}\n\n".format(info["date"].replace("T", " ")[:-5])
                     ),
                     "dbl_page": (
-                        _("[DBL Page]({})").format(f"https://discordbots.org/bot/{bot.id}")
+                        _("[Top.gg Page]({})").format(f"https://top.gg/bot/{bot.id}")
                     ),
                     "if_inv": (
                         _(" • [Invitation link]({})").format(info["invite"])
@@ -206,7 +204,7 @@ class DblTools(commands.Cog):
                 ).format(**format_kwargs)
                 em = discord.Embed(color=(await ctx.embed_colour()), description=description)
                 em.set_author(
-                    name=_("DBL Info about {}:").format(info["username"]),
+                    name=_("Top.gg Info about {}:").format(info["username"]),
                     icon_url="https://cdn.discordapp.com/emojis/393548388664082444.gif",
                 )
                 em.set_thumbnail(url=bot.avatar_url_as(static_format="png"))
@@ -221,8 +219,13 @@ class DblTools(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 1, commands.BucketType.user)
     async def dblwidget(self, ctx, *, bot: Union[int, discord.Member, discord.User, None] = None):
-        """Send the widget of a chosen bot on DBL."""
-        key = await ctx.bot.db.api_tokens.get_raw("dbl", default=None)
+        """Send the widget of a chosen bot on Top.gg."""
+        if hasattr(self.bot, "get_shared_api_tokens"):  # Red > 3.2
+            api = await self.bot.get_shared_api_tokens("dbl")
+            key = api.get("api_key")
+        else:  # Red < 3.2
+            api = await self.bot.db.api_tokens.get_raw("dbl", default=None)
+            key = api["api_key"]
         if key is None:
             return await ctx.send(_("Owner of this bot need to set an API key first !"))
         if bot is None:
@@ -241,11 +244,11 @@ class DblTools(commands.Cog):
                 return
             em = discord.Embed(
                 color=discord.Color.blurple(),
-                description=bold(_("[DBL Page]({})")).format(
-                    f"https://discordbots.org/bot/{bot.id}"
+                description=bold(_("[Top.gg Page]({})")).format(
+                    f"https://top.gg/bot/{bot.id}"
                 ),
             )
-            em.set_image(url=f"https://discordbots.org/api/widget/{bot.id}.png")
+            em.set_image(url=f"https://top.gg/api/widget/{bot.id}.png")
         await ctx.send(embed=em)
 
     def cog_unload(self):

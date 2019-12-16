@@ -21,7 +21,7 @@ class Nsfw(Core, commands.Cog):
     """
 
     __author__ = ["Predä", "aikaterna"]
-    __version__ = "2.2.2"
+    __version__ = "2.2.4"
 
     @commands.command()
     async def nsfwversion(self, ctx):
@@ -184,6 +184,33 @@ class Nsfw(Core, commands.Cog):
     @nsfwcheck()
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
+    @commands.command(aliases=["facial"])
+    async def facials(self, ctx):
+        """Show some facials images from random subreddits."""
+
+        await self._send_msg(ctx, _("facials"), sub=sub.FACIALS)
+
+    @nsfwcheck()
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.cooldown(1, 0.5, commands.BucketType.user)
+    @commands.command(aliases=["feets", "feetish"])
+    async def feet(self, ctx):
+        """Show some feet images from random subreddits."""
+
+        await self._send_msg(ctx, _("feets"), sub=sub.FEET)
+
+    @nsfwcheck()
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.cooldown(1, 0.5, commands.BucketType.user)
+    @commands.command()
+    async def femdom(self, ctx):
+        """Show some femdom images from random subreddits."""
+
+        await self._send_msg(ctx, _("femdom"), sub=sub.FEMDOM)
+
+    @nsfwcheck()
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["futanari"])
     async def futa(self, ctx):
         """Show some futa images from random subreddits."""
@@ -226,41 +253,11 @@ class Nsfw(Core, commands.Cog):
     @nsfwcheck()
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command()
-    async def hololewd(self, ctx):
-        """Show some holo images/gif from Nekos.life API."""
-
-        await self._send_other_msg(
-            ctx,
-            name=_("holo"),
-            arg="url",
-            source="Nekos.life API",
-            url=sub.NEKOS_LIFE_URL.format(sub.NEKOS_LIFE_HOLO),
-        )
-
-    @nsfwcheck()
-    @commands.bot_has_permissions(embed_links=True)
-    @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["lesbians"])
     async def lesbian(self, ctx):
         """Show some lesbian gifs or images from random subreddits."""
 
         await self._send_msg(ctx, _("lesbian"), sub=sub.LESBIANS)
-
-    @nsfwcheck()
-    @commands.bot_has_permissions(embed_links=True)
-    @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command(aliases=["lewdgif", "lewdgifs"])
-    async def lewd(self, ctx):
-        """Show some lewd images/gifs from Nekos.life API."""
-
-        await self._send_other_msg(
-            ctx,
-            name=_("lewd"),
-            arg="url",
-            source="Nekos.life API",
-            url=sub.NEKOS_LIFE_URL.format("lewd"),
-        )
 
     @nsfwcheck()
     @commands.bot_has_permissions(embed_links=True)
@@ -276,14 +273,14 @@ class Nsfw(Core, commands.Cog):
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["nekogifs"])
     async def nekogif(self, ctx):
-        """Show some neko gifs from Nekos.life API."""
+        """Show some neko gifs from Nekobot API."""
 
         await self._send_other_msg(
             ctx,
             name=_("neko gif"),
-            arg="url",
-            source="Nekos.life API",
-            url=sub.NEKOS_LIFE_URL.format("nsfw_neko_gif"),
+            arg="message",
+            source="Nekobot API",
+            url=sub.NEKOBOT_URL.format("hneko"),
         )
 
     @nsfwcheck()

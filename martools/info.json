@@ -10,5 +10,8 @@
         "information",
         "counters",
         "statistics"
+    ],
+    "requirements": [
+        "apsw-wheels"
     ]
 }

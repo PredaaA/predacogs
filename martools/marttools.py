@@ -1,88 +1,83 @@
-import discord
+from datetime import datetime, timezone
 
+import apsw
+import discord
 import lavalink
 
-from redbot.core import bank, commands, checks
+from redbot.core import bank, commands
+from redbot.core.data_manager import cog_data_path
 from redbot.core.i18n import Translator, cog_i18n
 from redbot.core.utils.chat_formatting import bold, humanize_timedelta
-# from redbot.cogs.audio.localtracks import Query <- Will be probably changed
 
-from datetime import datetime
+
+try:
+    from redbot.cogs.audio.audio_dataclasses import Query
+except ImportError:
+    Query = None
+
+from .listeners import Listeners
+from .statements import *
+from .utils import rgetattr
 
 _ = Translator("MartTools", __file__)
 
 
 @cog_i18n(_)
-class MartTools(commands.Cog):
-    """Multiple tools that are originally used on Martine."""
+class MartTools(Listeners, commands.Cog):
+    """Multiple tools that are originally used on Martine the BOT."""
 
     __author__ = "Predä"
-    __version__ = "1.4.1"
+    __version__ = "1.5.0"
 
     def __init__(self, bot):
         self.bot = bot
-        lavalink.register_event_listener(self.event_handler)  # To delete at next audio update.
+        self._connection = apsw.Connection(str(cog_data_path(self) / "MartTools.db"))
+        self.cursor = self._connection.cursor()
+        self.cursor.execute(PRAGMA)
+        self.cursor.execute(CREATE_TABLE_PERMA)
+        self.cursor.execute(DROP_TEMP)
+        self.cursor.execute(CREATE_TABLE_TEMP)
+        self.uptime = datetime.now(tz=timezone.utc)
+
+        if not Query:
+            lavalink.register_event_listener(self.event_handler)  # To delete at next audio update.
+
+    def upset(self, id: int, event: str):
+        self.cursor.execute(UPSET_PERMA, (id, event))
+        self.cursor.execute(UPSET_TEMP, (id, event))
+
+    def fetch(self, key, id=None) -> int:
+        if id is None:
+            query = SELECT_PERMA_GLOBAL
+            condition = {"event": key}
+        else:
+            query = SELECT_PERMA_SINGLE
+            condition = {"event": key, "guild_id": id}
+        result = self.cursor.execute(query, condition)
+        return result[0] if result else 0
+
+    def get(self, key, id=None) -> int:
+        if id is None:
+            query = SELECT_TEMP_GLOBAL
+            condition = {"event": key}
+        else:
+            query = SELECT_TEMP_SINGLE
+            condition = {"event": key, "guild_id": id}
+        result = self.cursor.execute(query, condition)
+        return result[0] if result else 0
 
     def cog_unload(self):  # To delete at next audio update.
-        lavalink.unregister_event_listener(self.event_handler)
+        if not Query:
+            lavalink.unregister_event_listener(self.event_handler)
 
     async def event_handler(self, player, event_type, extra):  # To delete at next audio update.
-        # Thanks Draper#6666
         if event_type == lavalink.LavalinkEvents.TRACK_START:
-            self.bot.counter["tracks_played"] += 1
+            self.upset(rgetattr(player, "channel.guild", 0), "tracks_played")
 
     def get_bot_uptime(self):
-        delta = datetime.utcnow() - self.bot.uptime
+        delta = datetime.utcnow() - self.uptime
         uptime = humanize_timedelta(timedelta=delta)
         return uptime
-
-    @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
-        if isinstance(error, commands.CommandInvokeError):
-            self.bot.counter["command_error"] += 1
-
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        if message.author.id == self.bot.user.id:
-            self.bot.counter["msg_sent"] += 1
-
-    @commands.Cog.listener()
-    async def on_guild_join(self, guild: discord.Guild):
-        self.bot.counter["guild_join"] += 1
-
-    @commands.Cog.listener()
-    async def on_guild_remove(self, guild: discord.Guild):
-        self.bot.counter["guild_remove"] += 1
-
-    # Planned for next audio update.
-    # @commands.Cog.listener()
-    # async def on_track_start(self, guild, track, requester):
-    #     self.bot.counter["tracks_played"] += 1
-    #     query = Query.process_input(track.uri)
-    #     if track.is_stream:
-    #         self.bot.counter["streams_played"] += 1
-    #     if track.is_stream and query.is_youtube:
-    #         self.bot.counter["yt_streams_played"] += 1
-    #     if track.is_stream and query.is_mixer:
-    #         self.bot.counter["mixer_streams_played"] += 1
-    #     if track.is_stream and query.is_twitch:
-    #         self.bot.counter["ttv_streams_played"] += 1
-    #     if track.is_stream and query.is_other:
-    #         self.bot.counter["other_streams_played"] += 1
-    #     if query.is_youtube:
-    #         self.bot.counter["youtube_tracks"] += 1
-    #     if query.is_soundcloud:
-    #         self.bot.counter["soundcloud_tracks"] += 1
-    #     if query.is_bandcamp:
-    #         self.bot.counter["bandcamp_tracks"] += 1
-    #     if query.is_vimeo:
-    #         self.bot.counter["vimeo_tracks"] += 1
-    #     if query.is_mixer:
-    #         self.bot.counter["mixer_tracks"] += 1
-    #     if query.is_twitch:
-    #         self.bot.counter["twitch_tracks"] += 1
-    #     if query.is_other:
-    #         self.bot.counter["other_tracks"] += 1
 
     @commands.command()
     @commands.guild_only()
@@ -144,10 +139,10 @@ class MartTools(commands.Cog):
             Commands processed, messages received, and music on servers.
         """
         uptime = str(self.get_bot_uptime())
-        commands_count = "`{:,}`".format(self.bot.counter["processed_commands"])
-        errors_count = "`{:,}`".format(self.bot.counter["command_error"])
-        messages_read = "`{:,}`".format(self.bot.counter["messages_read"])
-        messages_sent = "`{:,}`".format(self.bot.counter["msg_sent"])
+        commands_count = "`{:,}`".format(self.get("processed_commands"))
+        errors_count = "`{:,}`".format(self.get("command_error"))
+        messages_read = "`{:,}`".format(self.get("messages_read"))
+        messages_sent = "`{:,}`".format(self.get("msg_sent"))
         try:
             total_num = "`{:,}/{:,}`".format(
                 len(lavalink.active_players()), len(lavalink.all_players())
@@ -157,9 +152,67 @@ class MartTools(commands.Cog):
                 len([p for p in lavalink.players if p.current is not None]),
                 len([p for p in lavalink.players]),
             )
-        tracks_played = "`{:,}`".format(self.bot.counter["tracks_played"])
-        guild_join = "`{:,}`".format(self.bot.counter["guild_join"])
-        guild_leave = "`{:,}`".format(self.bot.counter["guild_remove"])
+        tracks_played = "`{:,}`".format(self.get("tracks_played"))
+        guild_join = "`{:,}`".format(self.get("guild_join"))
+        guild_leave = "`{:,}`".format(self.get("guild_remove"))
+        avatar = self.bot.user.avatar_url_as(static_format="png")
+        msg = (
+            bold(_("Commands processed: "))
+            + _("{} commands.\n").format(commands_count)
+            + bold(_("Commands errors: "))
+            + _("{} errors.\n").format(errors_count)
+            + bold(_("Messages received: "))
+            + _("{} messages.\n").format(messages_read)
+            + bold(_("Messages sent: "))
+            + _("{} messages.\n").format(messages_sent)
+            + bold(_("Playing music on: "))
+            + _("{} servers.\n").format(total_num)
+            + bold(_("Tracks played: "))
+            + _("{} tracks.\n\n").format(tracks_played)
+            + bold(_("Servers joined: "))
+            + _("{} servers.\n").format(guild_join)
+            + bold(_("Servers left: "))
+            + _("{} servers.").format(guild_leave)
+        )
+        try:
+            em = discord.Embed(color=await ctx.embed_colour())
+            em.add_field(
+                name=_("Usage count of {} since last restart:").format(ctx.bot.user.name),
+                value=msg,
+            )
+            em.set_thumbnail(url=avatar)
+            em.set_footer(text=_("Since {}").format(uptime))
+            await ctx.send(embed=em)
+        except discord.Forbidden:
+            await ctx.send(
+                _("Usage count of {} since last restart:\n").format(ctx.bot.user.name)
+                + msg
+                + _("\n\nSince {}").format(uptime)
+            )
+
+    @commands.command(aliases=["advusagec"])
+    async def advusagecount(self, ctx):
+        """
+            Show the usage count of the bot.
+            Commands processed, messages received, and music on servers.
+        """
+        uptime = str(self.get_bot_uptime())
+        commands_count = "`{:,}`".format(self.fetch("processed_commands"))
+        errors_count = "`{:,}`".format(self.fetch("command_error"))
+        messages_read = "`{:,}`".format(self.fetch("messages_read"))
+        messages_sent = "`{:,}`".format(self.fetch("msg_sent"))
+        try:
+            total_num = "`{:,}/{:,}`".format(
+                len(lavalink.active_players()), len(lavalink.all_players())
+            )
+        except AttributeError:
+            total_num = "`{:,}/{:,}`".format(
+                len([p for p in lavalink.players if p.current is not None]),
+                len([p for p in lavalink.players]),
+            )
+        tracks_played = "`{:,}`".format(self.fetch("tracks_played"))
+        guild_join = "`{:,}`".format(self.fetch("guild_join"))
+        guild_leave = "`{:,}`".format(self.fetch("guild_remove"))
         avatar = self.bot.user.avatar_url_as(static_format="png")
         msg = (
             bold(_("Commands processed: "))

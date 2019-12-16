@@ -35,7 +35,7 @@ CREATE_TABLE_TEMP = """CREATE TABLE IF NOT EXISTS
 """
 
 
-UPSET_PERMA = """INSERT INTO 
+UPSERT_PERMA = """INSERT INTO 
 bot_stats_perma 
   (
     guild_id, 
@@ -55,7 +55,28 @@ DO UPDATE
   SET quantity = quantity + 1;
 """
 
-UPSET_TEMP = """INSERT INTO 
+INSERT_PERMA_DO_NOTHING = """INSERT INTO 
+bot_stats_perma 
+  (
+    guild_id, 
+    event,
+    quantity
+  ) 
+VALUES 
+  (
+    ?,
+    ?,
+    ?
+  )
+ON CONFLICT
+  (
+    guild_id, 
+    event
+  ) 
+DO NOTHING;
+"""
+
+UPSERT_TEMP = """INSERT INTO 
 bot_stats_temp 
   (
     guild_id, 

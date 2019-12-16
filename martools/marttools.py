@@ -1,4 +1,5 @@
-from datetime import datetime, timezone
+import time
+from datetime import datetime
 
 import apsw
 import discord
@@ -50,13 +51,14 @@ class MartTools(Listeners, commands.Cog):
         self.cursor.execute(DROP_TEMP)
         self.cursor.execute(CREATE_TABLE_TEMP)
         self.uptime = datetime.utcnow()
+        self.cursor.execute(INSERT_PERMA_DO_NOTHING, (-1000, "creation_time", time.time()))
 
         if not Query:
             lavalink.register_event_listener(self.event_handler)  # To delete at next audio update.
 
-    def upset(self, id: int, event: str):
-        self.cursor.execute(UPSET_PERMA, (id, event))
-        self.cursor.execute(UPSET_TEMP, (id, event))
+    def upsert(self, id: int, event: str):
+        self.cursor.execute(UPSERT_PERMA, (id, event))
+        self.cursor.execute(UPSERT_TEMP, (id, event))
 
     def fetch(self, key, id=None) -> str:
         if id is None:
@@ -84,7 +86,7 @@ class MartTools(Listeners, commands.Cog):
 
     async def event_handler(self, player, event_type, extra):  # To delete at next audio update.
         if event_type == lavalink.LavalinkEvents.TRACK_START:
-            self.upset(rgetattr(player, "channel.guild", 0), "tracks_played")
+            self.upsert(rgetattr(player, "channel.guild", 0), "tracks_played")
 
     def get_bot_uptime(self):
         delta = datetime.utcnow() - self.uptime
@@ -214,7 +216,11 @@ class MartTools(Listeners, commands.Cog):
         Same as [p]usagecount command but with more stats.
         """
         avatar = self.bot.user.avatar_url_as(static_format="png")
-        uptime = str(self.get_bot_uptime())
+        query = SELECT_PERMA_SINGLE
+        condition = {"event": "creation_time", "guild_id": -1000}
+        result = list(self.cursor.execute(query, condition))
+        delta = datetime.utcnow() - datetime.utcfromtimestamp(result[0][0])
+        uptime = humanize_timedelta(timedelta=delta)
         try:
             total_num = "{}/{}".format(
                 humanize_number(len(lavalink.active_players())),

@@ -95,8 +95,7 @@ class Listeners:
 
     @commands.Cog.listener()
     async def on_member_ban(self, guild, user):
-        self.update_counters("members_banned")
-        self.upsert(rgetattr(guild, "id", -1), "members_unbanned")
+        self.upsert(rgetattr(guild, "id", -1), "members_banned")
 
     @commands.Cog.listener()
     async def on_member_unban(self, guild, user):

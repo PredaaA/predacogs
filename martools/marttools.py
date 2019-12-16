@@ -86,7 +86,7 @@ class MartTools(Listeners, commands.Cog):
 
     async def event_handler(self, player, event_type, extra):  # To delete at next audio update.
         if event_type == lavalink.LavalinkEvents.TRACK_START:
-            self.upsert(rgetattr(player, "channel.guild", 0), "tracks_played")
+            self.upsert(rgetattr(player, "channel.guild.id", 0), "tracks_played")
 
     def get_bot_uptime(self):
         delta = datetime.utcnow() - self.uptime

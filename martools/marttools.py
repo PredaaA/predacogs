@@ -48,7 +48,7 @@ class MartTools(Listeners, commands.Cog):
         self.cursor.execute(CREATE_TABLE_PERMA)
         self.cursor.execute(DROP_TEMP)
         self.cursor.execute(CREATE_TABLE_TEMP)
-        self.uptime = datetime.now(tz=timezone.utc)
+        self.uptime = datetime.utcnow()
 
         if not Query:
             lavalink.register_event_listener(self.event_handler)  # To delete at next audio update.

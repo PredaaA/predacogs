@@ -367,6 +367,41 @@ class MartTools(Listeners, commands.Cog):
             ),
             inline=False,
         )
+        em.add_field(
+            name=_("Track Stats"),
+            value=box(
+                _(
+                    "Streams             : {streams_played}\n"
+                    "YouTube Streams     : {yt_streams_played}\n"
+                    "Mixer Streams       : {mixer_streams_played}\n"
+                    "Twitch Streams      : {ttv_streams_played}\n"
+                    "Other Streams       : {streams_played}\n"
+                    "YouTube Tracks      : {youtube_tracks}\n"
+                    "Soundcloud Tracks   : {soundcloud_tracks}\n"
+                    "Bandcamp Tracks     : {bandcamp_tracks}\n"
+                    "Vimeo Tracks        : {vimeo_tracks}\n"
+                    "Mixer Tracks        : {mixer_tracks}\n"
+                    "Twitch Tracks       : {twitch_tracks}\n"
+                    "Other Tracks        : {other_tracks}\n"
+                ).format(
+                    streams_played=self.fetch("streams_played"),
+                    yt_streams_played=self.fetch("yt_streams_played"),
+                    mixer_streams_played=self.fetch("mixer_streams_played"),
+                    ttv_streams_played=self.fetch("ttv_streams_played"),
+                    other_streams_played=self.fetch("other_streams_played"),
+                    youtube_tracks=self.fetch("youtube_tracks"),
+                    soundcloud_tracks=self.fetch("soundcloud_tracks"),
+                    bandcamp_tracks=self.fetch("bandcamp_tracks"),
+                    vimeo_tracks=self.fetch("vimeo_tracks"),
+                    mixer_tracks=self.fetch("mixer_tracks"),
+                    twitch_tracks=self.fetch("twitch_tracks"),
+                    other_tracks=self.fetch("other_tracks"),
+                ),
+                lang="prolog",
+            ),
+            inline=False,
+        )
+
         em.set_thumbnail(url=avatar)
         em.set_footer(text=_("Since {}").format(uptime))
         await ctx.send(embed=em)

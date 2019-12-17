@@ -83,6 +83,7 @@ class MartTools(Listeners, commands.Cog):
     def cog_unload(self):  # To delete at next audio update.
         if not Query:
             lavalink.unregister_event_listener(self.event_handler)
+        self._connection.close()
 
     async def event_handler(self, player, event_type, extra):  # To delete at next audio update.
         if event_type == lavalink.LavalinkEvents.TRACK_START:

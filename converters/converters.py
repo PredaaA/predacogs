@@ -17,7 +17,7 @@ class Converters(commands.Cog):
     """Some converters."""
 
     __author__ = "Predä"
-    __version__ = "0.3.0"
+    __version__ = "0.3.1"
 
     def __init__(self, bot: Red):
         self.bot = bot

@@ -1,6 +1,6 @@
 import discord
 
-from redbot.core import Red
+from redbot.core.bot import Red
 from redbot.core import commands
 from redbot.core.i18n import Translator, cog_i18n
 from redbot.core.utils.chat_formatting import humanize_timedelta
@@ -17,7 +17,7 @@ class Converters(commands.Cog):
     """Some converters."""
 
     __author__ = "Predä"
-    __version__ = "0.3.1"
+    __version__ = "0.3.2"
 
     def __init__(self, bot: Red):
         self.bot = bot

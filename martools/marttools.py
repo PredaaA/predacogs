@@ -7,8 +7,6 @@ import contextlib
 from copy import copy
 from datetime import datetime
 from collections import Counter, defaultdict
-from typing import Union  # <- Remove this at 3.2
-from babel.numbers import format_decimal  # <- Remove this at 3.2
 
 from redbot.core import Config, bank, commands
 from redbot.core.i18n import Translator, cog_i18n
@@ -16,7 +14,8 @@ from redbot.core.utils.chat_formatting import (
     bold,
     box,
     humanize_timedelta,
-)  # , humanize_number <- Will be for 3.2
+    humanize_number,
+)
 
 # from redbot.cogs.audio.dataclasses import Query
 
@@ -25,16 +24,12 @@ from .listeners import Listeners
 _ = Translator("MartTools", __file__)
 
 
-def humanize_number(val: Union[int, float]):  # <- Remove this at 3.2
-    return format_decimal(val, locale="en_US")
-
-
 @cog_i18n(_)
 class MartTools(Listeners, commands.Cog):
     """Multiple tools that are originally used on Martine."""
 
     __author__ = "Predä"
-    __version__ = "1.5.9"
+    __version__ = "1.5.91"
 
     def __init__(self, bot):
         self.bot = bot
@@ -185,16 +180,10 @@ class MartTools(Listeners, commands.Cog):
         errors_count = "`{}`".format(humanize_number(self.counter["command_error"]))
         messages_read = "`{}`".format(humanize_number(self.counter["messages_read"]))
         messages_sent = "`{}`".format(humanize_number(self.counter["msg_sent"]))
-        try:
-            total_num = "`{}/{}`".format(
-                humanize_number(len(lavalink.active_players())),
-                humanize_number(len(lavalink.all_players())),
-            )
-        except AttributeError:  # Remove at 3.2
-            total_num = "`{}/{}`".format(
-                humanize_number(len([p for p in lavalink.players if p.current is not None])),
-                humanize_number(len([p for p in lavalink.players])),
-            )
+        total_num = "`{}/{}`".format(
+            humanize_number(len(lavalink.active_players())),
+            humanize_number(len(lavalink.all_players())),
+        )
         tracks_played = "`{}`".format(humanize_number(self.counter["tracks_played"]))
         guild_join = "`{}`".format(humanize_number(self.counter["guild_join"]))
         guild_leave = "`{}`".format(humanize_number(self.counter["guild_remove"]))
@@ -242,16 +231,10 @@ class MartTools(Listeners, commands.Cog):
         avatar = self.bot.user.avatar_url_as(static_format="png")
         counters = defaultdict(int, self.counter)
         uptime = str(self.get_bot_uptime())
-        try:
-            total_num = "{}/{}".format(
-                humanize_number(len(lavalink.active_players())),
-                humanize_number(len(lavalink.all_players())),
-            )
-        except AttributeError:  # Remove at 3.2
-            total_num = "{}/{}".format(
-                humanize_number(len([p for p in lavalink.players if p.current is not None])),
-                humanize_number(len([p for p in lavalink.players])),
-            )
+        total_num = "{}/{}".format(
+            humanize_number(len(lavalink.active_players())),
+            humanize_number(len(lavalink.all_players())),
+        )
 
         em = discord.Embed(
             title=_("Usage count of {} since last restart:").format(ctx.bot.user.name),
@@ -356,18 +339,11 @@ class MartTools(Listeners, commands.Cog):
     @commands.command(aliases=["prefixes"])
     async def prefix(self, ctx):
         """Show all prefixes of the bot"""
-        if hasattr(self.bot, "_config"):  # Red > 3.2
-            default_prefixes = await self.bot._config.prefix()
-            try:
-                guild_prefixes = await self.bot._config.guild(ctx.guild).prefix()
-            except AttributeError:
-                guild_prefixes = False
-        else:  # Red < 3.2
-            default_prefixes = await self.bot.db.prefix()
-            try:
-                guild_prefixes = await self.bot.db.guild(ctx.guild).prefix()
-            except AttributeError:
-                guild_prefixes = False
+        default_prefixes = await self.bot._config.prefix()
+        try:
+            guild_prefixes = await self.bot._config.guild(ctx.guild).prefix()
+        except AttributeError:
+            guild_prefixes = False
         bot_name = ctx.bot.user.name
         avatar = self.bot.user.avatar_url_as(static_format="png")
 

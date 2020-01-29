@@ -18,7 +18,7 @@ class DblTools(commands.Cog):
     """Tools to get bots information from Top.gg."""
 
     __author__ = "Predä"
-    __version__ = "1.3.2"
+    __version__ = "1.3.3"
 
     def __init__(self, bot):
         self.bot = bot
@@ -26,12 +26,7 @@ class DblTools(commands.Cog):
 
     async def _get_data(self, ctx, bot=None, endpoint: Optional[str] = ""):
         """Get data from Top.gg."""
-        if hasattr(self.bot, "get_shared_api_tokens"):  # Red > 3.2
-            api = await self.bot.get_shared_api_tokens("dbl")
-            key = api.get("api_key")
-        else:  # Red < 3.2
-            api = await self.bot.db.api_tokens.get_raw("dbl", default=None)
-            key = api["api_key"]
+        key = (await self.bot.get_shared_api_tokens("dbl")).get("api_key")
         headers = {"Authorization": key}
         async with self.session.get(DBL_BASE_URL + str(bot) + endpoint, headers=headers) as resp:
             if resp.status == 401:
@@ -81,12 +76,7 @@ class DblTools(commands.Cog):
 
             `[bot]`: Can be a mention or ID of a bot.
         """
-        if hasattr(self.bot, "get_shared_api_tokens"):  # Red > 3.2
-            api = await self.bot.get_shared_api_tokens("dbl")
-            key = api.get("api_key")
-        else:  # Red < 3.2
-            api = await self.bot.db.api_tokens.get_raw("dbl", default=None)
-            key = api["api_key"]
+        key = (await self.bot.get_shared_api_tokens("dbl")).get("api_key")
         if key is None:
             return await ctx.send(_("Owner of this bot needs to set an API key first !"))
         if bot is None:
@@ -220,12 +210,7 @@ class DblTools(commands.Cog):
     @commands.cooldown(1, 1, commands.BucketType.user)
     async def dblwidget(self, ctx, *, bot: Union[int, discord.Member, discord.User, None] = None):
         """Send the widget of a chosen bot on Top.gg."""
-        if hasattr(self.bot, "get_shared_api_tokens"):  # Red > 3.2
-            api = await self.bot.get_shared_api_tokens("dbl")
-            key = api.get("api_key")
-        else:  # Red < 3.2
-            api = await self.bot.db.api_tokens.get_raw("dbl", default=None)
-            key = api["api_key"]
+        key = (await self.bot.get_shared_api_tokens("dbl")).get("api_key")
         if key is None:
             return await ctx.send(_("Owner of this bot need to set an API key first !"))
         if bot is None:

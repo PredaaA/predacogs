@@ -15,7 +15,7 @@ class WhoPlays(commands.Cog):
     """
 
     __author__ = ["Stevy", "Predä"]
-    __version__ = "0.5.2"
+    __version__ = "0.5.3"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -23,7 +23,7 @@ class WhoPlays(commands.Cog):
     def format_help_for_context(self, ctx: commands.Context) -> str:
         """Thanks Sinbad!"""
         pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
+        return f"{pre_processed}\n\nAuthor: {', '.join(self.__author__)}\nCog Version: {self.__version__}"
 
     @commands.command(aliases=["whoplay"])
     @commands.guild_only()

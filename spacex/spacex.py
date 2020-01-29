@@ -187,9 +187,12 @@ class SpaceX(Core):
             if data is None:
                 return
 
-            base_stats, stages_stats, payload_weights_stats, engines_stats = await self._rockets_texts(
-                data
-            )
+            (
+                base_stats,
+                stages_stats,
+                payload_weights_stats,
+                engines_stats,
+            ) = await self._rockets_texts(data)
 
             em = discord.Embed(
                 color=await ctx.embed_colour(),
@@ -220,9 +223,12 @@ class SpaceX(Core):
             msg = []
             page = 1
             for data in resp:
-                base_stats, stages_stats, payload_weights_stats, engines_stats = await self._rockets_texts(
-                    data
-                )
+                (
+                    base_stats,
+                    stages_stats,
+                    payload_weights_stats,
+                    engines_stats,
+                ) = await self._rockets_texts(data)
 
                 em = discord.Embed(
                     color=await ctx.embed_colour(),

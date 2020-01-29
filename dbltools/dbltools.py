@@ -33,7 +33,9 @@ class DblTools(commands.Cog):
         pre_processed = super().format_help_for_context(ctx)
         return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
 
-    async def _get_data(self, ctx: commands.Context, bot: str = None, endpoint: Optional[str] = ""):
+    async def _get_data(
+        self, ctx: commands.Context, bot: str = None, endpoint: Optional[str] = ""
+    ):
         """Get data from Top.gg."""
         key = (await self.bot.get_shared_api_tokens("dbl")).get("api_key")
         headers = {"Authorization": key}
@@ -79,7 +81,9 @@ class DblTools(commands.Cog):
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 1, commands.BucketType.user)
-    async def dblinfo(self, ctx: commands.Context, *, bot: Union[int, discord.Member, discord.User, None] = None):
+    async def dblinfo(
+        self, ctx: commands.Context, *, bot: Union[int, discord.Member, discord.User, None] = None
+    ):
         """
             Show information of a chosen bot on Top.gg.
 
@@ -168,9 +172,7 @@ class DblTools(commands.Cog):
                         bold(_("Approval date:"))
                         + " {}\n\n".format(info["date"].replace("T", " ")[:-5])
                     ),
-                    "dbl_page": (
-                        _("[Top.gg Page]({})").format(f"https://top.gg/bot/{bot.id}")
-                    ),
+                    "dbl_page": (_("[Top.gg Page]({})").format(f"https://top.gg/bot/{bot.id}")),
                     "if_inv": (
                         _(" • [Invitation link]({})").format(info["invite"])
                         if info["invite"]
@@ -217,7 +219,9 @@ class DblTools(commands.Cog):
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 1, commands.BucketType.user)
-    async def dblwidget(self, ctx: commands.Context, *, bot: Union[int, discord.Member, discord.User, None] = None):
+    async def dblwidget(
+        self, ctx: commands.Context, *, bot: Union[int, discord.Member, discord.User, None] = None
+    ):
         """Send the widget of a chosen bot on Top.gg."""
         key = (await self.bot.get_shared_api_tokens("dbl")).get("api_key")
         if key is None:
@@ -238,9 +242,7 @@ class DblTools(commands.Cog):
                 return
             em = discord.Embed(
                 color=discord.Color.blurple(),
-                description=bold(_("[Top.gg Page]({})")).format(
-                    f"https://top.gg/bot/{bot.id}"
-                ),
+                description=bold(_("[Top.gg Page]({})")).format(f"https://top.gg/bot/{bot.id}"),
             )
             em.set_image(url=f"https://top.gg/api/widget/{bot.id}.png")
         await ctx.send(embed=em)

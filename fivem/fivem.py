@@ -298,7 +298,9 @@ class FiveM(commands.Cog):
         await ctx.send(f"Activity type set to: {inline(activity.lower())}")
 
     @fivemset.command()
-    async def activitystream(self, ctx: commands.Context, streamer: str = None, *, streamtitle: str = None):
+    async def activitystream(
+        self, ctx: commands.Context, streamer: str = None, *, streamtitle: str = None
+    ):
         """
         Choose if you want to put a Twitch stream for the bot status.
 

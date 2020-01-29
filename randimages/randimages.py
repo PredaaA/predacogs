@@ -13,7 +13,12 @@ class RandImages(Core, commands.Cog):
     """Send random images (animals, art ...) from different APIs."""
 
     __author__ = "Predä"
-    __version__ = "1.0.4"
+    __version__ = "1.0.5"
+
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        """Thanks Sinbad!"""
+        pre_processed = super().format_help_for_context(ctx)
+        return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
 
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.bot_has_permissions(embed_links=True)

@@ -21,6 +21,9 @@ class Core(Stuff):
         self.bot = bot
         self.session = aiohttp.ClientSession()
 
+    def cog_unload(self):
+        self.bot.loop.create_task(self.session.close())
+
     async def _get_imgs(self, ctx, sub=None):
         """Get images from Reddit API."""
         try:
@@ -166,9 +169,6 @@ class Core(Stuff):
         if footer:
             em.set_footer(text=footer)
         return em
-
-    def cog_unload(self):
-        self.bot.loop.create_task(self.session.close())
 
 
 def nsfwcheck():

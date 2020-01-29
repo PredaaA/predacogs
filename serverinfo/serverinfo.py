@@ -17,10 +17,15 @@ class ServerInfo(commands.Cog):
     """Replace original Red serverinfo command with more details."""
 
     __author__ = "Predä"
-    __version__ = "1.3.3"
+    __version__ = "1.3.4"
 
     def __init__(self, bot):
         self.bot = bot
+
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        """Thanks Sinbad!"""
+        pre_processed = super().format_help_for_context(ctx)
+        return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
 
     def cog_unload(self):
         # Remove command logic are from: https://github.com/mikeshardmind/SinbadCogs/tree/v3/messagebox

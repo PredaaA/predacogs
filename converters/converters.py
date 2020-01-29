@@ -18,10 +18,15 @@ class Converters(commands.Cog):
     """Some converters."""
 
     __author__ = "Predä"
-    __version__ = "0.3.3"
+    __version__ = "0.3.4"
 
     def __init__(self, bot: Red):
         self.bot = bot
+
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        """Thanks Sinbad!"""
+        pre_processed = super().format_help_for_context(ctx)
+        return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
 
     @commands.group(aliases=["converter"])
     async def conv(self, ctx: commands.Context):

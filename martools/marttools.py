@@ -29,7 +29,7 @@ class MartTools(Listeners, commands.Cog):
     """Multiple tools that are originally used on Martine."""
 
     __author__ = "Predä"
-    __version__ = "1.5.91"
+    __version__ = "1.5.92"
 
     def __init__(self, bot):
         self.bot = bot
@@ -65,6 +65,11 @@ class MartTools(Listeners, commands.Cog):
         self.config.register_global(**global_defauls)
         self._task = self.bot.loop.create_task(self._save_counters_to_config())
         lavalink.register_event_listener(self.event_handler)  # To delete at next audio update.
+
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        """Thanks Sinbad!"""
+        pre_processed = super().format_help_for_context(ctx)
+        return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
 
     def cog_unload(self):
         lavalink.unregister_event_listener(self.event_handler)  # To delete at next audio update.

@@ -18,11 +18,16 @@ class DblTools(commands.Cog):
     """Tools to get bots information from Top.gg."""
 
     __author__ = "Predä"
-    __version__ = "1.3.3"
+    __version__ = "1.3.4"
 
     def __init__(self, bot):
         self.bot = bot
         self.session = aiohttp.ClientSession()
+
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        """Thanks Sinbad!"""
+        pre_processed = super().format_help_for_context(ctx)
+        return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
 
     async def _get_data(self, ctx, bot=None, endpoint: Optional[str] = ""):
         """Get data from Top.gg."""

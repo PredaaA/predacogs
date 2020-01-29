@@ -14,7 +14,12 @@ class FiveM(commands.Cog):
     """Tools for FiveM servers."""
 
     __author__ = "Predä"
-    __version__ = "0.1.2"
+    __version__ = "0.1.3"
+
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        """Thanks Sinbad!"""
+        pre_processed = super().format_help_for_context(ctx)
+        return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
 
     def __init__(self, bot):
         self.bot = bot

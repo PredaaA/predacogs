@@ -21,7 +21,12 @@ class Nsfw(Core, commands.Cog):
     """
 
     __author__ = ["Predä", "aikaterna"]
-    __version__ = "2.2.4"
+    __version__ = "2.2.5"
+
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        """Thanks Sinbad!"""
+        pre_processed = super().format_help_for_context(ctx)
+        return f"{pre_processed}\n\nAuthor: {', '.join(self.__author__)}\nCog Version: {self.__version__}"
 
     @commands.command()
     async def nsfwversion(self, ctx):

@@ -1,5 +1,6 @@
 import discord
 
+from redbot.core.bot import Red
 from redbot.core import commands, Config, checks
 from redbot.core.utils.menus import DEFAULT_CONTROLS, menu
 from redbot.core.utils.chat_formatting import box, inline, pagify
@@ -14,14 +15,9 @@ class FiveM(commands.Cog):
     """Tools for FiveM servers."""
 
     __author__ = "Predä"
-    __version__ = "0.1.3"
+    __version__ = "0.1.4"
 
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        """Thanks Sinbad!"""
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
-
-    def __init__(self, bot):
+    def __init__(self, bot: Red):
         self.bot = bot
 
         self.config = Config.get_conf(self, 33298047065037209654, force_registration=True)
@@ -41,6 +37,11 @@ class FiveM(commands.Cog):
     def cog_unload(self):
         self.bot.loop.create_task(self.session.close())
         self.status_task.cancel()
+
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        """Thanks Sinbad!"""
+        pre_processed = super().format_help_for_context(ctx)
+        return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
 
     @staticmethod
     def _check(check: str):
@@ -297,7 +298,7 @@ class FiveM(commands.Cog):
         await ctx.send(f"Activity type set to: {inline(activity.lower())}")
 
     @fivemset.command()
-    async def activitystream(self, ctx: commands.Context, streamer=None, *, streamtitle=None):
+    async def activitystream(self, ctx: commands.Context, streamer: str = None, *, streamtitle: str = None):
         """
         Choose if you want to put a Twitch stream for the bot status.
 

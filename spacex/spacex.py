@@ -9,39 +9,31 @@ from random import choice
 from typing import Optional
 
 
-class SpaceX(Core, commands.Cog):
+class SpaceX(Core):
     """Get multiple information about SpaceX using SpaceX-API."""
 
-    __author__ = "Predä"
-    __version__ = "0.1.3"
-
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        """Thanks Sinbad!"""
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
-
     @commands.group()
-    async def spacex(self, ctx):
+    async def spacex(self, ctx: commands.Context):
         """SpaceX group commands."""
         pass
 
     @spacex.command()
     @commands.bot_has_permissions(embed_links=True)
-    async def about(self, ctx):
+    async def about(self, ctx: commands.Context):
         """Send general company information about SpaceX."""
 
         await self._about(ctx)
 
     @spacex.command()
     @commands.bot_has_permissions(embed_links=True)
-    async def aboutcog(self, ctx):
+    async def aboutcog(self, ctx: commands.Context):
         """Send information about the cog and SpaceX-API."""
 
         await self._about_cog(ctx, version=self.__version__)
 
     @spacex.command()
     @commands.bot_has_permissions(embed_links=True)
-    async def history(self, ctx):
+    async def history(self, ctx: commands.Context):
         """Return SpaceX historical events."""
         async with ctx.typing():
             resp = await self._get_data(ctx, "history")
@@ -66,7 +58,7 @@ class SpaceX(Core, commands.Cog):
 
     @spacex.command()
     @commands.bot_has_permissions(embed_links=True)
-    async def launchpads(self, ctx):
+    async def launchpads(self, ctx: commands.Context):
         """Return SpaceX launchpads."""
         async with ctx.typing():
             resp = await self._get_data(ctx, "launchpads")
@@ -92,7 +84,7 @@ class SpaceX(Core, commands.Cog):
 
     @spacex.command()
     @commands.bot_has_permissions(embed_links=True)
-    async def landpads(self, ctx):
+    async def landpads(self, ctx: commands.Context):
         """Return SpaceX landpads."""
         async with ctx.typing():
             resp = await self._get_data(ctx, "landpads")
@@ -118,7 +110,7 @@ class SpaceX(Core, commands.Cog):
 
     @spacex.command()
     @commands.bot_has_permissions(embed_links=True)
-    async def missions(self, ctx):
+    async def missions(self, ctx: commands.Context):
         """Returns all missions of SpaceX."""
         async with ctx.typing():
             resp = await self._get_data(ctx, "missions")
@@ -156,7 +148,7 @@ class SpaceX(Core, commands.Cog):
 
     @spacex.command()
     @commands.bot_has_permissions(embed_links=True)
-    async def roadster(self, ctx):
+    async def roadster(self, ctx: commands.Context):
         """Get informations about Tesla roadster launched in space."""
         async with ctx.typing():
             data = await self._get_data(ctx, "roadster")
@@ -176,7 +168,7 @@ class SpaceX(Core, commands.Cog):
 
     @spacex.command()
     @commands.bot_has_permissions(embed_links=True)
-    async def rocket(self, ctx, details: Optional[bool] = False, *, rocket):
+    async def rocket(self, ctx: commands.Context, details: Optional[bool] = False, *, rocket: str):
         """
             Get informations about SpaceX rockets.
 
@@ -214,7 +206,7 @@ class SpaceX(Core, commands.Cog):
             await ctx.send(embed=em)
 
     @spacex.command()
-    async def rockets(self, ctx, details: bool = False):
+    async def rockets(self, ctx: commands.Context, details: bool = False):
         """
             Get informations of all SpaceX rockets.
 

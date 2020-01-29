@@ -1,5 +1,6 @@
 import discord
 
+from redbot.core.bot import Red
 from redbot.core import commands
 from redbot.core.i18n import Translator, cog_i18n
 from redbot.core.utils.chat_formatting import (
@@ -17,9 +18,9 @@ class ServerInfo(commands.Cog):
     """Replace original Red serverinfo command with more details."""
 
     __author__ = "Predä"
-    __version__ = "1.3.4"
+    __version__ = "1.3.5"
 
-    def __init__(self, bot):
+    def __init__(self, bot: Red):
         self.bot = bot
 
     def format_help_for_context(self, ctx: commands.Context) -> str:
@@ -38,7 +39,7 @@ class ServerInfo(commands.Cog):
             self.bot.add_command(_old_serverinfo)
 
     @staticmethod
-    def _size(num):
+    def _size(num: int):
         for unit in ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB"]:
             if abs(num) < 1024.0:
                 return "{0:.1f}{1}".format(num, unit)
@@ -46,7 +47,7 @@ class ServerInfo(commands.Cog):
         return "{0:.1f}{1}".format(num, "YB")
 
     @staticmethod
-    def _bitsize(num):
+    def _bitsize(num: int):
         for unit in ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB"]:
             if abs(num) < 1000.0:
                 return "{0:.1f}{1}".format(num, unit)
@@ -56,7 +57,7 @@ class ServerInfo(commands.Cog):
     @commands.command()
     @commands.guild_only()
     @commands.bot_has_permissions(embed_links=True)
-    async def serverinfo(self, ctx):
+    async def serverinfo(self, ctx: commands.Context):
         """Show server information with some details."""
         guild = ctx.guild
         passed = (ctx.message.created_at - guild.created_at).days

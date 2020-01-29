@@ -8,6 +8,7 @@ from copy import copy
 from datetime import datetime
 from collections import Counter, defaultdict
 
+from redbot.core.bot import Red
 from redbot.core import Config, bank, commands
 from redbot.core.i18n import Translator, cog_i18n
 from redbot.core.utils.chat_formatting import (
@@ -29,9 +30,9 @@ class MartTools(Listeners, commands.Cog):
     """Multiple tools that are originally used on Martine."""
 
     __author__ = "Predä"
-    __version__ = "1.5.92"
+    __version__ = "1.5.93"
 
-    def __init__(self, bot):
+    def __init__(self, bot: Red):
         self.bot = bot
         self.counter = Counter()
         self.sticky_counter = Counter()

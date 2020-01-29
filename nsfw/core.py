@@ -3,12 +3,13 @@ import discord
 import aiohttp
 import json
 
+from redbot.core.bot import Red
 from redbot.core import commands
 from redbot.core.i18n import Translator, cog_i18n
 from redbot.core.utils.chat_formatting import bold, box, inline
 
 from random import choice
-from typing import Optional
+from typing import Optional, List, Union
 
 from .constants import REDDIT_BASEURL, IMGUR_LINKS, GOOD_EXTENSIONS, Stuff
 
@@ -16,15 +17,24 @@ _ = Translator("Nsfw", __file__)
 
 
 @cog_i18n(_)
-class Core(Stuff):
-    def __init__(self, bot):
+class Core(commands.Cog, Stuff):
+
+    __author__ = ["Predä", "aikaterna"]
+    __version__ = "2.3"
+
+    def __init__(self, bot: Red):
         self.bot = bot
         self.session = aiohttp.ClientSession()
+
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        """Thanks Sinbad!"""
+        pre_processed = super().format_help_for_context(ctx)
+        return f"{pre_processed}\n\nAuthors: {', '.join(self.__author__)}\nCog Version: {self.__version__}"
 
     def cog_unload(self):
         self.bot.loop.create_task(self.session.close())
 
-    async def _get_imgs(self, ctx, sub=None):
+    async def _get_imgs(self, ctx: commands.Context, sub: str = None):
         """Get images from Reddit API."""
         try:
             async with self.session.get(REDDIT_BASEURL.format(choice(sub))) as reddit:
@@ -53,7 +63,7 @@ class Core(Stuff):
             await self._api_errors_msg(ctx, error_code="JSON decode failed")
             return None, None
 
-    async def _get_others_imgs(self, ctx, url=None):
+    async def _get_others_imgs(self, ctx: commands.Context, url: str = None):
         """Get images from all other images APIs."""
         try:
             async with self.session.get(url) as resp:
@@ -71,14 +81,14 @@ class Core(Stuff):
             await self._api_errors_msg(ctx, error_code="JSON decode failed")
             return None
 
-    async def _api_errors_msg(self, ctx, error_code=None):
+    async def _api_errors_msg(self, ctx: commands.Context, error_code: int = None):
         """Error message when API calls fail."""
         return await ctx.send(
             _("Error when trying to contact image service, please try again later. ")
             + "(Code: {})".format(inline(str(error_code)))
         )
 
-    async def _version_msg(self, ctx, version, authors):
+    async def _version_msg(self, ctx: commands.Context, version: str, authors: List[str]):
         """Cog version message."""
         msg = box(
             _("Nsfw cog version: {version}\nAuthors: {authors}").format(
@@ -88,7 +98,7 @@ class Core(Stuff):
         )
         return await ctx.send(msg)
 
-    async def _make_embed(self, ctx, sub, name):
+    async def _make_embed(self, ctx: commands.Context, sub: str, name: str):
         """Function to make the embed for all Reddit API images."""
         url, subr = await self._get_imgs(ctx, sub=sub)
         if not url:
@@ -117,7 +127,9 @@ class Core(Stuff):
             )
         return em
 
-    async def _make_embed_other(self, ctx, name, url, arg, source):
+    async def _make_embed_other(
+        self, ctx: commands.Context, name: str, url: str, arg: str, source: str
+    ):
         """Function to make the embed for all others APIs images."""
         data = await self._get_others_imgs(ctx, url=url)
         if not data:
@@ -135,7 +147,7 @@ class Core(Stuff):
         )
         return em
 
-    async def _maybe_embed(self, ctx, embed):
+    async def _maybe_embed(self, ctx: commands.Context, embed: Union[discord.Embed, str]):
         """
             Function to choose if type of the message is an embed or not
             and if not send a simple message.
@@ -148,13 +160,15 @@ class Core(Stuff):
         except discord.HTTPException:
             return
 
-    async def _send_msg(self, ctx, name, sub=None):
+    async def _send_msg(self, ctx: commands.Context, name: str, sub: str = None):
         """Main function called in all Reddit API commands."""
         async with ctx.typing():
             embed = await self._make_embed(ctx, sub, name)
         return await self._maybe_embed(ctx, embed=embed)
 
-    async def _send_other_msg(self, ctx, name, arg, source, url=None):
+    async def _send_other_msg(
+        self, ctx: commands.Context, name: str, arg: str, source: str, url: str = None
+    ):
         """Main function called in all others APIs commands."""
         async with ctx.typing():
             embed = await self._make_embed_other(ctx, name, url, arg, source)
@@ -162,7 +176,11 @@ class Core(Stuff):
 
     @staticmethod
     async def _embed(
-        color=None, title=None, description=None, image=None, footer: Optional[str] = None
+        color: Union[int, discord.Color] = None,
+        title: str = None,
+        description: str = None,
+        image: str = None,
+        footer: Optional[str] = None,
     ):
         em = discord.Embed(color=color, title=title, description=description)
         em.set_image(url=image)
@@ -177,7 +195,7 @@ def nsfwcheck():
         and block usage of them if used in a non-nsfw channel.
     """
 
-    async def predicate(ctx):
+    async def predicate(ctx: commands.Context):
         if not ctx.guild:
             return True
         if ctx.message.channel.is_nsfw():

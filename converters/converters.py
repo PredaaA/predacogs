@@ -5,6 +5,7 @@ from redbot.core import commands
 from redbot.core.i18n import Translator, cog_i18n
 from redbot.core.utils.chat_formatting import humanize_timedelta
 
+from typing import Union
 from datetime import datetime
 
 import contextlib
@@ -17,7 +18,7 @@ class Converters(commands.Cog):
     """Some converters."""
 
     __author__ = "Predä"
-    __version__ = "0.3.2"
+    __version__ = "0.3.3"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -28,14 +29,13 @@ class Converters(commands.Cog):
         pass
 
     @conv.command()
-    async def todate(self, ctx: commands.Context, timestamp: int):
+    async def todate(self, ctx: commands.Context, timestamp: Union[int, float]):
         """Convert a unix timestamp to a readable datetime."""
         try:
-            given = timestamp[: timestamp.find(".")] if "." in timestamp else timestamp
-            convert = datetime.utcfromtimestamp(int(given)).strftime("%Y-%m-%d %H:%M:%S")
+            convert = datetime.utcfromtimestamp(int(timestamp)).strftime("%Y-%m-%d %H:%M:%S")
         except (ValueError, OverflowError):
-            return await ctx.send(_("`{}` is not a valid timestamp.").format(given))
-        g = datetime.fromtimestamp(int(given))
+            return await ctx.send(_("`{}` is not a valid timestamp.").format(timestamp))
+        g = datetime.fromtimestamp(int(timestamp))
         curr = datetime.fromtimestamp(int(datetime.now().timestamp()))
         secs = str((curr - g).total_seconds())
         seconds = secs[1:][:-2] if "-" in secs else secs[:-2] if ".0" in secs else secs
@@ -45,8 +45,8 @@ class Converters(commands.Cog):
         )
 
         await ctx.send(
-            _("Successfully converted `{given}` to `{convert}`\n{when}").format(
-                given=given, convert=convert, when=when
+            _("Successfully converted `{timestamp}` to `{convert}`\n{when}").format(
+                timestamp=int(timestamp), convert=convert, when=when
             )
         )
 

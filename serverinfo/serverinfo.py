@@ -67,7 +67,6 @@ class ServerInfo(commands.Cog):
         )
 
         # Logic from: https://github.com/TrustyJAID/Trusty-cogs/blob/master/serverstats/serverstats.py#L159
-        lurkers_len = len([m for m in guild.members if m.joined_at is None])
         online_stats = {
             _("Humans: "): lambda x: not x.bot,
             _(" • Bots: "): lambda x: x.bot,
@@ -80,11 +79,6 @@ class ServerInfo(commands.Cog):
         }
         member_msg = _("Total Users: {total}\n").format(
             total=bold(humanize_number(guild.member_count))
-        )
-        member_msg += (
-            _("Lurkers: {lurkers}").format(lurkers=bold(humanize_number(lurkers_len)))
-            if lurkers_len
-            else ""
         )
         count = 1
         for emoji, value in online_stats.items():

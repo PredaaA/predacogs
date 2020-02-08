@@ -345,7 +345,7 @@ class MartTools(Listeners, commands.Cog):
     @commands.command(aliases=["prefixes"])
     async def prefix(self, ctx):
         """Show all prefixes of the bot"""
-        default_prefixes = await self.bot._config.prefix()
+        default_prefixes = await self.bot._config.prefix()  # TODO: Use prefixes cache.
         try:
             guild_prefixes = await self.bot._config.guild(ctx.guild).prefix()
         except AttributeError:

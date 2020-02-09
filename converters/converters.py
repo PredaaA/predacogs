@@ -18,7 +18,7 @@ class Converters(commands.Cog):
     """Some converters."""
 
     __author__ = "Predä"
-    __version__ = "0.3.4"
+    __version__ = "0.3.5"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -115,8 +115,6 @@ class Converters(commands.Cog):
     @celsius.command(name="fahrenheit", aliases=["f"])
     async def celsius_to_fahrenheit(self, ctx: commands.Context, temperature: float):
         """Convert degree Celsius to Fahrenheit."""
-        if not temperature:
-            return await ctx.send_help()
         fahrenheit = round((temperature * 1.8) + 32, 1)
         msg = _("{temp:,}° Celsius is equal to {f:,}° Fahrenheit.").format(
             temp=temperature, f=fahrenheit
@@ -126,8 +124,6 @@ class Converters(commands.Cog):
     @celsius.command(name="kelvin", aliases=["k"])
     async def celsius_to_kelvin(self, ctx: commands.Context, temperature: float):
         """Convert degree Celsius to Kelvin."""
-        if not temperature:
-            return await ctx.send_help()
         kelvin = round((temperature + 273.15), 1)
         msg = _("{temp:,}° Celsius is equal to {k:,}° Kelvin.").format(temp=temperature, k=kelvin)
         await ctx.send(msg)
@@ -148,8 +144,6 @@ class Converters(commands.Cog):
     @fahrenheit.command(name="celsius", aliases=["c"])
     async def fahrenheit_to_celsius(self, ctx: commands.Context, temperature: float):
         """Convert Fahrenheit degree to Celsius."""
-        if not temperature:
-            return await ctx.send_help()
         celsius = round((temperature - 32) / 1.8, 1)
         msg = _("{temp:,}° Fahrenheit is equal to {c:,}° Celsius.").format(
             temp=temperature, c=celsius
@@ -159,8 +153,6 @@ class Converters(commands.Cog):
     @fahrenheit.command(name="kelvin", aliases=["k"])
     async def fahrenheit_to_kelvin(self, ctx: commands.Context, temperature: float):
         """Convert Fahrenheit degree to Kelvin."""
-        if not temperature:
-            return await ctx.send_help()
         kelvin = round((temperature - 32) * (5 / 9) + 273.15, 1)
         msg = _("{temp:,}° Fahrenheit is equal to {k:,}° Kelvin.").format(
             temp=temperature, k=kelvin
@@ -183,8 +175,6 @@ class Converters(commands.Cog):
     @kelvin.command(name="celsius", aliases=["c"])
     async def kelvin_to_celsius(self, ctx: commands.Context, temperature: float):
         """Convert Kelvin degree to Celsius."""
-        if not temperature:
-            return await ctx.send_help()
         celsius = round((temperature - 273.15) * (9 / 5) + 32, 1)
         msg = _("{temp:,}° Kelvin is equal to {c:,}° Celsius.").format(temp=temperature, c=celsius)
         await ctx.send(msg)
@@ -192,8 +182,6 @@ class Converters(commands.Cog):
     @kelvin.command(name="fahrenheit", aliases=["f"])
     async def kelvin_to_fahrenheit(self, ctx: commands.Context, temperature: float):
         """Convert Kelvin degree to Fahrenheit."""
-        if not temperature:
-            return await ctx.send_help()
         fahrenheit = round((temperature - 273.15), 1)
         msg = _("{temp:,}° Kelvin is equal to {f:,}° Fahrenheit.").format(
             temp=temperature, f=fahrenheit

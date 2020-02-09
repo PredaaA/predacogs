@@ -1,31 +1,33 @@
-import contextlib
-import time
-from collections import Counter, defaultdict
-from copy import copy
-from datetime import datetime
-
 import discord
-import lavalink
-from redbot.core import Config, bank, commands
+
 from redbot.core.bot import Red
-from redbot.core.data_manager import cog_data_path
+from redbot.core import Config, bank, commands
 from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils.chat_formatting import (bold, box, humanize_number,
-                                               humanize_timedelta)
-
-import apsw
-
-from .listeners import Listeners
-from .statements import *
-from .utils import rgetattr
+from redbot.core.data_manager import cog_data_path
+from redbot.core.utils.chat_formatting import (
+    bold,
+    box,
+    humanize_timedelta,
+    humanize_number,
+)
 
 try:
     from redbot.cogs.audio.audio_dataclasses import Query
 except ImportError:
     Query = None
 
+from .statements import *
+from .utils import rgetattr
+from .listeners import Listeners
 
+import time
+import apsw
+import lavalink
+import contextlib
 
+from copy import copy
+from datetime import datetime
+from collections import Counter, defaultdict
 
 _ = Translator("MartTools", __file__)
 

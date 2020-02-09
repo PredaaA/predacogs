@@ -1,45 +1,31 @@
-import time
-from datetime import datetime
-
-import apsw
-import discord
-import lavalink
 import contextlib
-
+import time
+from collections import Counter, defaultdict
 from copy import copy
 from datetime import datetime
-from collections import Counter, defaultdict
 
-from redbot.core.bot import Red
+import discord
+import lavalink
 from redbot.core import Config, bank, commands
+from redbot.core.bot import Red
 from redbot.core.data_manager import cog_data_path
 from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils.chat_formatting import (
-    bold,
-    box,
-    humanize_timedelta,
-    humanize_number,
-)
+from redbot.core.utils.chat_formatting import (bold, box, humanize_number,
+                                               humanize_timedelta)
 
+import apsw
+
+from .listeners import Listeners
+from .statements import *
+from .utils import rgetattr
 
 try:
     from redbot.cogs.audio.audio_dataclasses import Query
 except ImportError:
     Query = None
 
-try:
-    from redbot.core.utils.chat_formatting import humanize_number
-except ImportError:
-    from typing import Union
-    from babel.numbers import format_decimal
-
-    def humanize_number(val: Union[int, float]):
-        return format_decimal(val, locale="en_US")
 
 
-from .listeners import Listeners
-from .statements import *
-from .utils import rgetattr
 
 _ = Translator("MartTools", __file__)
 
@@ -49,7 +35,7 @@ class MartTools(Listeners, commands.Cog):
     """Multiple tools that are originally used on Martine."""
 
     __author__ = "Predä"
-    __version__ = "1.6.0"
+    __version__ = "1.7"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -63,9 +49,6 @@ class MartTools(Listeners, commands.Cog):
         self.cursor.execute(CREATE_TABLE_TEMP)
         self.uptime = datetime.utcnow()
         self.cursor.execute(INSERT_PERMA_DO_NOTHING, (-1000, "creation_time", time.time()))
-
-        if not Query:
-            lavalink.register_event_listener(self.event_handler)  # To delete at next audio update.
 
     def upsert(self, id: int, event: str):
         self.cursor.execute(UPSERT_PERMA, (id, event))
@@ -90,20 +73,14 @@ class MartTools(Listeners, commands.Cog):
             condition = {"event": key, "guild_id": id}
         result = list(self.cursor.execute(query, condition))
         return humanize_number(result[0][0] if result else 0)
-      
+
     def format_help_for_context(self, ctx: commands.Context) -> str:
         """Thanks Sinbad!"""
         pre_processed = super().format_help_for_context(ctx)
         return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
-      
-    def cog_unload(self):  # To delete at next audio update.
-        if not Query:
-            lavalink.unregister_event_listener(self.event_handler)
-        self._connection.close()
 
-    async def event_handler(self, player, event_type, extra):  # To delete at next audio update.
-        if event_type == lavalink.LavalinkEvents.TRACK_START:
-            self.upsert(rgetattr(player, "channel.guild.id", 0), "tracks_played")
+    def cog_unload(self):
+        self._connection.close()
 
     def get_bot_uptime(self):
         delta = datetime.utcnow() - self.uptime
@@ -113,7 +90,7 @@ class MartTools(Listeners, commands.Cog):
     @commands.command()
     @commands.guild_only()
     @commands.bot_has_permissions(embed_links=True)
-    async def bankstats(self, ctx):
+    async def bankstats(self, ctx: commands.Context):
         """Show stats of the bank."""
         icon = self.bot.user.avatar_url_as(static_format="png")
         user_bal = await bank.get_balance(ctx.author)
@@ -168,7 +145,7 @@ class MartTools(Listeners, commands.Cog):
         await ctx.send(embed=em)
 
     @commands.command(aliases=["usagec"])
-    async def usagecount(self, ctx):
+    async def usagecount(self, ctx: commands.Context):
         """
             Show the usage count of the bot.
             Commands processed, messages received, and music on servers.
@@ -228,7 +205,7 @@ class MartTools(Listeners, commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.command(aliases=["advusagec"])
-    async def advusagecount(self, ctx):
+    async def advusagecount(self, ctx: commands.Context):
         """
         Same as [p]usagecount command but with more stats.
         """
@@ -425,9 +402,9 @@ class MartTools(Listeners, commands.Cog):
         await ctx.send(embed=em)
 
     @commands.command(aliases=["prefixes"])
-    async def prefix(self, ctx):
+    async def prefix(self, ctx: commands.Context):
         """Show all prefixes of the bot"""
-        default_prefixes = await self.bot._config.prefix()  # TODO: Use prefixes cache.
+        default_prefixes = await self.bot._config.prefix()
         try:
             guild_prefixes = await self.bot._config.guild(ctx.guild).prefix()
         except AttributeError:
@@ -437,52 +414,50 @@ class MartTools(Listeners, commands.Cog):
 
         if not guild_prefixes:
             to_send = [f"`\u200b{p}\u200b`" for p in default_prefixes]
-            plural = _("es") if len(default_prefixes) >= 2 else ""
+            plural = _("Prefixes") if len(default_prefixes) >= 2 else _("Prefix")
             try:
                 em = discord.Embed(
                     color=await ctx.embed_colour(),
-                    title=_("Prefix{es} of {name}:").format(es=plural, name=bot_name),
+                    title=_("{} of {}:").format(plural, bot_name),
                     description=" ".join(to_send),
                 )
                 em.set_thumbnail(url=avatar)
                 await ctx.send(embed=em)
             except discord.Forbidden:
-                await ctx.send(
-                    bold(_("Prefix{es} of {name}:\n")).format(es=plural, name=bot_name)
-                    + " ".join(to_send)
-                )
+                await ctx.send(bold(_("{} of {}:\n")).format(plural, bot_name) + " ".join(to_send))
         else:
             to_send = [f"`\u200b{p}\u200b`" for p in guild_prefixes]
-            plural = _("es") if len(guild_prefixes) >= 2 else ""
+            plural = _("prefixes") if len(default_prefixes) >= 2 else _("prefix")
             try:
                 em = discord.Embed(
                     color=await ctx.embed_colour(),
-                    title=_("Server prefix{es} of {name}:").format(es=plural, name=bot_name),
+                    title=_("Server {} of {}:").format(plural, bot_name),
                     description=" ".join(to_send),
                 )
                 em.set_thumbnail(url=avatar)
                 await ctx.send(embed=em)
             except discord.Forbidden:
                 await ctx.send(
-                    bold(_("Server prefix{es} of {name}:\n")).format(es=plural, name=bot_name)
-                    + " ".join(to_send)
+                    bold(_("Server {} of {name}:\n")).format(plural, bot_name) + " ".join(to_send)
                 )
 
     @commands.command(aliases=["serverc", "serversc"])
-    async def servercount(self, ctx):
+    async def servercount(self, ctx: commands.Context):
         """Send servers stats of the bot."""
         msg = _(
-            "{name} is running on `{shards}` shard{s}.\n"
+            "{name} is running on `{shard_count}` {shards}.\n"
             "Serving `{servs}` servers (`{channels}` channels).\n"
-            "For a total of `{users}` users (`{unique}` unique)."
+            "For a total of `{users}` users (`{unique}` unique).\n"
+            "(`{users}` visible now, `{real_total}` total)"
         ).format(
             name=ctx.bot.user.name,
-            shards=humanize_number(self.bot.shard_count),
-            s="s" if self.bot.shard_count >= 2 else "",
+            shard_count=humanize_number(self.bot.shard_count),
+            shards=_("shards") if self.bot.shard_count > 1 else _("shard"),
             servs=humanize_number(len(self.bot.guilds)),
             channels=humanize_number(sum(len(s.channels) for s in self.bot.guilds)),
             users=humanize_number(sum(len(s.members) for s in self.bot.guilds)),
             unique=humanize_number(len(self.bot.users)),
+            real_total=humanize_number(sum(s.member_count for s in self.bot.guilds)),
         )
         try:
             em = discord.Embed(color=await ctx.embed_colour(), description=msg)
@@ -491,7 +466,7 @@ class MartTools(Listeners, commands.Cog):
             await ctx.send(msg)
 
     @commands.command(aliases=["servreg"])
-    async def serversregions(self, ctx, sort="guilds"):
+    async def serversregions(self, ctx: commands.Context, sort: str = "guilds"):
         """
         Show total of regions where the bot is.
 
@@ -531,7 +506,7 @@ class MartTools(Listeners, commands.Cog):
             regions[region]["users"] += guild.member_count
             regions[region]["guilds"] += 1
 
-        def sort_keys(key):
+        def sort_keys(key: str):
             keys = (
                 (key[1]["guilds"], key[1]["users"])
                 if sort != "users"

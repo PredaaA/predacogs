@@ -8,5 +8,6 @@
         "spacex",
         "space",
         "information"
-    ]
+    ],
+    "min_bot_version": "3.2.0a0.dev1"
 }

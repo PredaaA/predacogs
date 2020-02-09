@@ -1,21 +1,16 @@
 import discord
 
+from redbot.core.bot import Red
 from redbot.core import commands
 from redbot.core.i18n import Translator, cog_i18n
 from redbot.core.utils.chat_formatting import (
     bold,
     humanize_timedelta,
-)  # , humanize_number <- Will be for 3.2
-
-from typing import Union  # <- Remove this at 3.2
-from babel.numbers import format_decimal  # <- Remove this at 3.2
+    humanize_number,
+)
 
 _old_serverinfo = None
 _ = Translator("ServerInfo", __file__)
-
-
-def humanize_number(val: Union[int, float]):  # <- Remove this at 3.2
-    return format_decimal(val, locale="en_US")
 
 
 @cog_i18n(_)
@@ -23,10 +18,15 @@ class ServerInfo(commands.Cog):
     """Replace original Red serverinfo command with more details."""
 
     __author__ = "Predä"
-    __version__ = "1.3.3"
+    __version__ = "1.3.5"
 
-    def __init__(self, bot):
+    def __init__(self, bot: Red):
         self.bot = bot
+
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        """Thanks Sinbad!"""
+        pre_processed = super().format_help_for_context(ctx)
+        return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
 
     def cog_unload(self):
         # Remove command logic are from: https://github.com/mikeshardmind/SinbadCogs/tree/v3/messagebox
@@ -39,7 +39,7 @@ class ServerInfo(commands.Cog):
             self.bot.add_command(_old_serverinfo)
 
     @staticmethod
-    def _size(num):
+    def _size(num: int):
         for unit in ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB"]:
             if abs(num) < 1024.0:
                 return "{0:.1f}{1}".format(num, unit)
@@ -47,7 +47,7 @@ class ServerInfo(commands.Cog):
         return "{0:.1f}{1}".format(num, "YB")
 
     @staticmethod
-    def _bitsize(num):
+    def _bitsize(num: int):
         for unit in ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB"]:
             if abs(num) < 1000.0:
                 return "{0:.1f}{1}".format(num, unit)
@@ -57,7 +57,7 @@ class ServerInfo(commands.Cog):
     @commands.command()
     @commands.guild_only()
     @commands.bot_has_permissions(embed_links=True)
-    async def serverinfo(self, ctx):
+    async def serverinfo(self, ctx: commands.Context):
         """Show server information with some details."""
         guild = ctx.guild
         passed = (ctx.message.created_at - guild.created_at).days
@@ -67,7 +67,6 @@ class ServerInfo(commands.Cog):
         )
 
         # Logic from: https://github.com/TrustyJAID/Trusty-cogs/blob/master/serverstats/serverstats.py#L159
-        lurkers_len = len([m for m in guild.members if m.joined_at is None])
         online_stats = {
             _("Humans: "): lambda x: not x.bot,
             _(" • Bots: "): lambda x: x.bot,
@@ -80,11 +79,6 @@ class ServerInfo(commands.Cog):
         }
         member_msg = _("Total Users: {total}\n").format(
             total=bold(humanize_number(guild.member_count))
-        )
-        member_msg += (
-            _("Lurkers: {lurkers}").format(lurkers=bold(humanize_number(lurkers_len)))
-            if lurkers_len
-            else ""
         )
         count = 1
         for emoji, value in online_stats.items():
@@ -153,9 +147,7 @@ class ServerInfo(commands.Cog):
             "MEMBER_LIST_DISABLED": _("Member list disabled"),
         }
         guild_features_list = [
-            f"\✅ {name}"
-            for feature, name in features.items()
-            if feature in set(guild.features)
+            f"\✅ {name}" for feature, name in features.items() if feature in set(guild.features)
         ]
 
         since_joined = (ctx.message.created_at - guild.me.joined_at).days

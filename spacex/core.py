@@ -1,5 +1,7 @@
 import discord
 
+from redbot.core.bot import Red
+from redbot.core import commands
 from redbot.core.utils.chat_formatting import humanize_timedelta
 
 import aiohttp
@@ -10,10 +12,22 @@ from datetime import datetime
 SPACE_X_API_BASE_URL = "https://api.spacexdata.com/v3/"
 
 
-class Core:
-    def __init__(self, bot):
+class Core(commands.Cog):
+
+    __author__ = "Predä"
+    __version__ = "0.1.5"
+
+    def __init__(self, bot: Red):
         self.bot = bot
         self.session = aiohttp.ClientSession()
+
+    def cog_unload(self):
+        self.bot.loop.create_task(self.session.close())
+
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        """Thanks Sinbad!"""
+        pre_processed = super().format_help_for_context(ctx)
+        return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
 
     async def _unix_convert(self, timestamp: int):
         """Convert a unix timestamp to a readable datetime."""
@@ -29,7 +43,7 @@ class Core:
         delta = humanize_timedelta(seconds=int(seconds))
         return convert, delta
 
-    async def _get_data(self, ctx, endpoint: Optional[str] = ""):
+    async def _get_data(self, ctx: commands.Context, endpoint: Optional[str] = ""):
         """Get data from SpaceX API."""
         async with self.session.get(SPACE_X_API_BASE_URL + endpoint) as resp:
             if resp.status == 404:
@@ -43,7 +57,7 @@ class Core:
             data = await resp.json()
             return data
 
-    async def _about(self, ctx):
+    async def _about(self, ctx: commands.Context):
         async with ctx.typing():
             data = await self._get_data(ctx, "info")
             if data is None:
@@ -98,7 +112,7 @@ class Core:
             )
             return await ctx.send(embed=em)
 
-    async def _about_cog(self, ctx, version=None):
+    async def _about_cog(self, ctx: commands.Context, version: str):
         async with ctx.typing():
             data = await self._get_data(ctx)
             description = data["description"]
@@ -129,7 +143,8 @@ class Core:
             em.add_field(name=title_cog, value=desc_cog)
         return await ctx.send(embed=em)
 
-    async def _history_texts(self, data):
+    @staticmethod
+    async def _history_texts(data: dict):
         description_kwargs = {
             "date": data["event_date_utc"].replace("T", " ")[:-1],
             "flight_num": "Flight number: **{}**\n".format(data["flight_number"])
@@ -148,7 +163,8 @@ class Core:
         ).format(**description_kwargs)
         return description
 
-    async def _launchpads_texts(self, data):
+    @staticmethod
+    async def _launchpads_texts(data: dict):
         description_kwargs = {
             "status": data["status"],
             "region": data["location"]["region"],
@@ -175,7 +191,8 @@ class Core:
         ).format(**description_kwargs)
         return description
 
-    async def _landpads_texts(self, data):
+    @staticmethod
+    async def _landpads_texts(data: dict):
         description_kwargs = {
             "status": data["status"],
             "landing_t": data["landing_type"],
@@ -197,7 +214,8 @@ class Core:
         ).format(**description_kwargs)
         return description
 
-    async def _missions_texts(self, data):
+    @staticmethod
+    async def _missions_texts(data: dict):
         description_kwargs = {
             "website": " • **[Website]({})**".format(data["website"])
             if data["website"] is not None
@@ -213,7 +231,7 @@ class Core:
         ).format(**description_kwargs)
         return description
 
-    async def _roadster_texts(self, data):
+    async def _roadster_texts(self, data: dict):
         date, delta = await self._unix_convert(data["launch_date_unix"])
         roadster_stats_kwargs = {
             "launch_date": date,
@@ -236,7 +254,8 @@ class Core:
         ).format(**roadster_stats_kwargs)
         return roadster_stats
 
-    async def _rockets_texts(self, data):
+    @staticmethod
+    async def _rockets_texts(data: dict):
         base_stats_kwargs = {
             "first_flight": data["first_flight"],
             "active": "Yes" if data["active"] is True else "No",
@@ -313,6 +332,3 @@ class Core:
             "Propellants: **{p_1} and {p_2}**"
         ).format(**engines_stats_kwargs)
         return base_stats, stages_stats, payload_weights_stats, engines_stats
-
-    def cog_unload(self):
-        self.bot.loop.create_task(self.session.close())

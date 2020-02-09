@@ -4,11 +4,22 @@ from datetime import datetime
 import apsw
 import discord
 import lavalink
+import contextlib
 
-from redbot.core import bank, commands
+from copy import copy
+from datetime import datetime
+from collections import Counter, defaultdict
+
+from redbot.core.bot import Red
+from redbot.core import Config, bank, commands
 from redbot.core.data_manager import cog_data_path
 from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils.chat_formatting import bold, box, humanize_timedelta
+from redbot.core.utils.chat_formatting import (
+    bold,
+    box,
+    humanize_timedelta,
+    humanize_number,
+)
 
 
 try:
@@ -40,7 +51,7 @@ class MartTools(Listeners, commands.Cog):
     __author__ = "Predä"
     __version__ = "1.6.0"
 
-    def __init__(self, bot):
+    def __init__(self, bot: Red):
         self.bot = bot
         self._connection = apsw.Connection(str(cog_data_path(self) / "MartTools.db"))
         self.cursor = self._connection.cursor()
@@ -79,7 +90,12 @@ class MartTools(Listeners, commands.Cog):
             condition = {"event": key, "guild_id": id}
         result = list(self.cursor.execute(query, condition))
         return humanize_number(result[0][0] if result else 0)
-
+      
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        """Thanks Sinbad!"""
+        pre_processed = super().format_help_for_context(ctx)
+        return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
+      
     def cog_unload(self):  # To delete at next audio update.
         if not Query:
             lavalink.unregister_event_listener(self.event_handler)
@@ -411,18 +427,11 @@ class MartTools(Listeners, commands.Cog):
     @commands.command(aliases=["prefixes"])
     async def prefix(self, ctx):
         """Show all prefixes of the bot"""
-        if hasattr(self.bot, "_config"):  # Red > 3.2
-            default_prefixes = await self.bot._config.prefix()
-            try:
-                guild_prefixes = await self.bot._config.guild(ctx.guild).prefix()
-            except AttributeError:
-                guild_prefixes = False
-        else:  # Red < 3.2
-            default_prefixes = await self.bot.db.prefix()
-            try:
-                guild_prefixes = await self.bot.db.guild(ctx.guild).prefix()
-            except AttributeError:
-                guild_prefixes = False
+        default_prefixes = await self.bot._config.prefix()  # TODO: Use prefixes cache.
+        try:
+            guild_prefixes = await self.bot._config.guild(ctx.guild).prefix()
+        except AttributeError:
+            guild_prefixes = False
         bot_name = ctx.bot.user.name
         avatar = self.bot.user.avatar_url_as(static_format="png")
 

@@ -1,8 +1,11 @@
 import discord
-import operator
+
+from redbot.core.bot import Red
 from redbot.core import commands
 from redbot.core.utils.chat_formatting import pagify
 from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
+
+import operator
 
 
 class WhoPlays(commands.Cog):
@@ -12,14 +15,19 @@ class WhoPlays(commands.Cog):
     """
 
     __author__ = ["Stevy", "Predä"]
-    __version__ = "0.5"
+    __version__ = "0.5.3"
 
-    def __init__(self, bot):
+    def __init__(self, bot: Red):
         self.bot = bot
+
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        """Thanks Sinbad!"""
+        pre_processed = super().format_help_for_context(ctx)
+        return f"{pre_processed}\n\nAuthors: {', '.join(self.__author__)}\nCog Version: {self.__version__}"
 
     @commands.command(aliases=["whoplay"])
     @commands.guild_only()
-    async def whoplays(self, ctx, *, game):
+    async def whoplays(self, ctx: commands.Context, *, game: str):
         """Shows a list of all the people playing a game."""
         if len(game) <= 2:
             await ctx.send("You need at least 3 characters.")
@@ -63,7 +71,7 @@ class WhoPlays(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    async def cgames(self, ctx):
+    async def cgames(self, ctx: commands.Context):
         """Shows the currently most played games"""
         freq_list = {}
         for member in ctx.guild.members:

@@ -1,5 +1,6 @@
 import discord
 
+from redbot.core.bot import Red
 from redbot.core import checks, commands, Config
 from redbot.core.i18n import Translator, cog_i18n
 from redbot.core.utils.chat_formatting import bold, box, inline
@@ -18,20 +19,25 @@ class DblTools(commands.Cog):
     """Tools to get bots information from Top.gg."""
 
     __author__ = "Predä"
-    __version__ = "1.3.2"
+    __version__ = "1.3.5"
 
-    def __init__(self, bot):
+    def __init__(self, bot: Red):
         self.bot = bot
         self.session = aiohttp.ClientSession()
 
-    async def _get_data(self, ctx, bot=None, endpoint: Optional[str] = ""):
+    def cog_unload(self):
+        self.bot.loop.create_task(self.session.close())
+
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        """Thanks Sinbad!"""
+        pre_processed = super().format_help_for_context(ctx)
+        return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
+
+    async def _get_data(
+        self, ctx: commands.Context, bot: str = None, endpoint: Optional[str] = ""
+    ):
         """Get data from Top.gg."""
-        if hasattr(self.bot, "get_shared_api_tokens"):  # Red > 3.2
-            api = await self.bot.get_shared_api_tokens("dbl")
-            key = api.get("api_key")
-        else:  # Red < 3.2
-            api = await self.bot.db.api_tokens.get_raw("dbl", default=None)
-            key = api["api_key"]
+        key = (await self.bot.get_shared_api_tokens("dbl")).get("api_key")
         headers = {"Authorization": key}
         async with self.session.get(DBL_BASE_URL + str(bot) + endpoint, headers=headers) as resp:
             if resp.status == 401:
@@ -52,7 +58,7 @@ class DblTools(commands.Cog):
 
     @checks.is_owner()
     @commands.command()
-    async def dblkey(self, ctx):
+    async def dblkey(self, ctx: commands.Context):
         """
             Explain how to set Top.gg API key.
 
@@ -75,18 +81,15 @@ class DblTools(commands.Cog):
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 1, commands.BucketType.user)
-    async def dblinfo(self, ctx, *, bot: Union[int, discord.Member, discord.User, None] = None):
+    async def dblinfo(
+        self, ctx: commands.Context, *, bot: Union[int, discord.Member, discord.User, None] = None
+    ):
         """
             Show information of a chosen bot on Top.gg.
 
             `[bot]`: Can be a mention or ID of a bot.
         """
-        if hasattr(self.bot, "get_shared_api_tokens"):  # Red > 3.2
-            api = await self.bot.get_shared_api_tokens("dbl")
-            key = api.get("api_key")
-        else:  # Red < 3.2
-            api = await self.bot.db.api_tokens.get_raw("dbl", default=None)
-            key = api["api_key"]
+        key = (await self.bot.get_shared_api_tokens("dbl")).get("api_key")
         if key is None:
             return await ctx.send(_("Owner of this bot needs to set an API key first !"))
         if bot is None:
@@ -102,10 +105,10 @@ class DblTools(commands.Cog):
         try:
             async with ctx.typing():
                 try:
-                    info = await self._get_data(ctx, bot=bot.id)
+                    info = await self._get_data(ctx, bot=str(bot.id))
                     if info is None:
                         return
-                    stats = await self._get_data(ctx, endpoint="/stats", bot=bot.id)
+                    stats = await self._get_data(ctx, endpoint="/stats", bot=str(bot.id))
                 except TypeError:
                     return
 
@@ -169,9 +172,7 @@ class DblTools(commands.Cog):
                         bold(_("Approval date:"))
                         + " {}\n\n".format(info["date"].replace("T", " ")[:-5])
                     ),
-                    "dbl_page": (
-                        _("[Top.gg Page]({})").format(f"https://top.gg/bot/{bot.id}")
-                    ),
+                    "dbl_page": (_("[Top.gg Page]({})").format(f"https://top.gg/bot/{bot.id}")),
                     "if_inv": (
                         _(" • [Invitation link]({})").format(info["invite"])
                         if info["invite"]
@@ -218,14 +219,11 @@ class DblTools(commands.Cog):
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 1, commands.BucketType.user)
-    async def dblwidget(self, ctx, *, bot: Union[int, discord.Member, discord.User, None] = None):
+    async def dblwidget(
+        self, ctx: commands.Context, *, bot: Union[int, discord.Member, discord.User, None] = None
+    ):
         """Send the widget of a chosen bot on Top.gg."""
-        if hasattr(self.bot, "get_shared_api_tokens"):  # Red > 3.2
-            api = await self.bot.get_shared_api_tokens("dbl")
-            key = api.get("api_key")
-        else:  # Red < 3.2
-            api = await self.bot.db.api_tokens.get_raw("dbl", default=None)
-            key = api["api_key"]
+        key = (await self.bot.get_shared_api_tokens("dbl")).get("api_key")
         if key is None:
             return await ctx.send(_("Owner of this bot need to set an API key first !"))
         if bot is None:
@@ -239,17 +237,12 @@ class DblTools(commands.Cog):
             return await ctx.send(_("This is not a bot user, please try again with a bot."))
 
         async with ctx.typing():
-            data = await self._get_data(ctx, bot=bot.id)
+            data = await self._get_data(ctx, bot=str(bot.id))
             if data is None:
                 return
             em = discord.Embed(
                 color=discord.Color.blurple(),
-                description=bold(_("[Top.gg Page]({})")).format(
-                    f"https://top.gg/bot/{bot.id}"
-                ),
+                description=bold(_("[Top.gg Page]({})")).format(f"https://top.gg/bot/{bot.id}"),
             )
             em.set_image(url=f"https://top.gg/api/widget/{bot.id}.png")
         await ctx.send(embed=em)
-
-    def cog_unload(self):
-        self.bot.loop.create_task(self.session.close())

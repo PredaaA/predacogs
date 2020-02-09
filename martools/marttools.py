@@ -1,6 +1,8 @@
-import discord
+import time
+from datetime import datetime
 
-import asyncio
+import apsw
+import discord
 import lavalink
 import contextlib
 
@@ -10,6 +12,7 @@ from collections import Counter, defaultdict
 
 from redbot.core.bot import Red
 from redbot.core import Config, bank, commands
+from redbot.core.data_manager import cog_data_path
 from redbot.core.i18n import Translator, cog_i18n
 from redbot.core.utils.chat_formatting import (
     bold,
@@ -18,9 +21,25 @@ from redbot.core.utils.chat_formatting import (
     humanize_number,
 )
 
-# from redbot.cogs.audio.dataclasses import Query
+
+try:
+    from redbot.cogs.audio.audio_dataclasses import Query
+except ImportError:
+    Query = None
+
+try:
+    from redbot.core.utils.chat_formatting import humanize_number
+except ImportError:
+    from typing import Union
+    from babel.numbers import format_decimal
+
+    def humanize_number(val: Union[int, float]):
+        return format_decimal(val, locale="en_US")
+
 
 from .listeners import Listeners
+from .statements import *
+from .utils import rgetattr
 
 _ = Translator("MartTools", __file__)
 
@@ -30,93 +49,66 @@ class MartTools(Listeners, commands.Cog):
     """Multiple tools that are originally used on Martine."""
 
     __author__ = "Predä"
-    __version__ = "1.5.93"
+    __version__ = "1.6.0"
 
     def __init__(self, bot: Red):
         self.bot = bot
-        self.counter = Counter()
-        self.sticky_counter = Counter()
-        self.config = Config.get_conf(self, 64481875498, force_registration=True)
-        self._monitor_time = datetime.utcnow().timestamp()
-        global_defauls = dict(
-            command_error=0,
-            msg_sent=0,
-            dms_received=0,
-            messages_read=0,
-            guild_join=0,
-            guild_remove=0,
-            sessions_resumed=0,
-            processed_commands=0,
-            new_members=0,
-            members_left=0,
-            messages_deleted=0,
-            messages_edited=0,
-            reactions_added=0,
-            reactions_removed=0,
-            roles_added=0,
-            roles_removed=0,
-            roles_updated=0,
-            members_banned=0,
-            members_unbanned=0,
-            emojis_removed=0,
-            emojis_added=0,
-            emojis_updated=0,
-            users_joined_bot_music_room=0,
-        )
-        self.config.register_global(**global_defauls)
-        self._task = self.bot.loop.create_task(self._save_counters_to_config())
-        lavalink.register_event_listener(self.event_handler)  # To delete at next audio update.
+        self._connection = apsw.Connection(str(cog_data_path(self) / "MartTools.db"))
+        self.cursor = self._connection.cursor()
+        self.cursor.execute(PRAGMA_journal_mode)
+        self.cursor.execute(PRAGMA_wal_autocheckpoint)
+        self.cursor.execute(PRAGMA_read_uncommitted)
+        self.cursor.execute(CREATE_TABLE_PERMA)
+        self.cursor.execute(DROP_TEMP)
+        self.cursor.execute(CREATE_TABLE_TEMP)
+        self.uptime = datetime.utcnow()
+        self.cursor.execute(INSERT_PERMA_DO_NOTHING, (-1000, "creation_time", time.time()))
 
+        if not Query:
+            lavalink.register_event_listener(self.event_handler)  # To delete at next audio update.
+
+    def upsert(self, id: int, event: str):
+        self.cursor.execute(UPSERT_PERMA, (id, event))
+        self.cursor.execute(UPSERT_TEMP, (id, event))
+
+    def fetch(self, key, id=None) -> str:
+        if id is None:
+            query = SELECT_PERMA_GLOBAL
+            condition = {"event": key}
+        else:
+            query = SELECT_PERMA_SINGLE
+            condition = {"event": key, "guild_id": id}
+        result = list(self.cursor.execute(query, condition))
+        return humanize_number(result[0][0] if result else 0)
+
+    def get(self, key, id=None) -> str:
+        if id is None:
+            query = SELECT_TEMP_GLOBAL
+            condition = {"event": key}
+        else:
+            query = SELECT_TEMP_SINGLE
+            condition = {"event": key, "guild_id": id}
+        result = list(self.cursor.execute(query, condition))
+        return humanize_number(result[0][0] if result else 0)
+      
     def format_help_for_context(self, ctx: commands.Context) -> str:
         """Thanks Sinbad!"""
         pre_processed = super().format_help_for_context(ctx)
         return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
-
-    def cog_unload(self):
-        lavalink.unregister_event_listener(self.event_handler)  # To delete at next audio update.
-        self.bot.loop.create_task(self._clean_up())
+      
+    def cog_unload(self):  # To delete at next audio update.
+        if not Query:
+            lavalink.unregister_event_listener(self.event_handler)
+        self._connection.close()
 
     async def event_handler(self, player, event_type, extra):  # To delete at next audio update.
-        # Thanks Draper#6666
         if event_type == lavalink.LavalinkEvents.TRACK_START:
-            self.update_counters("tracks_played")
-
-    def update_counters(self, key: str):
-        self.counter[key] += 1
-        self.sticky_counter[key] += 1
+            self.upsert(rgetattr(player, "channel.guild.id", 0), "tracks_played")
 
     def get_bot_uptime(self):
-        delta = datetime.utcnow() - (
-            self.bot.uptime if hasattr(self.bot, "uptime") else self.bot._uptime
-        )
+        delta = datetime.utcnow() - self.uptime
         uptime = humanize_timedelta(timedelta=delta)
         return uptime
-
-    async def _save_counters_to_config(self):
-        await self.bot.wait_until_ready()
-        with contextlib.suppress(asyncio.CancelledError):
-            while True:
-                users_data = copy(self.sticky_counter)
-                self.sticky_counter = Counter()
-                async with self.config.all() as new_data:
-                    for key, value in users_data.items():
-                        if key in new_data:
-                            new_data[key] += value
-                        else:
-                            new_data[key] = value
-                    if "start_date" not in new_data:
-                        new_data["start_date"] = self._monitor_time
-                await asyncio.sleep(60)
-
-    async def _clean_up(self):
-        if self._task:
-            self._task.cancel()
-        async with self.config.all() as new_data:
-            for key, value in self.sticky_counter.items():
-                if key in new_data:
-                    new_data[key] += value
-                else:
-                    new_data[key] = value
 
     @commands.command()
     @commands.guild_only()
@@ -182,17 +174,23 @@ class MartTools(Listeners, commands.Cog):
             Commands processed, messages received, and music on servers.
         """
         uptime = str(self.get_bot_uptime())
-        commands_count = "`{}`".format(humanize_number(self.counter["processed_commands"]))
-        errors_count = "`{}`".format(humanize_number(self.counter["command_error"]))
-        messages_read = "`{}`".format(humanize_number(self.counter["messages_read"]))
-        messages_sent = "`{}`".format(humanize_number(self.counter["msg_sent"]))
-        total_num = "`{}/{}`".format(
-            humanize_number(len(lavalink.active_players())),
-            humanize_number(len(lavalink.all_players())),
-        )
-        tracks_played = "`{}`".format(humanize_number(self.counter["tracks_played"]))
-        guild_join = "`{}`".format(humanize_number(self.counter["guild_join"]))
-        guild_leave = "`{}`".format(humanize_number(self.counter["guild_remove"]))
+        commands_count = "`{}`".format(self.get("processed_commands"))
+        errors_count = "`{}`".format(self.get("command_error"))
+        messages_read = "`{}`".format(self.get("messages_read"))
+        messages_sent = "`{}`".format(self.get("msg_sent"))
+        try:
+            total_num = "`{}/{}`".format(
+                humanize_number(len(lavalink.active_players())),
+                humanize_number(len(lavalink.all_players())),
+            )
+        except AttributeError:  # Remove at 3.2
+            total_num = "`{}/{}`".format(
+                humanize_number(len([p for p in lavalink.players if p.current is not None])),
+                humanize_number(len([p for p in lavalink.players])),
+            )
+        tracks_played = "`{}`".format(self.get("tracks_played"))
+        guild_join = "`{}`".format(self.get("guild_join"))
+        guild_leave = "`{}`".format(self.get("guild_remove"))
         avatar = self.bot.user.avatar_url_as(static_format="png")
         msg = (
             bold(_("Commands processed: "))
@@ -213,10 +211,10 @@ class MartTools(Listeners, commands.Cog):
             + _("{} servers.").format(guild_leave)
         )
         try:
-            em = discord.Embed(
-                color=await ctx.embed_colour(),
-                title=_("Usage count of {} since last restart:").format(ctx.bot.user.name),
-                description=msg,
+            em = discord.Embed(color=await ctx.embed_colour())
+            em.add_field(
+                name=_("Usage count of {} since last restart:").format(ctx.bot.user.name),
+                value=msg,
             )
             em.set_thumbnail(url=avatar)
             em.set_footer(text=_("Since {}").format(uptime))
@@ -235,27 +233,44 @@ class MartTools(Listeners, commands.Cog):
         Same as [p]usagecount command but with more stats.
         """
         avatar = self.bot.user.avatar_url_as(static_format="png")
-        counters = defaultdict(int, self.counter)
-        uptime = str(self.get_bot_uptime())
-        total_num = "{}/{}".format(
-            humanize_number(len(lavalink.active_players())),
-            humanize_number(len(lavalink.all_players())),
-        )
+        query = SELECT_PERMA_SINGLE
+        condition = {"event": "creation_time", "guild_id": -1000}
+        result = list(self.cursor.execute(query, condition))
+        delta = datetime.utcnow() - datetime.utcfromtimestamp(result[0][0])
+        uptime = humanize_timedelta(timedelta=delta)
+        try:
+            total_num = "{}/{}".format(
+                humanize_number(len(lavalink.active_players())),
+                humanize_number(len(lavalink.all_players())),
+            )
+        except AttributeError:  # Remove at 3.2
+            total_num = "{}/{}".format(
+                humanize_number(len([p for p in lavalink.players if p.current is not None])),
+                humanize_number(len([p for p in lavalink.players])),
+            )
 
         em = discord.Embed(
-            title=_("Usage count of {} since last restart:").format(ctx.bot.user.name),
+            title=_("Usage count of {}:").format(ctx.bot.user.name),
             color=await ctx.embed_colour(),
         )
         em.add_field(
             name=_("Message Stats"),
             value=box(
                 _(
-                    "Messages Read       : {messages_read:,}\n"
-                    "Messages Sent       : {msg_sent:,}\n"
-                    "Messages Deleted    : {messages_deleted:,}\n"
-                    "Messages Edited     : {messages_edited:,}\n"
-                    "DMs Received        : {dms_received:,}\n"
-                ).format_map(counters),
+                    "Messages Read       : {messages_read}\n"
+                    "Messages Sent       : {msg_sent}\n"
+                    "Messages Deleted    : {messages_deleted}\n"
+                    "Messages Edited     : {messages_edited}\n"
+                    "DMs Received        : {dms_received}\n"
+                ).format_map(
+                    {
+                        "messages_read": self.fetch("messages_read"),
+                        "msg_sent": self.fetch("msg_sent"),
+                        "messages_deleted": self.fetch("messages_deleted"),
+                        "messages_edited": self.fetch("messages_edited"),
+                        "dms_received": self.fetch("dms_received"),
+                    }
+                ),
                 lang="prolog",
             ),
             inline=False,
@@ -264,10 +279,16 @@ class MartTools(Listeners, commands.Cog):
             name=_("Commands Stats"),
             value=box(
                 _(
-                    "Commands Processed  : {processed_commands:,}\n"
-                    "Errors Occured      : {command_error:,}\n"
-                    "Sessions Resumed    : {sessions_resumed:,}\n"
-                ).format_map(counters),
+                    "Commands Processed  : {processed_commands}\n"
+                    "Errors Occured      : {command_error}\n"
+                    "Sessions Resumed    : {sessions_resumed}\n"
+                ).format_map(
+                    {
+                        "processed_commands": self.fetch("processed_commands"),
+                        "command_error": self.fetch("command_error"),
+                        "sessions_resumed": self.fetch("sessions_resumed"),
+                    }
+                ),
                 lang="prolog",
             ),
             inline=False,
@@ -276,9 +297,13 @@ class MartTools(Listeners, commands.Cog):
             name=_("Guild Stats"),
             value=box(
                 _(
-                    "Guilds Joined       : {guild_join:,}\n"
-                    "Guilds Left         : {guild_remove:,}\n"
-                ).format_map(counters),
+                    "Guilds Joined       : {guild_join}\n" "Guilds Left         : {guild_remove}\n"
+                ).format_map(
+                    {
+                        "guild_join": self.fetch("guild_join"),
+                        "guild_remove": self.fetch("guild_remove"),
+                    }
+                ),
                 lang="prolog",
             ),
             inline=False,
@@ -287,11 +312,18 @@ class MartTools(Listeners, commands.Cog):
             name=_("User Stats"),
             value=box(
                 _(
-                    "New Users           : {new_members:,}\n"
-                    "Left Users          : {members_left:,}\n"
-                    "Banned Users        : {members_banned:,}\n"
-                    "Unbanned Users      : {members_unbanned:,}\n"
-                ).format_map(counters),
+                    "New Users           : {new_members}\n"
+                    "Left Users          : {members_left}\n"
+                    "Banned Users        : {members_banned}\n"
+                    "Unbanned Users      : {members_unbanned}\n"
+                ).format_map(
+                    {
+                        "new_members": self.fetch("new_members"),
+                        "members_left": self.fetch("members_left"),
+                        "members_banned": self.fetch("members_banned"),
+                        "members_unbanned": self.fetch("members_unbanned"),
+                    }
+                ),
                 lang="prolog",
             ),
             inline=False,
@@ -300,10 +332,16 @@ class MartTools(Listeners, commands.Cog):
             name=_("Role Stats"),
             value=box(
                 _(
-                    "Roles Added         : {roles_added:,}\n"
-                    "Roles Removed       : {roles_removed:,}\n"
-                    "Roles Updated       : {roles_updated:,}\n"
-                ).format_map(counters),
+                    "Roles Added         : {roles_added}\n"
+                    "Roles Removed       : {roles_removed}\n"
+                    "Roles Updated       : {roles_updated}\n"
+                ).format_map(
+                    {
+                        "roles_added": self.fetch("roles_added"),
+                        "roles_removed": self.fetch("roles_removed"),
+                        "roles_updated": self.fetch("roles_updated"),
+                    }
+                ),
                 lang="prolog",
             ),
             inline=False,
@@ -312,12 +350,20 @@ class MartTools(Listeners, commands.Cog):
             name=_("Emoji Stats"),
             value=box(
                 _(
-                    "Reacts Added        : {reactions_added:,}\n"
-                    "Reacts Removed      : {reactions_removed:,}\n"
-                    "Emoji Added         : {emojis_added:,}\n"
-                    "Emoji Removed       : {emojis_removed:,}\n"
-                    "Emoji Updated       : {emojis_updated:,}\n"
-                ).format_map(counters),
+                    "Reacts Added        : {reactions_added}\n"
+                    "Reacts Removed      : {reactions_removed}\n"
+                    "Emoji Added         : {emojis_added}\n"
+                    "Emoji Removed       : {emojis_removed}\n"
+                    "Emoji Updated       : {emojis_updated}\n"
+                ).format_map(
+                    {
+                        "reactions_added": self.fetch("reactions_added"),
+                        "reactions_removed": self.fetch("reactions_removed"),
+                        "emojis_added": self.fetch("emojis_added"),
+                        "emojis_removed": self.fetch("emojis_removed"),
+                        "emojis_updated": self.fetch("emojis_updated"),
+                    }
+                ),
                 lang="prolog",
             ),
             inline=False,
@@ -326,18 +372,54 @@ class MartTools(Listeners, commands.Cog):
             name=_("Audio Stats"),
             value=box(
                 _(
-                    "Users Who Joined VC : {users_joined_bot_music_room:,}\n"
-                    "Tracks Played       : {tracks_played:,}\n"
+                    "Users Who Joined VC : {users_joined_bot_music_room}\n"
+                    "Tracks Played       : {tracks_played}\n"
                     "Number Of Players   : {total_num}"
                 ).format(
-                    users_joined_bot_music_room=counters["users_joined_bot_music_room"],
-                    tracks_played=counters["tracks_played"],
+                    users_joined_bot_music_room=self.fetch("users_joined_bot_music_room"),
+                    tracks_played=self.fetch("tracks_played"),
                     total_num=total_num,
                 ),
                 lang="prolog",
             ),
             inline=False,
         )
+        if Query:
+            em.add_field(
+                name=_("Track Stats"),
+                value=box(
+                    _(
+                        "Streams             : {streams_played}\n"
+                        "YouTube Streams     : {yt_streams_played}\n"
+                        "Mixer Streams       : {mixer_streams_played}\n"
+                        "Twitch Streams      : {ttv_streams_played}\n"
+                        "Other Streams       : {streams_played}\n"
+                        "YouTube Tracks      : {youtube_tracks}\n"
+                        "Soundcloud Tracks   : {soundcloud_tracks}\n"
+                        "Bandcamp Tracks     : {bandcamp_tracks}\n"
+                        "Vimeo Tracks        : {vimeo_tracks}\n"
+                        "Mixer Tracks        : {mixer_tracks}\n"
+                        "Twitch Tracks       : {twitch_tracks}\n"
+                        "Other Tracks        : {other_tracks}\n"
+                    ).format(
+                        streams_played=self.fetch("streams_played"),
+                        yt_streams_played=self.fetch("yt_streams_played"),
+                        mixer_streams_played=self.fetch("mixer_streams_played"),
+                        ttv_streams_played=self.fetch("ttv_streams_played"),
+                        other_streams_played=self.fetch("other_streams_played"),
+                        youtube_tracks=self.fetch("youtube_tracks"),
+                        soundcloud_tracks=self.fetch("soundcloud_tracks"),
+                        bandcamp_tracks=self.fetch("bandcamp_tracks"),
+                        vimeo_tracks=self.fetch("vimeo_tracks"),
+                        mixer_tracks=self.fetch("mixer_tracks"),
+                        twitch_tracks=self.fetch("twitch_tracks"),
+                        other_tracks=self.fetch("other_tracks"),
+                    ),
+                    lang="prolog",
+                ),
+                inline=False,
+            )
+
         em.set_thumbnail(url=avatar)
         em.set_footer(text=_("Since {}").format(uptime))
         await ctx.send(embed=em)

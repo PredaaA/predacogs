@@ -72,7 +72,7 @@ class ServerInfo(commands.Cog):
             _(" • Bots: "): lambda x: x.bot,
             "📗": lambda x: x.status == discord.Status.online,
             "📙": lambda x: x.status == discord.Status.idle,
-            "📕": lambda x: x.status == discord.Status.idle,
+            "📕": lambda x: x.status == discord.Status.dnd,
             "📓": lambda x: x.status == discord.Status.offline,
             "🎥": lambda x: x.activity == discord.Streaming,
             "📱": lambda x: x.is_on_mobile(),

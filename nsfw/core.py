@@ -11,16 +11,16 @@ from redbot.core.utils.chat_formatting import bold, box, inline
 from random import choice
 from typing import Optional, List, Union
 
-from .constants import REDDIT_BASEURL, IMGUR_LINKS, GOOD_EXTENSIONS, Stuff
+from .constants import REDDIT_BASEURL, IMGUR_LINKS, GOOD_EXTENSIONS, emoji
 
 _ = Translator("Nsfw", __file__)
 
 
 @cog_i18n(_)
-class Core(commands.Cog, Stuff):
+class Core(commands.Cog):
 
     __author__ = ["Predä", "aikaterna"]
-    __version__ = "2.3"
+    __version__ = "2.3.1"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -110,7 +110,7 @@ class Core(commands.Cog, Stuff):
                 description=bold(_("[Link if you don't see image]({url})")).format(url=url),
                 image=url,
                 footer=_("Requested by {req} {emoji} • From r/{r}").format(
-                    req=ctx.author.display_name, emoji=await self.emoji(), r=subr
+                    req=ctx.author.display_name, emoji=emoji(), r=subr
                 ),
             )
         if url.startswith("https://gfycat.com"):
@@ -121,7 +121,7 @@ class Core(commands.Cog, Stuff):
             ).format(
                 name=name,
                 req=bold(ctx.author.display_name),
-                emoji=await self.emoji(),
+                emoji=emoji(),
                 r=bold(f"r/{subr}"),
                 url=url,
             )
@@ -142,7 +142,7 @@ class Core(commands.Cog, Stuff):
             ),
             image=data["img"][arg],
             footer=_("Requested by {req} {emoji} • From {source}").format(
-                req=ctx.author.display_name, emoji=await self.emoji(), source=source
+                req=ctx.author.display_name, emoji=emoji(), source=source
             ),
         )
         return em

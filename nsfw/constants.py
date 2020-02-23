@@ -1,19 +1,18 @@
 from random import choice
 
 # Stuff for the cog
-class Stuff:
-    async def emoji(self):
-        """Randomize footer emojis."""
-        EMOJIS = [
-            "\N{AUBERGINE}",
-            "\N{SMIRKING FACE}",
-            "\N{PEACH}",
-            "\N{SPLASHING SWEAT SYMBOL}",
-            "\N{BANANA}",
-            "\N{KISS MARK}",
-        ]
-        emoji = choice(EMOJIS)
-        return emoji
+def emoji():
+    """Randomize footer emojis."""
+    EMOJIS = [
+        "\N{AUBERGINE}",
+        "\N{SMIRKING FACE}",
+        "\N{PEACH}",
+        "\N{SPLASHING SWEAT SYMBOL}",
+        "\N{BANANA}",
+        "\N{KISS MARK}",
+    ]
+    emoji = choice(EMOJIS)
+    return emoji
 
 
 REDDIT_BASEURL = "https://api.reddit.com/r/{}/random"
@@ -111,7 +110,7 @@ BOOBS = [
     "burstingout",
     "boobgifs",
 ]
-BOTTOMLESS = ["upskirt", "Bottomless", "Bottomless_Vixens", "nopanties", "Pantiesdown"]
+BOTTOMLESS = ["upskirt", "Bottomless", "nopanties", "Pantiesdown"]
 COSPLAY = [
     "nsfwcosplay",
     "cosplayonoff",

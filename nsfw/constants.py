@@ -20,7 +20,7 @@ IMGUR_LINKS = "http://imgur.com", "https://m.imgur.com", "https://imgur.com"
 GOOD_EXTENSIONS = ".png", ".jpg", ".jpeg", ".gif"
 
 # Subreddits
-FOUR_K = ["HighResNSFW", "UHDnsfw", "nsfw4k", "nsfw_hd", "NSFW_Wallpapers", "HDnsfw", "closeup"]
+FOUR_K = ["HighResNSFW", "UHDnsfw", "nsfw4k", "nsfw_hd", "NSFW_Wallpapers", "closeup"]
 AHEGAO = ["AhegaoGirls", "RealAhegao", "EyeRollOrgasm", "MouthWideOpen", "O_Faces"]
 ASS = [
     "ass",
@@ -120,7 +120,7 @@ COSPLAY = [
     "CosplayLewd",
     "CosplayBeauties",
 ]
-CUNNI = ["cunnilingus", "eatpussy2015", "CunnilingusSelfie", "Hegoesdown"]
+CUNNI = ["cunnilingus", "CunnilingusSelfie", "Hegoesdown"]
 CUMSHOTS = [
     "cumfetish",
     "cumontongue",
@@ -187,7 +187,6 @@ ORAL = [
     "SuckingItDry",
     "OralCreampie",
     "cunnilingus",
-    "eatpussy2015",
     "CunnilingusSelfie",
     "Hegoesdown",
     "DeepThroatTears",

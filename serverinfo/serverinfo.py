@@ -18,7 +18,7 @@ class ServerInfo(commands.Cog):
     """Replace original Red serverinfo command with more details."""
 
     __author__ = "Predä"
-    __version__ = "1.3.5"
+    __version__ = "1.3.6"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -162,7 +162,7 @@ class ServerInfo(commands.Cog):
 
         em = discord.Embed(description=created_at, colour=await ctx.embed_colour())
         em.set_author(
-            name=guild.name,
+            name=guild.name + ("\n" + guild.description if guild.description else ""),
             icon_url="https://cdn.discordapp.com/emojis/457879292152381443.png"
             if "VERIFIED" in guild.features
             else "https://cdn.discordapp.com/emojis/508929941610430464.png"

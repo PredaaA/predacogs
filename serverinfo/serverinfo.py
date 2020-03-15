@@ -18,7 +18,7 @@ class ServerInfo(commands.Cog):
     """Replace original Red serverinfo command with more details."""
 
     __author__ = "Predä"
-    __version__ = "1.3.6"
+    __version__ = "1.3.7"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -65,20 +65,24 @@ class ServerInfo(commands.Cog):
             date=bold(guild.created_at.strftime("%d %b %Y %H:%M")),
             num=bold(humanize_number(passed)),
         )
+        online = humanize_number(
+            len([m.status for m in guild.members if m.status != discord.Status.offline])
+        )
+        total_users = humanize_number(guild.member_count)
 
         # Logic from: https://github.com/TrustyJAID/Trusty-cogs/blob/master/serverstats/serverstats.py#L159
         online_stats = {
             _("Humans: "): lambda x: not x.bot,
             _(" • Bots: "): lambda x: x.bot,
-            "📗": lambda x: x.status == discord.Status.online,
-            "📙": lambda x: x.status == discord.Status.idle,
-            "📕": lambda x: x.status == discord.Status.dnd,
-            "📓": lambda x: x.status == discord.Status.offline,
-            "🎥": lambda x: x.activity == discord.Streaming,
-            "📱": lambda x: x.is_on_mobile(),
+            "\N{LARGE GREEN CIRCLE}": lambda x: x.status == discord.Status.online,
+            "\N{LARGE ORANGE CIRCLE}": lambda x: x.status == discord.Status.idle,
+            "\N{LARGE RED CIRCLE}": lambda x: x.status == discord.Status.do_not_disturb,
+            "\N{MEDIUM WHITE CIRCLE}": lambda x: x.status == discord.Status.offline,
+            "\N{LARGE PURPLE CIRCLE}": lambda x: x.activity == discord.Streaming,
+            "\N{MOBILE PHONE}": lambda x: x.is_on_mobile(),
         }
-        member_msg = _("Total Users: {total}\n").format(
-            total=bold(humanize_number(guild.member_count))
+        member_msg = _("Users online: **{online}/{total_users}**\n").format(
+            online=online, total_users=total_users
         )
         count = 1
         for emoji, value in online_stats.items():
@@ -126,7 +130,7 @@ class ServerInfo(commands.Cog):
             "none": _("0 - None"),
             "low": _("1 - Low"),
             "medium": _("2 - Medium"),
-            "high": _("3 - Hard"),
+            "high": _("3 - High"),
             "extreme": _("4 - Extreme"),
         }
 
@@ -134,6 +138,7 @@ class ServerInfo(commands.Cog):
             "PARTNERED": _("Partnered"),
             "VERIFIED": _("Verified"),
             "DISCOVERABLE": _("Server Discovery"),
+            "FEATURABLE": _("Featurable"),
             "PUBLIC": _("Public"),
             "INVITE_SPLASH": _("Splash Invite"),
             "VIP_REGIONS": _("VIP Voice Servers"),
@@ -147,7 +152,7 @@ class ServerInfo(commands.Cog):
             "MEMBER_LIST_DISABLED": _("Member list disabled"),
         }
         guild_features_list = [
-            f"\✅ {name}" for feature, name in features.items() if feature in set(guild.features)
+            f"\✅ {name}" for feature, name in features.items() if feature in guild.features
         ]
 
         since_joined = (ctx.message.created_at - guild.me.joined_at).days
@@ -160,7 +165,10 @@ class ServerInfo(commands.Cog):
             since_join=humanize_number(since_joined),
         )
 
-        em = discord.Embed(description=created_at, colour=await ctx.embed_colour())
+        em = discord.Embed(
+            description=created_at + ("\n" + guild.description if guild.description else ""),
+            colour=await ctx.embed_colour(),
+        )
         em.set_author(
             name=guild.name + ("\n" + guild.description if guild.description else ""),
             icon_url="https://cdn.discordapp.com/emojis/457879292152381443.png"
@@ -169,11 +177,8 @@ class ServerInfo(commands.Cog):
             if "PARTNERED" in guild.features
             else discord.Embed.Empty,
         )
-        em.set_thumbnail(
-            url=guild.icon_url
-            if guild.icon_url
-            else "https://cdn.discordapp.com/embed/avatars/1.png"
-        )
+        if guild.icon_url:
+            em.set_thumbnail(url=guild.icon_url)
         em.add_field(name=_("Members:"), value=member_msg)
         em.add_field(
             name=_("Channels:"),
@@ -196,7 +201,7 @@ class ServerInfo(commands.Cog):
                 "Owner: {owner}\nRegion: {region}\nVerif. level: {verif}\nServer ID: {id}"
             ).format(
                 owner=bold(str(guild.owner)),
-                region=bold(vc_regions[str(guild.region)]),
+                region=f"**{vc_regions.get(str(guild.region)) or str(guild.region)}**",
                 verif=bold(verif[str(guild.verification_level)]),
                 id=bold(str(guild.id)),
             ),

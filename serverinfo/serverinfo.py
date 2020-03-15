@@ -18,7 +18,7 @@ class ServerInfo(commands.Cog):
     """Replace original Red serverinfo command with more details."""
 
     __author__ = "Predä"
-    __version__ = "1.3.8"
+    __version__ = "1.3.9"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -165,6 +165,13 @@ class ServerInfo(commands.Cog):
             bot_join=bot_joined,
             since_join=humanize_number(since_joined),
         )
+        shard = (
+            _("\nShard ID: **{}/{}**").format(
+                humanize_number(guild.shard_id + 1), humanize_number(self.bot.shard_count)
+            )
+            if self.bot.shard_count > 1
+            else ""
+        )
 
         em = discord.Embed(
             description=(f"{guild.description}\n\n" if guild.description else "") + created_at,
@@ -199,12 +206,13 @@ class ServerInfo(commands.Cog):
         em.add_field(
             name=_("Utility:"),
             value=_(
-                "Owner: {owner}\nVoice region: {region}\nVerif. level: {verif}\nServer ID: {id}"
+                "Owner: {owner}\nVoice region: {region}\nVerif. level: {verif}\nServer ID: {id}{shard}"
             ).format(
                 owner=bold(str(guild.owner)),
                 region=f"**{vc_regions.get(str(guild.region)) or str(guild.region)}**",
                 verif=bold(verif[str(guild.verification_level)]),
                 id=bold(str(guild.id)),
+                shard=shard,
             ),
             inline=False,
         )

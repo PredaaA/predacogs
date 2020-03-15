@@ -18,7 +18,7 @@ class ServerInfo(commands.Cog):
     """Replace original Red serverinfo command with more details."""
 
     __author__ = "Predä"
-    __version__ = "1.3.7"
+    __version__ = "1.3.8"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -167,7 +167,7 @@ class ServerInfo(commands.Cog):
         )
 
         em = discord.Embed(
-            description=created_at + ("\n" + guild.description if guild.description else ""),
+            description=(f"{guild.description}\n\n" if guild.description else "") + created_at,
             colour=await ctx.embed_colour(),
         )
         em.set_author(
@@ -199,7 +199,7 @@ class ServerInfo(commands.Cog):
         em.add_field(
             name=_("Utility:"),
             value=_(
-                "Owner: {owner}\nRegion: {region}\nVerif. level: {verif}\nServer ID: {id}"
+                "Owner: {owner}\nVoice region: {region}\nVerif. level: {verif}\nServer ID: {id}"
             ).format(
                 owner=bold(str(guild.owner)),
                 region=f"**{vc_regions.get(str(guild.region)) or str(guild.region)}**",
@@ -211,7 +211,7 @@ class ServerInfo(commands.Cog):
         em.add_field(
             name=_("Misc:"),
             value=_(
-                "AFK channel: {afk_chan}\nAFK Timeout: {afk_timeout}\nCustom emojis: {emojis}\nRoles: {roles}"
+                "AFK channel: {afk_chan}\nAFK timeout: {afk_timeout}\nCustom emojis: {emojis}\nRoles: {roles}"
             ).format(
                 afk_chan=bold(str(guild.afk_channel)) if guild.afk_channel else bold(_("Not set")),
                 afk_timeout=bold(humanize_timedelta(seconds=guild.afk_timeout)),

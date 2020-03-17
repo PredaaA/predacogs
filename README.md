@@ -5,7 +5,7 @@
     <img src="https://img.shields.io/badge/Red%20DiscordBot-V3-red.svg">
     </a>
   <a href="https://github.com/Rapptz/discord.py/tree/rewrite">
-    <img src="https://img.shields.io/badge/Discord.py-rewrite-blue.svg">
+    <img src="https://img.shields.io/badge/discord-py-blue.svg">
     </a>
   <a href="https://github.com/ambv/black">
     <img src="https://img.shields.io/badge/code%20style-black-000000.svg">

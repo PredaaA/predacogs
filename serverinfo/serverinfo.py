@@ -79,7 +79,7 @@ class ServerInfo(commands.Cog):
             "\N{LARGE RED CIRCLE}": lambda x: x.status is discord.Status.do_not_disturb,
             "\N{MEDIUM WHITE CIRCLE}": lambda x: x.status is discord.Status.offline,
             "\N{LARGE PURPLE CIRCLE}": lambda x: (
-                x.activity is not None and x.activity.type == discord.ActivityType.streaming
+                x.activity is not None and x.activity.type is discord.ActivityType.streaming
             ),
             "\N{MOBILE PHONE}": lambda x: x.is_on_mobile(),
         }

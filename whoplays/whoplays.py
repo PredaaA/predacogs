@@ -15,7 +15,7 @@ class WhoPlays(commands.Cog):
     """
 
     __author__ = ["Stevy", "Predä"]
-    __version__ = "0.5.3"
+    __version__ = "0.5.4"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -42,9 +42,11 @@ class WhoPlays(commands.Cog):
                 continue
             if member.bot:
                 continue
-            if game.lower() in member.activity.name.lower():
-                member_list.append(member)
-                count_playing += 1
+            # Prevents searching through statuses
+            if activity := discord.utils.get(member.activities, type=discord.ActivityType.playing):
+                if game.lower() in activity.name.lower():
+                    member_list.append(member)
+                    count_playing += 1
 
         if count_playing == 0:
             await ctx.send("No one is playing that game.")
@@ -81,9 +83,11 @@ class WhoPlays(commands.Cog):
                 continue
             if member.bot:
                 continue
-            if member.activity.name not in freq_list:
-                freq_list[member.activity.name] = 0
-            freq_list[member.activity.name] += 1
+            # This should ignore things that aren't under playing activity type
+            if activity := discord.utils.get(member.activities, type=discord.ActivityType.playing):
+                if activity.name not in freq_list:
+                    freq_list[activity.name] = 0
+                freq_list[activity.name] += 1
 
         sorted_list = sorted(freq_list.items(), key=operator.itemgetter(1), reverse=True)
 

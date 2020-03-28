@@ -78,7 +78,9 @@ class ServerInfo(commands.Cog):
             "\N{LARGE ORANGE CIRCLE}": lambda x: x.status is discord.Status.idle,
             "\N{LARGE RED CIRCLE}": lambda x: x.status is discord.Status.do_not_disturb,
             "\N{MEDIUM WHITE CIRCLE}": lambda x: x.status is discord.Status.offline,
-            "\N{LARGE PURPLE CIRCLE}": lambda x: any(a.type is discord.ActivityType.streaming for a in x.activities),
+            "\N{LARGE PURPLE CIRCLE}": lambda x: any(
+                a.type is discord.ActivityType.streaming for a in x.activities
+            ),
             "\N{MOBILE PHONE}": lambda x: x.is_on_mobile(),
         }
         member_msg = _("Users online: **{online}/{total_users}**\n").format(

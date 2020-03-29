@@ -75,7 +75,7 @@ class DblTools(commands.Cog):
             "then click on `Show token` and copy the token.\n"
             "5. Use in DM `{}set api dbl api_key,your_api_key_here`\n"
             "6. There you go! You can now use DblTools cog."
-        ).format(ctx.prefix)
+        ).format(ctx.clean_prefix)
         await ctx.maybe_send_embed(message)
 
     @commands.command()

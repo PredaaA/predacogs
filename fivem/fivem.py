@@ -242,7 +242,7 @@ class FiveM(commands.Cog):
         msg = (
             "I will no longer show a custom status based on a FiveM server. Use the same command to set it back."
             if toggled
-            else f"I will now show a custom status based on a FiveM server.\nMake sure to set a valid IP address using `{ctx.prefix}fivemset ip` command!"
+            else f"I will now show a custom status based on a FiveM server.\nMake sure to set a valid IP address using `{ctx.clean_prefix}fivemset ip` command!"
         )
         await ctx.send(msg)
 

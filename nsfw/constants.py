@@ -20,7 +20,7 @@ IMGUR_LINKS = "http://imgur.com", "https://m.imgur.com", "https://imgur.com"
 GOOD_EXTENSIONS = ".png", ".jpg", ".jpeg", ".gif"
 
 # Subreddits
-FOUR_K = ["HighResNSFW", "UHDnsfw", "nsfw4k", "nsfw_hd", "NSFW_Wallpapers", "closeup"]
+FOUR_K = ["HighResNSFW", "UHDnsfw", "nsfw_hd", "NSFW_Wallpapers", "closeup"]
 AHEGAO = ["AhegaoGirls", "RealAhegao", "EyeRollOrgasm", "MouthWideOpen", "O_Faces"]
 ASS = [
     "ass",

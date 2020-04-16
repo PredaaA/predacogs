@@ -1,17 +1,14 @@
 {
     "author": ["Predä"],
-    "install_msg": "Thank you for installing the serverinfo cog!",
+    "install_msg": "Thanks for install my serverinfo cog. Though it is now no longer needed, as same output of this command is now available in Red general cog by using `[p]serverinfo 1`. I let it hidden on my repo so the command can be used without specifying `1` or `True` argument.",
     "name": "ServerInfo",
-    "short": "Replace original Red serverinfo command with more details.",
-    "description": "Replace original Red serverinfo command with more details, about users and server.",
     "tags": [
         "serverinfo",
         "utility",
         "information",
         "replacement"
     ],
-    "requirements": [
-        "babel"
-    ],
-    "min_bot_version": "3.2.0a0.dev1"
+    "requirements": ["babel"],
+    "min_bot_version": "3.2.0a0.dev1",
+    "hidden": true
 }

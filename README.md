@@ -45,7 +45,6 @@
 | [MartTools](https://github.com/PredaaA/predacogs/tree/master/martools) | <details><summary>Multiple tools that are originally used on [Martine](https://martinethebot.com).</summary>Multiple useful tools that are originally used on [Martine](https://martinethebot.com), like usagecount command, that show you all usage of the bot, messages received, read, commands processed and more. Prefix command to show prefixes of the bot, etc.</details>
 | [DblTools](https://github.com/PredaaA/predacogs/tree/master/dbltools) | <details><summary>Tools to get bots information from Top.gg.</summary>Tools to get bots information from Top.gg, like description, votes, published server count, and more.</details>
 | [FiveM](https://github.com/PredaaA/predacogs/tree/master/fivem) | <details><summary>Tools for FiveM servers.</details></summary>
-| [ServerInfo](https://github.com/PredaaA/predacogs/tree/master/serverinfo) | <details><summary>Replace original Red serverinfo command with more details.</summary>Replace original Red serverinfo command with more details, about users and server.</details>
 
 ## Contributing
 

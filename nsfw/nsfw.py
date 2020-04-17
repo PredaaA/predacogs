@@ -70,6 +70,7 @@ class Nsfw(Core):
 
         await self._send_msg(ctx, _("ass"), sub=sub.ASS)
 
+    @nsfwcheck()
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["asian"])
@@ -87,6 +88,7 @@ class Nsfw(Core):
 
         await self._send_msg(ctx, _("anal"), sub=sub.ANAL)
 
+    @nsfwcheck()
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command()
@@ -194,6 +196,7 @@ class Nsfw(Core):
 
         await self._send_msg(ctx, _("double penetration"), sub=sub.DOUBLE_P)
 
+    @nsfwcheck()
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command()
@@ -391,6 +394,7 @@ class Nsfw(Core):
 
         await self._send_msg(ctx, _("thigh"), sub=sub.THIGHS)
 
+    @nsfwcheck()
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["groupsex"])

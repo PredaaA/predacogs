@@ -50,6 +50,16 @@ ASS = [
     "HungryButts",
     "Upshorts",
 ]
+ASIANPORN = [
+    "AmateurAsianGirls",
+    "asian_gifs",
+    "AsianHotties",
+    "AsianCuties",
+    "AsianNSFW",
+    "AsianPorn",
+    "AsiansGoneWild",
+    "AmateurAsianGirls",
+]
 ANAL = [
     "MasterOfAnal",
     "anal",
@@ -60,6 +70,7 @@ ANAL = [
     "assholegonewild",
     "sodomy",
 ]
+BBW = ["BBW", "BBW_Chubby", "BBWVideos"]
 BDSM = ["BDSMGW", "bdsm", "ropeart", "shibari"]
 BLACKCOCK = ["ChurchOfTheBBC", "blackcock", "Blackdick", "bigblackcocks"]
 BLOWJOB = [
@@ -135,7 +146,6 @@ CUMSHOTS = [
     "unexpectedcum",
     "bodyshots",
     "ContainTheLoad",
-    "bodyshots",
 ]
 DEEPTHROAT = [
     "deepthroat_gifs",
@@ -146,6 +156,14 @@ DEEPTHROAT = [
 ]
 DICK = ["DickPics4Freedom", "MassiveCock", "penis", "cock", "ThickDick", "bulges", "twinks"]
 DOUBLE_P = ["doublepenetration", "dp_porn", "Technical_DP"]
+EBONY = [
+    "Ebony",
+    "ebonyamateurs",
+    "EbonyGirls",
+    "blackchickswhitedicks",
+    "bigblackasses",
+    "blackporn",
+]
 FACIALS = ["facial", "facialcumshots", "FacialFun"]
 FEET = ["ButtsAndBareFeet", "Feet_NSFW", "feetish", "Feetup", "rule34feet", "StomachDownFeetUp"]
 FEMDOM = ["Femdom", "femdom", "FemdomHumiliation", "hentaifemdom"]
@@ -200,7 +218,6 @@ PUBLIC = [
     "FlashingGirls",
     "PublicFlashing",
     "Unashamed",
-    "OutsideNude",
     "NudeInPublic",
     "publicplug",
     "casualnudity",
@@ -235,6 +252,10 @@ REDHEADS = [
     "redhead",
     "thesluttyginger",
     "RedheadGifs",
+    "nsfw_redhead",
+    "RedheadsPorn",
+    "gingerporn",
+    "AlexTanner",
 ]
 RULE_34 = [
     "rule34",
@@ -248,6 +269,7 @@ RULE_34 = [
 ]
 SQUIRTS = ["SquatSquirt", "GushingGirls", "squirting_gifs", "squirting"]
 THIGHS = ["Thighs", "ThickThighs", "thighhighs", "Thigh", "leggingsgonewild", "legsup"]
+THREESOME = ["groupsex", "Threesome", "amateur_threesomes", "Xsome"]
 TRAPS = [
     "Transex",
     "DeliciousTraps",

@@ -70,6 +70,14 @@ class Nsfw(Core):
 
         await self._send_msg(ctx, _("ass"), sub=sub.ASS)
 
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.cooldown(1, 0.5, commands.BucketType.user)
+    @commands.command(aliases=["asian"])
+    async def asianporn(self, ctx: commands.Context):
+        """Show some asian porn images."""
+
+        await self._send_msg(ctx, _("asian porn"), sub=sub.ASIANPORN)
+
     @nsfwcheck()
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
@@ -78,6 +86,14 @@ class Nsfw(Core):
         """Show some anal images/gifs from random subreddits."""
 
         await self._send_msg(ctx, _("anal"), sub=sub.ANAL)
+
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.cooldown(1, 0.5, commands.BucketType.user)
+    @commands.command()
+    async def bbw(self, ctx: commands.Context):
+        """Show some bbw images."""
+
+        await self._send_msg(ctx, _("bbw"), sub=sub.BBW)
 
     @nsfwcheck()
     @commands.bot_has_permissions(embed_links=True)
@@ -178,6 +194,14 @@ class Nsfw(Core):
 
         await self._send_msg(ctx, _("double penetration"), sub=sub.DOUBLE_P)
 
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.cooldown(1, 0.5, commands.BucketType.user)
+    @commands.command()
+    async def ebony(self, ctx: commands.Context):
+        """Show some ebony images."""
+
+        await self._send_msg(ctx, _("ebony"), sub=sub.EBONY)
+
     @nsfwcheck()
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
@@ -265,20 +289,20 @@ class Nsfw(Core):
 
         await self._send_msg(ctx, _("milf"), sub=sub.MILF)
 
-    @nsfwcheck()
-    @commands.bot_has_permissions(embed_links=True)
-    @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command(aliases=["nekogifs"])
-    async def nekogif(self, ctx: commands.Context):
-        """Show some neko gifs from Nekobot API."""
+    # @nsfwcheck()
+    # @commands.bot_has_permissions(embed_links=True)
+    # @commands.cooldown(1, 0.5, commands.BucketType.user)
+    # @commands.command(aliases=["nekogifs"])
+    # async def nekogif(self, ctx: commands.Context):
+    #     """Show some neko gifs from Nekobot API."""
 
-        await self._send_other_msg(
-            ctx,
-            name=_("neko gif"),
-            arg="message",
-            source="Nekobot API",
-            url=sub.NEKOBOT_URL.format("hneko"),
-        )
+    #     await self._send_other_msg(
+    #         ctx,
+    #         name=_("neko gif"),
+    #         arg="message",
+    #         source="Nekobot API",
+    #         url=sub.NEKOBOT_URL.format("hneko"),
+    #     )
 
     @nsfwcheck()
     @commands.bot_has_permissions(embed_links=True)
@@ -366,6 +390,14 @@ class Nsfw(Core):
         """Show some thighs images from random subreddits."""
 
         await self._send_msg(ctx, _("thigh"), sub=sub.THIGHS)
+
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.cooldown(1, 0.5, commands.BucketType.user)
+    @commands.command(aliases=["groupsex"])
+    async def threesome(self, ctx: commands.Context):
+        """Show some threesome images."""
+
+        await self._send_msg(ctx, _("threesome"), sub=sub.THREESOME)
 
     @nsfwcheck()
     @commands.bot_has_permissions(embed_links=True)

@@ -1,11 +1,11 @@
-<h1 align="center">Predä Cogs for Red v3</h1>
+<h1 align="center">Predä Cogs for Red Discord bot</h1>
 
 <p align="center">
   <a href="https://github.com/Cog-Creators/Red-DiscordBot/tree/V3/develop">
-    <img src="https://img.shields.io/badge/Red%20DiscordBot-V3-red.svg">
+    <img src="https://img.shields.io/badge/Red-Discord Bot-red.svg">
     </a>
   <a href="https://github.com/Rapptz/discord.py/tree/rewrite">
-    <img src="https://img.shields.io/badge/Discord.py-rewrite-blue.svg">
+    <img src="https://img.shields.io/badge/discord-py-blue.svg">
     </a>
   <a href="https://github.com/ambv/black">
     <img src="https://img.shields.io/badge/code%20style-black-000000.svg">
@@ -43,8 +43,8 @@
 | [WhoPlays](https://github.com/PredaaA/predacogs/tree/master/whoplays) | <details><summary>Look at what games people in the server are playing. V3 Rewrite of [Stevy's cog](https://github.com/AznStevy/Maybe-Useful-Cogs/blob/master/whoplays/whoplays.py).</summary>Check who's playing certain games or who's playing what on your server.</details>
 | [Converters](https://github.com/PredaaA/predacogs/tree/master/converters) | <details><summary>Some utility converters.</summary>Some utility converters, for temperatures, mass, but also dates to timestamps.</details>
 | [MartTools](https://github.com/PredaaA/predacogs/tree/master/martools) | <details><summary>Multiple tools that are originally used on [Martine](https://martinethebot.com).</summary>Multiple useful tools that are originally used on [Martine](https://martinethebot.com), like usagecount command, that show you all usage of the bot, messages received, read, commands processed and more. Prefix command to show prefixes of the bot, etc.</details>
-| [DblTools](https://github.com/PredaaA/predacogs/tree/master/dbltools) | <details><summary>Tools to get bots information from discordbots.org.</summary>Tools to get bots information from discordbots.org, like description, votes, published server count, and more.</details>
-| [ServerInfo](https://github.com/PredaaA/predacogs/tree/master/serverinfo) | <details><summary>Replace original Red serverinfo command with more details.</summary>Replace original Red serverinfo command with more details, about users and server.</details>
+| [DblTools](https://github.com/PredaaA/predacogs/tree/master/dbltools) | <details><summary>Tools to get bots information from Top.gg.</summary>Tools to get bots information from Top.gg, like description, votes, published server count, and more.</details>
+| [FiveM](https://github.com/PredaaA/predacogs/tree/master/fivem) | <details><summary>Tools for FiveM servers.</details></summary>
 
 ## Contributing
 
@@ -53,7 +53,7 @@ Feel free to open a PR or an issue for any suggestion about my cogs !
 ## Contact
 
 For any suggestions or issues, feel free to join my [Discord server](https://discord.gg/TwCNvVz) or the [Red - Cog Support server](https://discord.gg/GET4DVk) in the channel #support-othercogs.<br>
-You can also contact me in DM: `Predä - 梅丽莎。十四#1001` (ID: `332980470650372096`) on Discord.
+You can also contact me in DM: `Predä 。#1001` (ID: `332980470650372096`) on Discord.
 
 ## Credits
 
@@ -64,5 +64,5 @@ You can also contact me in DM: `Predä - 梅丽莎。十四#1001` (ID: `33298047
 - [Stevy](https://github.com/AznStevy) to authorize me to publish rewritten version of [WhoPlays cog](https://github.com/PredaaA/predacogs/tree/master/whoplays).
 
 <a href="https://github.com/PredaaA/predacogs">
-  <img src="https://img.shields.io/badge/PredaCogs-Red V3-red.svg?style=popout&logo=Python">
+  <img src="https://img.shields.io/badge/PredaCogs-For Red-red.svg?style=popout&logo=Python">
 </a>

@@ -1,9 +1,13 @@
-# Remove command logic are from : https://github.com/mikeshardmind/SinbadCogs/tree/v3/messagebox
-
 import discord
 
+from redbot.core.bot import Red
 from redbot.core import commands
 from redbot.core.i18n import Translator, cog_i18n
+from redbot.core.utils.chat_formatting import (
+    bold,
+    humanize_timedelta,
+    humanize_number,
+)
 
 _old_serverinfo = None
 _ = Translator("ServerInfo", __file__)
@@ -11,17 +15,21 @@ _ = Translator("ServerInfo", __file__)
 
 @cog_i18n(_)
 class ServerInfo(commands.Cog):
-    """
-        Replace original Red serverinfo command with more details.
-    """
+    """Replace original Red serverinfo command with more details."""
 
     __author__ = "Predä"
-    __version__ = "1.2.3"
+    __version__ = "1.3.95"
 
-    def __init__(self, bot):
+    def __init__(self, bot: Red):
         self.bot = bot
 
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        """Thanks Sinbad!"""
+        pre_processed = super().format_help_for_context(ctx)
+        return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
+
     def cog_unload(self):
+        # Remove command logic are from: https://github.com/mikeshardmind/SinbadCogs/tree/v3/messagebox
         global _old_serverinfo
         if _old_serverinfo:
             try:
@@ -31,7 +39,7 @@ class ServerInfo(commands.Cog):
             self.bot.add_command(_old_serverinfo)
 
     @staticmethod
-    def _size(num):
+    def _size(num: int):
         for unit in ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB"]:
             if abs(num) < 1024.0:
                 return "{0:.1f}{1}".format(num, unit)
@@ -39,7 +47,7 @@ class ServerInfo(commands.Cog):
         return "{0:.1f}{1}".format(num, "YB")
 
     @staticmethod
-    def _bitsize(num):
+    def _bitsize(num: int):
         for unit in ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB"]:
             if abs(num) < 1000.0:
                 return "{0:.1f}{1}".format(num, unit)
@@ -49,190 +57,199 @@ class ServerInfo(commands.Cog):
     @commands.command()
     @commands.guild_only()
     @commands.bot_has_permissions(embed_links=True)
-    async def serverinfo(self, ctx):
-        """Show server information."""
+    async def serverinfo(self, ctx: commands.Context):
+        """Show server information with some details."""
         guild = ctx.guild
-        filelimit = self._size(guild.filesize_limit)
-        boostlevel = guild.premium_tier
-        nitroboosters = guild.premium_subscription_count
-        elimit = guild.emoji_limit
-        bitrate = self._bitsize(guild.bitrate_limit)
+        passed = (ctx.message.created_at - guild.created_at).days
+        created_at = _("Created on {date}. That's over {num} days ago!").format(
+            date=bold(guild.created_at.strftime("%d %b %Y %H:%M")),
+            num=bold(humanize_number(passed)),
+        )
+        online = humanize_number(
+            len([m.status for m in guild.members if m.status != discord.Status.offline])
+        )
+        total_users = humanize_number(guild.member_count)
 
-        def check_feature(feature):
-            return "\N{WHITE HEAVY CHECK MARK}" if feature in guild.features else "\N{CROSS MARK}"
-
-        format_kwargs = {
-            "vip": check_feature("VIP_REGIONS"),
-            "van": _("{} Vanity URL\n").format(check_feature("VANITY_URL"))
-            if ("VERIFIED" in ctx.guild.features or "PARTNERED" in ctx.guild.features)
-            else "",
-            "splash": _("{} Splash Invite\n").format(check_feature("INVITE_SPLASH"))
-            if ("VERIFIED" in ctx.guild.features or "PARTNERED" in ctx.guild.features)
-            else "",
-            "m_emojis": _("{} More Emojis\n").format(check_feature("MORE_EMOJI"))
-            if "MORE_EMOJI" in ctx.guild.features
-            else "",
-            "verify": check_feature("VERIFIED"),
-            "partner": check_feature("PARTNERED"),
-            "banner": _("{} Banner Image\n").format(check_feature("BANNER"))
-            if "VERIFIED" in ctx.guild.features
-            else "",
+        # Logic from: https://github.com/TrustyJAID/Trusty-cogs/blob/master/serverstats/serverstats.py#L159
+        online_stats = {
+            _("Humans: "): lambda x: not x.bot,
+            _(" • Bots: "): lambda x: x.bot,
+            "\N{LARGE GREEN CIRCLE}": lambda x: x.status is discord.Status.online,
+            "\N{LARGE ORANGE CIRCLE}": lambda x: x.status is discord.Status.idle,
+            "\N{LARGE RED CIRCLE}": lambda x: x.status is discord.Status.do_not_disturb,
+            "\N{MEDIUM WHITE CIRCLE}": lambda x: x.status is discord.Status.offline,
+            "\N{LARGE PURPLE CIRCLE}": lambda x: any(
+                a.type is discord.ActivityType.streaming for a in x.activities
+            ),
+            "\N{MOBILE PHONE}": lambda x: x.is_on_mobile(),
         }
+        member_msg = _("Users online: **{online}/{total_users}**\n").format(
+            online=online, total_users=total_users
+        )
+        count = 1
+        for emoji, value in online_stats.items():
+            try:
+                num = len([m for m in guild.members if value(m)])
+            except Exception as error:
+                print(error)
+                continue
+            else:
+                member_msg += f"{emoji} {bold(humanize_number(num))} " + (
+                    "\n" if count % 2 == 0 else ""
+                )
+            count += 1
 
-        nitro_kwargs = {
-            "animatedicon": check_feature("ANIMATED_ICON"),
-            "filelimit": filelimit,
-            "bitrate": bitrate,
-            "boostlevel": boostlevel,
-            "nitroboosters": nitroboosters,
-            "elimit": elimit,
-            "banner": _("{} Banner Image\n").format(check_feature("BANNER"))
-            if "VERIFIED" not in ctx.guild.features
-            else "",
-            "van": _("{} Vanity URL\n").format(check_feature("VANITY_URL"))
-            if ("VERIFIED" not in ctx.guild.features and "PARTNERED" not in ctx.guild.features)
-            else "",
-            "splash": _("{} Splash Invite\n").format(check_feature("INVITE_SPLASH"))
-            if ("VERIFIED" not in ctx.guild.features and "PARTNERED" not in ctx.guild.features)
-            else "",
-        }
+        text_channels = len(guild.text_channels)
+        nsfw_channels = len([c for c in guild.text_channels if c.is_nsfw()])
+        voice_channels = len(guild.voice_channels)
 
+        vc_regions = {
+            "vip-us-east": _("__VIP__ US East ") + "\U0001F1FA\U0001F1F8",
+            "vip-us-west": _("__VIP__ US West ") + "\U0001F1FA\U0001F1F8",
+            "vip-amsterdam": _("__VIP__ Amsterdam ") + "\U0001F1F3\U0001F1F1",
+            "eu-west": _("EU West ") + "\U0001F1EA\U0001F1FA",
+            "eu-central": _("EU Central ") + "\U0001F1EA\U0001F1FA",
+            "europe": _("Europe ") + "\U0001F1EA\U0001F1FA",
+            "london": _("London ") + "\U0001F1EC\U0001F1E7",
+            "frankfurt": _("Frankfurt ") + "\U0001F1E9\U0001F1EA",
+            "amsterdam": _("Amsterdam ") + "\U0001F1F3\U0001F1F1",
+            "us-west": _("US West ") + "\U0001F1FA\U0001F1F8",
+            "us-east": _("US East ") + "\U0001F1FA\U0001F1F8",
+            "us-south": _("US South ") + "\U0001F1FA\U0001F1F8",
+            "us-central": _("US Central ") + "\U0001F1FA\U0001F1F8",
+            "singapore": _("Singapore ") + "\U0001F1F8\U0001F1EC",
+            "sydney": _("Sydney ") + "\U0001F1E6\U0001F1FA",
+            "brazil": _("Brazil ") + "\U0001F1E7\U0001F1F7",
+            "hongkong": _("Hong Kong ") + "\U0001F1ED\U0001F1F0",
+            "russia": _("Russia ") + "\U0001F1F7\U0001F1FA",
+            "japan": _("Japan ") + "\U0001F1EF\U0001F1F5",
+            "southafrica": _("South Africa ") + "\U0001F1FF\U0001F1E6",
+            "india": _("India ") + "\U0001F1EE\U0001F1F3",
+            "dubai": _("Dubai ") + "\U0001F1E6\U0001F1EA",
+            "south-korea": _("South Korea ") + "\U0001f1f0\U0001f1f7",
+        }  # Unicode is needed because bold() is escaping emojis for some reason in this case.
         verif = {
             "none": _("0 - None"),
             "low": _("1 - Low"),
             "medium": _("2 - Medium"),
-            "high": _("3 - Hard"),
+            "high": _("3 - High"),
             "extreme": _("4 - Extreme"),
         }
-        region = {
-            "vip-us-east": _("__VIP__ US East") + " :flag_us:",
-            "vip-us-west": _("__VIP__ US West") + " :flag_us:",
-            "vip-amsterdam": _("__VIP__ Amsterdam") + " :flag_nl:",
-            "eu-west": _("EU West") + " :flag_eu:",
-            "eu-central": _("EU Central") + " :flag_eu:",
-            "london": _("London") + " :flag_gb:",
-            "frankfurt": _("Frankfurt") + " :flag_de:",
-            "amsterdam": _("Amsterdam") + " :flag_nl:",
-            "us-west": _("US West") + " :flag_us:",
-            "us-east": _("US East") + " :flag_us:",
-            "us-south": _("US South") + " :flag_us:",
-            "us-central": _("US Central") + " :flag_us:",
-            "singapore": _("Singapore") + " :flag_sg:",
-            "sydney": _("Sydney") + " :flag_au:",
-            "brazil": _("Brazil") + " :flag_br:",
-            "hongkong": _("Hong Kong") + " :flag_hk:",
-            "russia": _("Russia") + " :flag_ru:",
-            "japan": _("Japan") + " :flag_jp:",
-            "southafrica": _("South Africa") + " :flag_za:",
-            "india": _("India") + " :flag_in:",
-        }
 
-        online = len([m.status for m in guild.members if m.status == discord.Status.online])
-        idle = len([m.status for m in guild.members if m.status == discord.Status.idle])
-        dnd = len([m.status for m in guild.members if m.status == discord.Status.dnd])
-        offline = len([m.status for m in guild.members if m.status == discord.Status.offline])
-        streaming = len([m for m in guild.members if isinstance(m.activity, discord.Streaming)])
-        mobile = len([m for m in guild.members if m.is_on_mobile()])
-        lurkers = len([m for m in guild.members if m.joined_at is None])
-        total_users = len(guild.members)
-        humans = len([a for a in ctx.guild.members if a.bot is False])
-        bots = len([a for a in ctx.guild.members if a.bot])
-        text_channels = len(guild.text_channels)
-        voice_channels = len(guild.voice_channels)
-        passed = (ctx.message.created_at - guild.created_at).days
-        created_at = _("Created on **{date}**. That's over **{num}** days ago!").format(
-            date=guild.created_at.strftime("%d %b %Y %H:%M"), num=passed
-        )
-        joined_at = guild.me.joined_at
-        since_joined = (ctx.message.created_at - joined_at).days
-        bot_joined = joined_at.strftime("%d %b %Y %H:%M:%S")
+        features = {
+            "PARTNERED": _("Partnered"),
+            "VERIFIED": _("Verified"),
+            "DISCOVERABLE": _("Server Discovery"),
+            "FEATURABLE": _("Featurable"),
+            "PUBLIC": _("Public"),
+            "PUBLIC_DISABLED": _("Public disabled"),
+            "INVITE_SPLASH": _("Splash Invite"),
+            "VIP_REGIONS": _("VIP Voice Servers"),
+            "VANITY_URL": _("Vanity URL"),
+            "MORE_EMOJI": _("More Emojis"),
+            "COMMERCE": _("Commerce"),
+            "LURKABLE": _("Lurkable"),
+            "NEWS": _("News Channels"),
+            "ANIMATED_ICON": _("Animated Icon"),
+            "BANNER": _("Banner Image"),
+            "MEMBER_LIST_DISABLED": _("Member list disabled"),
+        }
+        guild_features_list = [
+            f"\✅ {name}" for feature, name in features.items() if feature in guild.features
+        ]
+
+        since_joined = (ctx.message.created_at - guild.me.joined_at).days
+        bot_joined = guild.me.joined_at.strftime("%d %b %Y %H:%M:%S")
         joined_on = _(
             "{bot_name} joined this server on {bot_join}. That's over {since_join} days ago!"
-        ).format(bot_name=ctx.bot.user.name, bot_join=bot_joined, since_join=since_joined)
-        data = discord.Embed(description=created_at, colour=(await ctx.embed_colour()))
-        data.add_field(
-            name=_("Members:"),
-            value=_(
-                "Total users: **{total}**\n{lurkers}Humans: **{hum}** • Bots: **{bots}**\n"
-                "📗 `{online}` 📙 `{idle}`\n📕 `{dnd}` 📓 `{off}`\n"
-                "🎥 `{streaming}` 📱 `{mobile}`\n"
-            ).format(
-                total=total_users,
-                lurkers=_("Lurkers: **{}**\n").format(lurkers) if lurkers else "",
-                hum=humans,
-                bots=bots,
-                online=online,
-                idle=idle,
-                dnd=dnd,
-                off=offline,
-                streaming=streaming,
-                mobile=mobile,
-            ),
+        ).format(
+            bot_name=self.bot.user.name,
+            bot_join=bot_joined,
+            since_join=humanize_number(since_joined),
         )
-        data.add_field(
+        shard = (
+            _("\nShard ID: **{}/{}**").format(
+                humanize_number(guild.shard_id + 1), humanize_number(self.bot.shard_count)
+            )
+            if self.bot.shard_count > 1
+            else ""
+        )
+
+        em = discord.Embed(
+            description=(f"{guild.description}\n\n" if guild.description else "") + created_at,
+            colour=await ctx.embed_colour(),
+        )
+        em.set_author(
+            name=guild.name,
+            icon_url="https://cdn.discordapp.com/emojis/457879292152381443.png"
+            if "VERIFIED" in guild.features
+            else "https://cdn.discordapp.com/emojis/508929941610430464.png"
+            if "PARTNERED" in guild.features
+            else discord.Embed.Empty,
+        )
+        if guild.icon_url:
+            em.set_thumbnail(url=guild.icon_url)
+        em.add_field(name=_("Members:"), value=member_msg)
+        em.add_field(
             name=_("Channels:"),
-            value=_("💬 Text: **{text}**\n🔊 Voice: **{voice}**").format(
-                text=text_channels, voice=voice_channels
+            value=_(
+                "\N{SPEECH BALLOON} Text: {text}\n{nsfw}"
+                "\N{SPEAKER WITH THREE SOUND WAVES} Voice: {voice}"
+            ).format(
+                text=bold(humanize_number(text_channels)),
+                nsfw=_("\N{NO ONE UNDER EIGHTEEN SYMBOL} Nsfw: {}\n").format(
+                    bold(humanize_number(nsfw_channels))
+                )
+                if nsfw_channels
+                else "",
+                voice=bold(humanize_number(voice_channels)),
             ),
         )
-        data.add_field(
+        em.add_field(
             name=_("Utility:"),
             value=_(
-                "Owner: **{owner}**\nRegion: **{region}**\nVerif. level: **{verif}**\nServer ID: **{id}**"
+                "Owner: {owner}\nVoice region: {region}\nVerif. level: {verif}\nServer ID: {id}{shard}"
             ).format(
-                owner=guild.owner,
-                region=region[str(guild.region)],
-                verif=verif[str(guild.verification_level)],
-                id=guild.id,
+                owner=bold(str(guild.owner)),
+                region=f"**{vc_regions.get(str(guild.region)) or str(guild.region)}**",
+                verif=bold(verif[str(guild.verification_level)]),
+                id=bold(str(guild.id)),
+                shard=shard,
             ),
+            inline=False,
         )
-        data.add_field(
+        em.add_field(
             name=_("Misc:"),
             value=_(
-                "AFK channel: **{afk_chan}**\nAFK Timeout: **{afk_timeout}sec**\nCustom emojis: **{emojis}**\nRoles: **{roles}**"
+                "AFK channel: {afk_chan}\nAFK timeout: {afk_timeout}\nCustom emojis: {emojis}\nRoles: {roles}"
             ).format(
-                afk_chan=guild.afk_channel,
-                afk_timeout=guild.afk_timeout,
-                emojis=len(guild.emojis),
-                roles=len(guild.roles),
+                afk_chan=bold(str(guild.afk_channel)) if guild.afk_channel else bold(_("Not set")),
+                afk_timeout=bold(humanize_timedelta(seconds=guild.afk_timeout)),
+                emojis=bold(humanize_number(len(guild.emojis))),
+                roles=bold(humanize_number(len(guild.roles))),
             ),
+            inline=False,
         )
-        if guild.features:
-            data.add_field(
-                name=_("Special features:"),
-                value=_(
-                    "{vip} VIP Regions\n{van}{splash}{m_emojis}{banner}{partner} Partnered\n"
-                    "{verify} Verified"
-                ).format(**format_kwargs),
+        if guild_features_list:
+            em.add_field(name=_("Server features:"), value="\n".join(guild_features_list))
+        if guild.premium_tier != 0:
+            nitro_boost = _(
+                "Tier {boostlevel} with {nitroboosters} boosters\n"
+                "File size limit: {filelimit}\n"
+                "Emoji limit: {emojis_limit}\n"
+                "VCs max bitrate: {bitrate}"
+            ).format(
+                boostlevel=bold(str(guild.premium_tier)),
+                nitroboosters=bold(humanize_number(guild.premium_subscription_count)),
+                filelimit=bold(self._size(guild.filesize_limit)),
+                emojis_limit=bold(str(guild.emoji_limit)),
+                bitrate=bold(self._bitsize(guild.bitrate_limit)),
             )
-        if guild.features:
-            data.add_field(
-                name=_("Nitro Boost Features:"),
-                value=_(
-                    "{animatedicon} Animated Server Icon\n{splash}{banner}{van} File Size Limit **{filelimit}**\nNitro Boost Tier **{boostlevel}** with **{nitroboosters}** boosters\n"
-                    "Emoji Limit **{elimit}**\n Max Bitrate **{bitrate}**"
-                ).format(**nitro_kwargs),
-            )
-        data.set_author(name=guild.name)
-        if "VERIFIED" in guild.features:
-            data.set_author(
-                name=guild.name,
-                icon_url="https://cdn.discordapp.com/emojis/457879292152381443.png",
-            )
-        if "PARTNERED" in guild.features:
-            data.set_author(
-                name=guild.name,
-                icon_url="https://www.discordia.me/uploads/icons/partner.png",
-            )
-        if guild.icon_url:
-            data.set_thumbnail(url=guild.icon_url)
-        else:
-            data.set_thumbnail(
-                url="https://cdn.discordapp.com/attachments/494975386334134273/529843761635786754/Discord-Logo-Black.png"
-            )
-        data.set_footer(text=joined_on)
-
-        await ctx.send(embed=data)
+            em.add_field(name=_("Nitro Boost:"), value=nitro_boost)
+        if guild.splash:
+            em.set_image(url=guild.splash_url_as(format="png"))
+        em.set_footer(text=joined_on)
+        await ctx.send(embed=em)
 
 
 def cog_unload(self):

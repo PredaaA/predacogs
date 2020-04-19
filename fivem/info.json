@@ -1,0 +1,13 @@
+{
+    "author": ["Predä"],
+    "install_msg": "Thank you for installing my FiveM cog!\nUse `[p]help FiveM` to get all commands.",
+    "name": "FiveM",
+    "short": "Tools for FiveM servers.",
+    "description": "Tools for FiveM servers.",
+    "tags": [
+        "tools",
+        "fivem",
+        "status"
+    ],
+    "min_bot_version": "3.2.0a0.dev1"
+}

@@ -1,19 +1,18 @@
 from random import choice
 
 # Stuff for the cog
-class Stuff:
-    async def emoji(self):
-        """Randomize footer emojis."""
-        EMOJIS = [
-            "\N{AUBERGINE}",
-            "\N{SMIRKING FACE}",
-            "\N{PEACH}",
-            "\N{SPLASHING SWEAT SYMBOL}",
-            "\N{BANANA}",
-            "\N{KISS MARK}",
-        ]
-        emoji = choice(EMOJIS)
-        return emoji
+def emoji():
+    """Randomize footer emojis."""
+    EMOJIS = [
+        "\N{AUBERGINE}",
+        "\N{SMIRKING FACE}",
+        "\N{PEACH}",
+        "\N{SPLASHING SWEAT SYMBOL}",
+        "\N{BANANA}",
+        "\N{KISS MARK}",
+    ]
+    emoji = choice(EMOJIS)
+    return emoji
 
 
 REDDIT_BASEURL = "https://api.reddit.com/r/{}/random"
@@ -21,7 +20,7 @@ IMGUR_LINKS = "http://imgur.com", "https://m.imgur.com", "https://imgur.com"
 GOOD_EXTENSIONS = ".png", ".jpg", ".jpeg", ".gif"
 
 # Subreddits
-FOUR_K = ["HighResNSFW", "UHDnsfw", "nsfw4k", "nsfw_hd", "NSFW_Wallpapers", "HDnsfw", "closeup"]
+FOUR_K = ["HighResNSFW", "UHDnsfw", "nsfw_hd", "NSFW_Wallpapers", "closeup"]
 AHEGAO = ["AhegaoGirls", "RealAhegao", "EyeRollOrgasm", "MouthWideOpen", "O_Faces"]
 ASS = [
     "ass",
@@ -51,6 +50,16 @@ ASS = [
     "HungryButts",
     "Upshorts",
 ]
+ASIANPORN = [
+    "AmateurAsianGirls",
+    "asian_gifs",
+    "AsianHotties",
+    "AsianCuties",
+    "AsianNSFW",
+    "AsianPorn",
+    "AsiansGoneWild",
+    "AmateurAsianGirls",
+]
 ANAL = [
     "MasterOfAnal",
     "anal",
@@ -61,6 +70,7 @@ ANAL = [
     "assholegonewild",
     "sodomy",
 ]
+BBW = ["BBW", "BBW_Chubby", "BBWVideos"]
 BDSM = ["BDSMGW", "bdsm", "ropeart", "shibari"]
 BLACKCOCK = ["ChurchOfTheBBC", "blackcock", "Blackdick", "bigblackcocks"]
 BLOWJOB = [
@@ -111,7 +121,7 @@ BOOBS = [
     "burstingout",
     "boobgifs",
 ]
-BOTTOMLESS = ["upskirt", "Bottomless", "Bottomless_Vixens", "nopanties", "Pantiesdown"]
+BOTTOMLESS = ["upskirt", "Bottomless", "nopanties", "Pantiesdown"]
 COSPLAY = [
     "nsfwcosplay",
     "cosplayonoff",
@@ -121,7 +131,7 @@ COSPLAY = [
     "CosplayLewd",
     "CosplayBeauties",
 ]
-CUNNI = ["cunnilingus", "eatpussy2015", "CunnilingusSelfie", "Hegoesdown"]
+CUNNI = ["cunnilingus", "CunnilingusSelfie", "Hegoesdown"]
 CUMSHOTS = [
     "cumfetish",
     "cumontongue",
@@ -136,7 +146,6 @@ CUMSHOTS = [
     "unexpectedcum",
     "bodyshots",
     "ContainTheLoad",
-    "bodyshots",
 ]
 DEEPTHROAT = [
     "deepthroat_gifs",
@@ -147,6 +156,17 @@ DEEPTHROAT = [
 ]
 DICK = ["DickPics4Freedom", "MassiveCock", "penis", "cock", "ThickDick", "bulges", "twinks"]
 DOUBLE_P = ["doublepenetration", "dp_porn", "Technical_DP"]
+EBONY = [
+    "Ebony",
+    "ebonyamateurs",
+    "EbonyGirls",
+    "blackchickswhitedicks",
+    "bigblackasses",
+    "blackporn",
+]
+FACIALS = ["facial", "facialcumshots", "FacialFun"]
+FEET = ["ButtsAndBareFeet", "Feet_NSFW", "feetish", "Feetup", "rule34feet", "StomachDownFeetUp"]
+FEMDOM = ["Femdom", "femdom", "FemdomHumiliation", "hentaifemdom"]
 FUTA = [
     "FutanariHentai",
     "FutanariPegging",
@@ -185,7 +205,6 @@ ORAL = [
     "SuckingItDry",
     "OralCreampie",
     "cunnilingus",
-    "eatpussy2015",
     "CunnilingusSelfie",
     "Hegoesdown",
     "DeepThroatTears",
@@ -199,7 +218,6 @@ PUBLIC = [
     "FlashingGirls",
     "PublicFlashing",
     "Unashamed",
-    "OutsideNude",
     "NudeInPublic",
     "publicplug",
     "casualnudity",
@@ -234,6 +252,10 @@ REDHEADS = [
     "redhead",
     "thesluttyginger",
     "RedheadGifs",
+    "nsfw_redhead",
+    "RedheadsPorn",
+    "gingerporn",
+    "AlexTanner",
 ]
 RULE_34 = [
     "rule34",
@@ -247,6 +269,7 @@ RULE_34 = [
 ]
 SQUIRTS = ["SquatSquirt", "GushingGirls", "squirting_gifs", "squirting"]
 THIGHS = ["Thighs", "ThickThighs", "thighhighs", "Thigh", "leggingsgonewild", "legsup"]
+THREESOME = ["groupsex", "Threesome", "amateur_threesomes", "Xsome"]
 TRAPS = [
     "Transex",
     "DeliciousTraps",
@@ -289,6 +312,3 @@ YIFF = ["Yiffbondage", "Hyiff", "femyiff", "yiff", "yiffgif"]
 # Other APIs
 NEKOBOT_HENTAI = choice(["hentai_anal", "hentai"])
 NEKOBOT_URL = "https://nekobot.xyz/api/image?type={}"
-
-NEKOS_LIFE_HOLO = choice(["holoero", "holo", "hololewd"])
-NEKOS_LIFE_URL = "https://nekos.life/api/v2/img/{}"

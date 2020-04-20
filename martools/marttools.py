@@ -99,12 +99,17 @@ class MartTools(Listeners, commands.Cog):
         credits_name = await bank.get_currency_name(ctx.guild)
         pos = await bank.get_leaderboard_position(ctx.author)
         bank_name = await bank.get_bank_name(ctx.guild)
-        if await bank.is_global():
-            all_accounts = len(await bank._conf.all_users())
-            accounts = await bank._conf.all_users()
+        if hasattr(bank, "_config"):
+            bank_config = bank._config
         else:
-            all_accounts = len(await bank._conf.all_members(ctx.guild))
-            accounts = await bank._conf.all_members(ctx.guild)
+            bank_config = bank._conf
+
+        if await bank.is_global():
+            all_accounts = len(await bank_config.all_users())
+            accounts = await bank_config.all_users()
+        else:
+            all_accounts = len(await bank_config.all_members(ctx.guild))
+            accounts = await bank_config.all_members(ctx.guild)
         member_account = await bank.get_account(ctx.author)
         created_at = str(member_account.created_at)
         no = "1970-01-01 00:00:00"

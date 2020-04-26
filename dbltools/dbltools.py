@@ -94,17 +94,9 @@ class DblTools(commands.Cog):
             self._init_task.cancel()
         if self._post_stats_task:
             self._post_stats_task.cancel()
-        payday_command = self.bot.get_command("payday")
-        if payday_command:
-            self.bot.remove_command(payday_command.name)
 
     async def cog_before_invoke(self, ctx: commands.Context):
         await self._ready_event.wait()
-        if ctx.command.name == "payday":
-            cog = self.bot.get_cog("Economy")
-            if not cog:
-                return
-            self.economy_cog = cog
 
     async def update_stats(self):
         await self.bot.wait_until_ready()

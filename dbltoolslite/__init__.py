@@ -1,6 +1,6 @@
-from .dbltools import DblTools
+from .dbltools import DblToolsLite
 
 
 def setup(bot):
-    cog = DblTools(bot)
+    cog = DblToolsLite(bot)
     bot.add_cog(cog)

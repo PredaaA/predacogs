@@ -29,7 +29,7 @@ class DblToolsLite(commands.Cog):
     """Tools for Top.gg API."""
 
     __author__ = "Predä"
-    __version__ = "2.0_lite"
+    __version__ = "2.0.1_lite"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -81,6 +81,8 @@ class DblToolsLite(commands.Cog):
                 data = await self.dbl.get_bot_info(bot.id)
             except dbl.NotFound:
                 return await ctx.send(_("That bot isn't validated on Top.gg."))
+            except dbl.errors.HTTPException as error:
+                return await ctx.send(_("Failed to contact Top.gg API. Please try again later."))
 
             cert_emoji = (
                 "<:dblCertified:392249976639455232>"
@@ -183,6 +185,9 @@ class DblToolsLite(commands.Cog):
                 url = await self.dbl.get_widget_large(bot.id)
             except dbl.NotFound:
                 return await ctx.send(_("That bot isn't validated on Top.gg."))
+            except dbl.errors.HTTPException as error:
+                log.error("Failed to fetch Top.gg API.", exc_info=error)
+                return await ctx.send(_("Failed to contact Top.gg API. Please try again later."))
             file = await download_widget(self.session, url)
             em = discord.Embed(
                 color=discord.Color.blurple(),
@@ -200,7 +205,11 @@ class DblToolsLite(commands.Cog):
     @commands.cooldown(1, 1, commands.BucketType.user)
     async def listdblvotes(self, ctx: commands.Context):
         """Sends a list of the persons who voted for the bot this month."""
-        data = await self.dbl.get_bot_upvotes()
+        try:
+            data = await self.dbl.get_bot_upvotes()
+        except dbl.errors.HTTPException as error:
+            log.error("Failed to fetch Top.gg API.", exc_info=error)
+            return await ctx.send(_("Failed to contact Top.gg API. Please try again later."))
         if not data:
             return await ctx.send(_("Your bot hasn't received any votes yet."))
 

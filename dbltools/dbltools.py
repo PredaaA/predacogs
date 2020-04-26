@@ -35,7 +35,7 @@ class DblTools(commands.Cog):
     """Tools for Top.gg API."""
 
     __author__ = "Predä"
-    __version__ = "2.0"
+    __version__ = "2.0.1"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -86,6 +86,11 @@ class DblTools(commands.Cog):
                     "[DblTools cog]\nThis bot seems doesn't seems be validated on Top.gg. Please try again with a validated bot."
                 )
             )
+        except dbl.errors.HTTPException:
+            await client.close()
+            return await self.bot.send_to_owners(
+                _("[DblTools cog]\nFailed to contact Top.gg API. Please try again later.")
+            )
         self.dbl = client
         self._ready_event.set()
 
@@ -135,6 +140,11 @@ class DblTools(commands.Cog):
                     "[DblTools cog]\nThis bot seems doesn't seems be validated on Top.gg. Please try again with a validated bot."
                 )
             )
+        except dbl.errors.HTTPException:
+            await client.close()
+            return await self.bot.send_to_owners(
+                _("[DblTools cog]\nFailed to contact Top.gg API. Please try again later.")
+            )
         self.dbl = client
         self._ready_event.set()
 
@@ -147,7 +157,12 @@ class DblTools(commands.Cog):
             return
         if not config["support_server_role"]["role_id"]:
             return
-        if await self.dbl.get_user_vote(member.id):
+        try:
+            check_vote = await self.dbl.get_user_vote(member.id)
+        except dbl.errors.HTTPException as error:
+            log.error("Failed to fetch Top.gg API.", exc_info=error)
+            return
+        if check_vote:
             try:
                 await member.add_roles(
                     member.guild.get_role(config["support_server_role"]["role_id"]),
@@ -258,6 +273,9 @@ class DblTools(commands.Cog):
                 data = await self.dbl.get_bot_info(bot.id)
             except dbl.NotFound:
                 return await ctx.send(_("That bot isn't validated on Top.gg."))
+            except dbl.errors.HTTPException as error:
+                log.error("Failed to fetch Top.gg API.", exc_info=error)
+                return await ctx.send(_("Failed to contact Top.gg API. Please try again later."))
 
             cert_emoji = (
                 "<:dblCertified:392249976639455232>"
@@ -360,6 +378,9 @@ class DblTools(commands.Cog):
                 url = await self.dbl.get_widget_large(bot.id)
             except dbl.NotFound:
                 return await ctx.send(_("That bot isn't validated on Top.gg."))
+            except dbl.errors.HTTPException as error:
+                log.error("Failed to fetch Top.gg API.", exc_info=error)
+                return await ctx.send(_("Failed to contact Top.gg API. Please try again later."))
             file = await download_widget(self.session, url)
             em = discord.Embed(
                 color=discord.Color.blurple(),
@@ -377,7 +398,11 @@ class DblTools(commands.Cog):
     @commands.cooldown(1, 1, commands.BucketType.user)
     async def listdblvotes(self, ctx: commands.Context):
         """Sends a list of the persons who voted for the bot this month."""
-        data = await self.dbl.get_bot_upvotes()
+        try:
+            data = await self.dbl.get_bot_upvotes()
+        except dbl.errors.HTTPException as error:
+            log.error("Failed to fetch Top.gg API.", exc_info=error)
+            return await ctx.send(_("Failed to contact Top.gg API. Please try again later."))
         if not data:
             return await ctx.send(_("Your bot hasn't received any votes yet."))
 
@@ -433,7 +458,12 @@ class DblTools(commands.Cog):
             return
         credits_name = await bank.get_currency_name(ctx.guild)
         weekend = check_weekend() and config["daily_rewards"]["weekend_bonus_toggled"]
-        if not await self.dbl.get_user_vote(author.id):
+        try:
+            check_vote = await self.dbl.get_user_vote(author.id)
+        except dbl.errors.HTTPException as error:
+            log.error("Failed to fetch Top.gg API.", exc_info=error)
+            return await ctx.send(_("Failed to contact Top.gg API. Please try again later."))
+        if not check_vote:
             maybe_weekend_bonus = ""
             if weekend:
                 maybe_weekend_bonus = _(" and the week-end bonus of {} {}").format(

@@ -55,6 +55,7 @@ class DblTools(commands.Cog):
             },
         )
         self.config.register_user(next_daily=0)
+        # TODO Cache config.
 
         self.economy_cog = None
         self.session = aiohttp.ClientSession()

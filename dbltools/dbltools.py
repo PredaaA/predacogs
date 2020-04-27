@@ -190,7 +190,11 @@ class DblTools(commands.Cog):
         """Set if you want to send your bot stats (Guilds and shards count) to Top.gg API."""
         toggled = await self.config.post_guild_count()
         await self.config.post_guild_count.set(not toggled)
-        msg = _("Daily command enabled.") if not toggled else _("Daily command disabled.")
+        msg = (
+            _("Stats will now be sent to Top.gg.")
+            if not toggled
+            else _("Stats will no longer be sent to Top.gg.")
+        )
         await ctx.send(msg)
 
     @dblset.group(aliases=["rolereward"])

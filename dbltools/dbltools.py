@@ -35,7 +35,7 @@ class DblTools(commands.Cog):
     """Tools for Top.gg API."""
 
     __author__ = "Predä"
-    __version__ = "2.0.2"
+    __version__ = "2.0.3"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -106,6 +106,7 @@ class DblTools(commands.Cog):
 
     async def update_stats(self):
         await self.bot.wait_until_ready()
+        await self._ready_event.wait()
         while True:
             if await self.config.post_guild_count():
                 try:

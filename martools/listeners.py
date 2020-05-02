@@ -128,9 +128,9 @@ class Listeners:
         self.upsert(rgetattr(guild, "id", -1), "tracks_played")
         cog = self.bot.get_cog("Audio")
         if hasattr(cog, "local_folder_current_path"):
-            query = Query.process_input(track.uri, cog.local_folder_current_path)
+            query = Query.process_input(query=track.uri, _local_folder_current_path=cog.local_folder_current_path)
         else:
-            query = Query.process_input(track.uri)
+            query = Query.process_input(query=track.uri)
         if track.is_stream:
             self.upsert(rgetattr(guild, "id", -1), "streams_played")
         if track.is_stream and query.is_youtube:

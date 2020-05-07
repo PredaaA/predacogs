@@ -1,13 +1,13 @@
 import discord
 
-import aiohttp
-import json
-
 from redbot.core.bot import Red
 from redbot.core import commands
 from redbot.core.i18n import Translator, cog_i18n
 from redbot.core.utils.chat_formatting import bold, box, inline
 
+import json
+import asyncio
+import aiohttp
 from random import choice
 from typing import Optional, List, Union
 
@@ -20,7 +20,7 @@ _ = Translator("Nsfw", __file__)
 class Core(commands.Cog):
 
     __author__ = ["Predä", "aikaterna"]
-    __version__ = "2.3.3"
+    __version__ = "2.3.4"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -100,7 +100,11 @@ class Core(commands.Cog):
 
     async def _make_embed(self, ctx: commands.Context, sub: str, name: str):
         """Function to make the embed for all Reddit API images."""
-        url, subr = await self._get_imgs(ctx, sub=sub)
+        try:
+            url, subr = await asyncio.wait_for(self._get_imgs(ctx, sub=sub), 3)
+        except asyncio.TimeoutError:
+            await ctx.send("Failed to get an image. Please try again later. (Timeout error)")
+            return
         if not url:
             return
         if url.endswith(GOOD_EXTENSIONS):
@@ -131,7 +135,11 @@ class Core(commands.Cog):
         self, ctx: commands.Context, name: str, url: str, arg: str, source: str
     ):
         """Function to make the embed for all others APIs images."""
-        data = await self._get_others_imgs(ctx, url=url)
+        try:
+            url, subr = await asyncio.wait_for(self._get_others_imgs(ctx, url=url), 3)
+        except asyncio.TimeoutError:
+            await ctx.send("Failed to get an image. Please try again later. (Timeout error)")
+            return
         if not data:
             return
         em = await self._embed(

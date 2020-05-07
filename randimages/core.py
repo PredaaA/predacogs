@@ -1,13 +1,13 @@
 import discord
 
-import aiohttp
-import json
-
 from redbot.core.bot import Red
 from redbot.core import Config, commands
 from redbot.core.i18n import Translator, cog_i18n
 from redbot.core.utils.chat_formatting import bold, box, inline
 
+import json
+import asyncio
+import aiohttp
 from random import choice
 from typing import Optional, Union
 
@@ -20,7 +20,7 @@ _ = Translator("Image", __file__)
 class Core(commands.Cog):
 
     __author__ = "Predä"
-    __version__ = "1.1.1"
+    __version__ = "1.1.2"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -169,10 +169,14 @@ class Core(commands.Cog):
         return em
 
     async def _make_embed_reddit_simple(
-        self, ctx: commands.Context, sub: str, name: str, emoji: str, url: str
+        self, ctx: commands.Context, sub: str, name: str, emoji: str
     ):
         """Function to make the embed for all Reddit API images."""
-        url, subr = await self._get_reddit_imgs_simple(ctx, sub=sub)
+        try:
+            url, subr = await asyncio.wait_for(self._get_reddit_imgs_simple(ctx, sub=sub), 3)
+        except asyncio.TimeoutError:
+            await ctx.send("Failed to get an image. (Timeout error)")
+            return
         if not url:
             return
         if url.endswith(GOOD_EXTENSIONS):
@@ -194,10 +198,16 @@ class Core(commands.Cog):
         return em
 
     async def _make_embed_reddit_details(
-        self, ctx: commands.Context, sub: str, name: str, emoji: str, url: str
+        self, ctx: commands.Context, sub: str, name: str, emoji: str
     ):
         """Function to make the embed for all Reddit API images with details."""
-        url, subr, author, title, post = await self._get_reddit_imgs_details(ctx, sub=sub)
+        try:
+            url, subr, author, title, post = await asyncio.wait_for(
+                self._get_reddit_imgs_details(ctx, sub=sub), 3
+            )
+        except asyncio.TimeoutError:
+            await ctx.send("Failed to get an image. Please try again later. (Timeout error)")
+            return
         if not url:
             return
         if url.endswith(GOOD_EXTENSIONS):
@@ -301,9 +311,9 @@ class Core(commands.Cog):
         """Main function called in all Reddit API commands."""
         async with ctx.typing():
             if details:
-                embed = await self._make_embed_reddit_details(ctx, sub, name, emoji, url=None)
+                embed = await self._make_embed_reddit_details(ctx, sub, name, emoji)
             else:
-                embed = await self._make_embed_reddit_simple(ctx, sub, name, emoji, url=None)
+                embed = await self._make_embed_reddit_simple(ctx, sub, name, emoji)
         return await self._maybe_embed(ctx, embed)
 
     async def _send_other_msg(

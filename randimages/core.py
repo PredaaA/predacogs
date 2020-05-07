@@ -175,7 +175,7 @@ class Core(commands.Cog):
         try:
             url, subr = await asyncio.wait_for(self._get_reddit_imgs_simple(ctx, sub=sub), 3)
         except asyncio.TimeoutError:
-            await ctx.send("Failed to get an image. (Timeout error)")
+            await ctx.send("Failed to get an image. Please try again later. (Timeout error)")
             return
         if not url:
             return

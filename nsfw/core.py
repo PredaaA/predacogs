@@ -20,7 +20,7 @@ _ = Translator("Nsfw", __file__)
 class Core(commands.Cog):
 
     __author__ = ["Predä", "aikaterna"]
-    __version__ = "2.3.4"
+    __version__ = "2.3.5"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -136,7 +136,7 @@ class Core(commands.Cog):
     ):
         """Function to make the embed for all others APIs images."""
         try:
-            url, subr = await asyncio.wait_for(self._get_others_imgs(ctx, url=url), 3)
+            data = await asyncio.wait_for(self._get_others_imgs(ctx, url=url), 3)
         except asyncio.TimeoutError:
             await ctx.send("Failed to get an image. Please try again later. (Timeout error)")
             return

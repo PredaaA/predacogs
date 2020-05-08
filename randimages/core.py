@@ -20,7 +20,7 @@ _ = Translator("Image", __file__)
 class Core(commands.Cog):
 
     __author__ = "Predä"
-    __version__ = "1.1.2"
+    __version__ = "1.1.3"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -179,6 +179,7 @@ class Core(commands.Cog):
             return
         if not url:
             return
+        em = ""
         if url.endswith(GOOD_EXTENSIONS):
             em = await self._embed(
                 color=await ctx.embed_colour(),
@@ -210,6 +211,7 @@ class Core(commands.Cog):
             return
         if not url:
             return
+        em = ""
         if url.endswith(GOOD_EXTENSIONS):
             em = await self._embed(
                 color=await ctx.embed_colour(),

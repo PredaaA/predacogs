@@ -23,7 +23,7 @@ from tabulate import tabulate
 from collections import Counter
 from datetime import datetime, timedelta
 
-from .utils import check_weekend, download_widget, error_message, guild_only_check, intro_msg
+from .utils import check_weekend, download_widget, error_message, intro_msg
 
 
 log = logging.getLogger("red.predacogs.DblTools")

@@ -18,7 +18,7 @@ class Converters(commands.Cog):
     """Some converters."""
 
     __author__ = "Predä"
-    __version__ = "0.3.6"
+    __version__ = "0.3.7"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -37,7 +37,7 @@ class Converters(commands.Cog):
         """Convert a unix timestamp to a readable datetime."""
         try:
             convert = datetime.utcfromtimestamp(int(timestamp)).strftime("%Y-%m-%d %H:%M:%S")
-        except (ValueError, OverflowError):
+        except (ValueError, OverflowError, OSError):
             return await ctx.send(_("`{}` is not a valid timestamp.").format(timestamp))
         g = datetime.fromtimestamp(int(timestamp))
         curr = datetime.fromtimestamp(int(datetime.now().timestamp()))

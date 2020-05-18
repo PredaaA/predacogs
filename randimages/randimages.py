@@ -277,6 +277,7 @@ class RandImages(Core):
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.bot_has_permissions(embed_links=True)
     @commands.command(aliases=["subr"])
+    @commands.max_concurrency(1, commands.BucketType.user, wait=False)
     async def subreddit(self, ctx: commands.Context, *, subreddit: str):
         """Send a random image from a chosen subreddit."""
         if subreddit in ["friends", "mod"]:

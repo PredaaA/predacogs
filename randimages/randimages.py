@@ -288,7 +288,7 @@ class RandImages(Core):
             name=_("random image"),
             emoji="\N{FRAME WITH PICTURE}",
             sub=[str(subreddit)],
-            details=False,
+            details=True,
         )
 
     @commands.cooldown(1, 0.5, commands.BucketType.user)

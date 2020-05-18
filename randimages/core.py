@@ -20,7 +20,7 @@ _ = Translator("Image", __file__)
 class Core(commands.Cog):
 
     __author__ = "Predä"
-    __version__ = "1.1.3"
+    __version__ = "1.1.4"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -34,7 +34,7 @@ class Core(commands.Cog):
         pre_processed = super().format_help_for_context(ctx)
         return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
 
-    async def _get_reddit_imgs_simple(self, ctx: commands.Context, sub: str = None):
+    async def _get_reddit_imgs_simple(self, ctx: commands.Context, sub: list):
         """Get images from Reddit API."""
         try:
             async with self.session.get(REDDIT_BASEURL.format(choice(sub))) as reddit:
@@ -70,7 +70,7 @@ class Core(commands.Cog):
             await self._api_errors_msg(ctx, error_code="JSON decode failed")
             return None, None
 
-    async def _get_reddit_imgs_details(self, ctx: commands.Context, sub: str = None):
+    async def _get_reddit_imgs_details(self, ctx: commands.Context, sub: list):
         """Get images from Reddit API with more details."""
         try:
             async with self.session.get(REDDIT_BASEURL.format(choice(sub))) as reddit:
@@ -175,7 +175,10 @@ class Core(commands.Cog):
         try:
             url, subr = await asyncio.wait_for(self._get_reddit_imgs_simple(ctx, sub=sub), 3)
         except asyncio.TimeoutError:
-            await ctx.send("Failed to get an image. Please try again later. (Timeout error)")
+            await ctx.send(
+                "Failed to get an image.\n"
+                "(Timeout error, it most likely means that Reddit API haven't returned images for 3 seconds)"
+            )
             return
         if not url:
             return
@@ -207,7 +210,10 @@ class Core(commands.Cog):
                 self._get_reddit_imgs_details(ctx, sub=sub), 3
             )
         except asyncio.TimeoutError:
-            await ctx.send("Failed to get an image. Please try again later. (Timeout error)")
+            await ctx.send(
+                "Failed to get an image.\n"
+                "(Timeout error, it most likely means that Reddit API haven't returned images for 3 seconds)"
+            )
             return
         if not url:
             return
@@ -308,7 +314,7 @@ class Core(commands.Cog):
             return
 
     async def _send_reddit_msg(
-        self, ctx: commands.Context, name: str, emoji: str, details: bool = False, sub: str = None
+        self, ctx: commands.Context, name: str, emoji: str, details: bool = False, sub: list
     ):
         """Main function called in all Reddit API commands."""
         async with ctx.typing():

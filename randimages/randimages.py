@@ -279,6 +279,8 @@ class RandImages(Core):
     @commands.command(aliases=["subr"])
     async def subreddit(self, ctx: commands.Context, *, subreddit: str):
         """Send a random image from a chosen subreddit."""
+        if subreddit in ["friends", "mod"]:
+            return await ctx.send("This isn't a valid subreddit.")
 
         await self._send_reddit_msg(
             ctx,

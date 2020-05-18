@@ -20,7 +20,7 @@ _ = Translator("Image", __file__)
 class Core(commands.Cog):
 
     __author__ = "Predä"
-    __version__ = "1.1.4"
+    __version__ = "1.1.5"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -314,7 +314,7 @@ class Core(commands.Cog):
             return
 
     async def _send_reddit_msg(
-        self, ctx: commands.Context, name: str, emoji: str, details: bool = False, sub: list
+        self, ctx: commands.Context, name: str, emoji: str, sub: list, details: bool = False
     ):
         """Main function called in all Reddit API commands."""
         async with ctx.typing():

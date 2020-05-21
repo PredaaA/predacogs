@@ -15,12 +15,15 @@ from .constants import REDDIT_BASEURL, IMGUR_LINKS, GOOD_EXTENSIONS
 
 _ = Translator("Image", __file__)
 
+# TODO Needs a good rewrite and simplification.
+# TODO Implement the possibility to use my API as an option untoggled by default.
+
 
 @cog_i18n(_)
 class Core(commands.Cog):
 
     __author__ = "Predä"
-    __version__ = "1.1.6"
+    __version__ = "1.1.7"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -95,7 +98,7 @@ class Core(commands.Cog):
                         await ctx.send(embed=await self._nsfw_channel_check(ctx))
                         return None, None, None, None, None
                 except (KeyError, ValueError, json.decoder.JSONDecodeError):
-                    author, title, url, subr, nsfw, text = await self._get_reddit_imgs_details(
+                    url, subr, author, title, post = await self._get_reddit_imgs_details(
                         ctx, sub=sub
                     )
                 if url.startswith(IMGUR_LINKS):
@@ -109,7 +112,7 @@ class Core(commands.Cog):
                     or not url.endswith(GOOD_EXTENSIONS)
                     and not url.startswith("https://gfycat.com")
                 ):
-                    author, title, url, subr, nsfw = await self._get_reddit_imgs_details(
+                    url, subr, author, title, post = await self._get_reddit_imgs_details(
                         ctx, sub=sub
                     )
             return url, subr, author, title, post
@@ -182,7 +185,7 @@ class Core(commands.Cog):
             return
         if not url:
             return
-        em = ""
+        em = ""  # FIXME That thing is dumb.
         if url.endswith(GOOD_EXTENSIONS):
             em = await self._embed(
                 color=await ctx.embed_colour(),
@@ -217,7 +220,7 @@ class Core(commands.Cog):
             return
         if not url:
             return
-        em = ""
+        em = ""  # FIXME That thing is dumb.
         if url.endswith(GOOD_EXTENSIONS):
             em = await self._embed(
                 color=await ctx.embed_colour(),

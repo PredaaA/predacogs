@@ -20,7 +20,7 @@ _ = Translator("Nsfw", __file__)
 class Core(commands.Cog):
 
     __author__ = ["Predä", "aikaterna"]
-    __version__ = "2.3.5"
+    __version__ = "2.3.6"
 
     def __init__(self, bot: Red):
         self.bot = bot

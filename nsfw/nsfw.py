@@ -3,6 +3,7 @@ import discord
 from redbot.core import checks, commands
 from redbot.core.i18n import Translator, cog_i18n
 
+import contextlib
 from typing import Union
 
 from . import constants as sub
@@ -40,7 +41,8 @@ class Nsfw(Core):
             return await ctx.send(_("This command works only for DM's messages !"))
         async for message in ctx.channel.history(limit=number):
             if message.author.id == ctx.bot.user.id:
-                await message.delete()
+                with contextlib.suppress(discord.NotFound):
+                    await message.delete()
         await ctx.tick()
 
     @nsfwcheck()

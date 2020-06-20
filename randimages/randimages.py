@@ -179,7 +179,7 @@ class RandImages(Core):
             name=_("panda"),
             emoji="\N{PANDA FACE}",
             source="some-random-api.ml",
-            img_url="https://some-random-api.ml/pandaimg",
+            img_url="https://some-random-api.ml/img/panda",
             img_arg="link",
             facts=False,
         )

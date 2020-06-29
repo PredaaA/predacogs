@@ -161,29 +161,29 @@ class TimeSeries(commands.Cog):
             for k, v in self.bot.stats.bot.__dict__.items():
                 if unchunked_guilds >= 8 and k == "Unique Users":
                     continue
-                p.field(k, v)
+                p.field(str(k), v)
             call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
 
             p = Point("Server Region")
             for k, v in self.bot.stats.guilds_regions.__dict__.items():
-                p.field(k, v)
+                p.field(str(k), v)
             call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
 
             p = Point("Servers")
             for k, v in self.bot.stats.guilds.__dict__.items():
                 if unchunked_guilds >= 8 and k == "Members":
                     continue
-                p.field(k, v)
+                p.field(str(k), v)
             call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
 
             p = Point("Server Features")
             for k, v in self.bot.stats.guild_features.__dict__.items():
-                p.field(k, v)
+                p.field(str(k), v)
             call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
 
             p = Point("Server Verification")
             for k, v in self.bot.stats.guild_verification.__dict__.items():
-                p.field(k, v)
+                p.field(str(k), v)
             call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
         except Exception as err:
             log.exception("Error while saving bot data to Influx", exc_info=err)
@@ -194,7 +194,7 @@ class TimeSeries(commands.Cog):
         try:
             p = Point("Audio")
             for k, v in self.bot.stats.audio.__dict__.items():
-                p.field(k, v)
+                p.field(str(k), v)
             call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
         except Exception as err:
             log.exception("Error while saving audio data to Influx", exc_info=err)
@@ -205,7 +205,7 @@ class TimeSeries(commands.Cog):
         try:
             p = Point("Shard")
             for k, v in self.bot.stats.shards.__dict__.items():
-                p.field(k, v)
+                p.field(str(k), v)
             call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
         except Exception as err:
             log.exception("Error while saving shard data to Influx", exc_info=err)
@@ -216,7 +216,7 @@ class TimeSeries(commands.Cog):
         try:
             p = Point("-")
             for k, v in self.bot.stats.currency.__dict__.items():
-                p.field(k, v)
+                p.field(str(k), v)
             call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
         except Exception as err:
             log.exception("Error while saving currency data to Influx", exc_info=err)
@@ -227,12 +227,12 @@ class TimeSeries(commands.Cog):
         try:
             p = Point("Commands")
             for k, v in self.commands_cache["session"].items():
-                p.field(k, v)
+                p.field(str(k), v)
             call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
 
             p = Point("Commands Persistent")
             for k, v in self.commands_cache["persistent"].items():
-                p.field(k, v)
+                p.field(str(k), v)
             call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
         except Exception as err:
             log.exception("Error while saving command data to Influx", exc_info=err)
@@ -245,7 +245,7 @@ class TimeSeries(commands.Cog):
         try:
             p = Point("Adventure")
             for k, v in self.bot.stats.adventure.__dict__.items():
-                p.field(k, v)
+                p.field(str(k), v)
             call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
         except Exception as err:
             log.exception("Error while saving adventure data to Influx", exc_info=err)

@@ -26,7 +26,7 @@ import asyncio
 import concurrent
 import contextlib
 import logging
-from datetime import datetime
+import re
 from collections import Counter, defaultdict
 from typing import Mapping, Any
 from types import SimpleNamespace
@@ -288,16 +288,16 @@ async def write_bot_data(bot: Red, config: Config):
             server_counter[key] = len(value)
 
         for key, value in counter.items():
-            setattr(bot.stats.bot, key, value)
+            setattr(bot.stats.bot, str(key), value)
         for key, value in server_counter.items():
-            setattr(bot.stats.guilds, key, value)
+            setattr(bot.stats.guilds, str(key), value)
         for key, value in region_count.items():
-            setattr(bot.stats.guilds_regions, key, value)
+            setattr(bot.stats.guilds_regions, str(key), value)
 
         for key, value in features_count.items():
-            setattr(bot.stats.guild_features, key, value)
+            setattr(bot.stats.guild_features, str(key), value)
         for key, value in verify_count.items():
-            setattr(bot.stats.guild_verification, key, value)
+            setattr(bot.stats.guild_verification, str(key), value)
     except Exception as err:
         log.exception("Exception in write_bot_data", exc_info=err)
 
@@ -366,7 +366,7 @@ async def write_adventure_data(bot: Red):
         setattr(bot.stats.adventure, "Losses", 0)
 
         for key, value in adventure_count.items():
-            setattr(bot.stats.adventure, key, value)
+            setattr(bot.stats.adventure, str(key), value)
 
         total_adventure = bot.stats.adventure.Wins + bot.stats.adventure.Losses
         if total_adventure:
@@ -422,7 +422,9 @@ async def write_audio_data(bot: Red, config: Config):
             counter["Other Tracks Played"] = call_sync_as_async(marttols.fetch, "other_tracks")
 
         for key, value in counter.items():
-            setattr(bot.stats.audio, key, value)
+            if isinstance(value, str):
+                value = int(re.sub(r'\D', '', value))
+            setattr(bot.stats.audio, str(key), value)
     except Exception as err:
         log.exception("Exception in write_audio_data", exc_info=err)
 
@@ -440,7 +442,7 @@ async def write_currency_data(bot: Red):
         overall += value["balance"]
     counter["Currency In Circulation"] = overall
     for key, value in counter.items():
-        setattr(bot.stats.currency, key, value)
+        setattr(bot.stats.currency, str(key), value)
 
 
 async def get_votes(bot: Red) -> Mapping:

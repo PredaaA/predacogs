@@ -71,22 +71,25 @@ class TimeSeries(commands.Cog):
         self._start_task = bot.loop.create_task(self.initialise())
 
     async def initialise(self):
-        val = getattr(self.bot, "_stats_task", None)
-        recreate = False
-        if val is None:
-            recreate = True
-        elif val:
-            if isinstance(val, asyncio.Task):
+        try:
+            val = getattr(self.bot, "_stats_task", None)
+            recreate = False
+            if val is None:
                 recreate = True
-                if not val.done():
-                    val.cancel()
-            else:
-                recreate = True
-        if recreate:
-            self.bot._stats_task = asyncio.create_task(start_stats_tasks(self.bot, self.config))
-        await self.connect_to_influx()
-        self.commands_cache["persistent"] = await self.config.commands_stats()
-        await self.start_tasks()
+            elif val:
+                if isinstance(val, asyncio.Task):
+                    recreate = True
+                    if not val.done():
+                        val.cancel()
+                else:
+                    recreate = True
+            if recreate:
+                self.bot._stats_task = asyncio.create_task(start_stats_tasks(self.bot, self.config))
+            await self.connect_to_influx()
+            self.commands_cache["persistent"] = await self.config.commands_stats()
+            await self.start_tasks()
+        except Exception as err:
+            log.exception("Exception in cog initialise", exc_info=err)
 
     async def wait_until_stats_ready(self):
         """Wait until stats task has done its first loop."""

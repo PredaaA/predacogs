@@ -289,7 +289,11 @@ class TimeSeries(commands.Cog):
     @checks.is_owner()
     @commands.group()
     async def timeseriesset(self, ctx: commands.Context):
-        """Settings for InfluxDB API."""
+        """
+        Settings for InfluxDB API.
+        
+        Be sure to have an instance running. https://v2.docs.influxdata.com/v2.0/get-started/
+        """
 
     @timeseriesset.command()
     async def url(self, ctx: commands.Context, *, url: str = "http://localhost:9999"):

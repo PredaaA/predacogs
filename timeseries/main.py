@@ -239,14 +239,7 @@ class TimeSeries(commands.Cog):
             return
         command = ctx.command.qualified_name
         self.commands_cache["session"][command] += 1
-        p = Point("Commands")
-        p.field(command, self.commands_cache["session"][command])
-        call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
-
         self.commands_cache["persistent"][command] += 1
-        p = Point("Commands Persistent")
-        p.field(command, self.commands_cache["persistent"][command])
-        call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
 
     async def start_tasks(self):
         for task in [self.update_task, self.save_commands_stats]:

@@ -355,6 +355,6 @@ class TimeSeries(commands.Cog):
         For this you need a Top.gg token set like this `[p]set api dbl api_key keyhere`.
         """
         state = await self.config.topgg_stats()
-        await self.config.detailed.set(not state)
+        await self.config.topgg_stats.set(not state)
         new_state = "Enabled" if not state else "Disabled"
         await ctx.send(f"Top.gg stats submission: {new_state}")

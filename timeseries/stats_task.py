@@ -26,7 +26,7 @@ import asyncio
 import concurrent
 import contextlib
 import logging
-from datetime import datetime
+import re
 from collections import Counter, defaultdict
 from typing import Mapping, Any
 from types import SimpleNamespace
@@ -422,6 +422,8 @@ async def write_audio_data(bot: Red, config: Config):
             counter["Other Tracks Played"] = call_sync_as_async(marttols.fetch, "other_tracks")
 
         for key, value in counter.items():
+            if isinstance(value, str):
+                value = int(re.sub(r'\D', '', value))
             setattr(bot.stats.audio, key, value)
     except Exception as err:
         log.exception("Exception in write_audio_data", exc_info=err)
@@ -429,7 +431,7 @@ async def write_audio_data(bot: Red, config: Config):
 
 async def write_shards_data(bot: Red):
     for index, latency in bot.latencies:
-        setattr(bot.stats.shards, f"{index + 1}", int(latency * 1000))
+        setattr(bot.stats.shards, f"_{index + 1}", int(latency * 1000))
 
 
 async def write_currency_data(bot: Red):

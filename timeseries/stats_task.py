@@ -431,7 +431,7 @@ async def write_audio_data(bot: Red, config: Config):
 
 async def write_shards_data(bot: Red):
     for index, latency in bot.latencies:
-        setattr(bot.stats.shards, f"_{index + 1}", int(latency * 1000))
+        setattr(bot.stats.shards, f"{index + 1}", int(latency * 1000))
 
 
 async def write_currency_data(bot: Red):

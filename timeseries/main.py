@@ -296,6 +296,8 @@ class TimeSeries(commands.Cog):
     @timeseriesset.command()
     async def url(self, ctx: commands.Context, *, url: str = "http://localhost:9999"):
         """Set the InfluxDB url. Default is `http://localhost:9999`."""
+        if url.endswith("/"):
+            url = url.rstrip("/")
         await self.config.url.set(url)
         connection = await self.connect_to_influx()
         await ctx.tick() if connection else await ctx.send(

@@ -1,1 +1,0 @@
-from .serverinfo import setup

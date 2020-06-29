@@ -1,8 +1,0 @@
-{
-    "author": ["Predä"],
-    "install_msg": "Thanks for install my serverinfo cog. Though it is now no longer needed, as same output of this command is now available in Red general cog by using `[p]serverinfo 1`. I let it hidden on my repo so the command can be used without specifying `1` or `True` argument.",
-    "name": "ServerInfo",
-    "min_bot_version": "3.2.0a0.dev1",
-    "hidden": true,
-    "disabled": true
-}

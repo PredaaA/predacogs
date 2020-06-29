@@ -69,7 +69,6 @@ class TimeSeries(commands.Cog):
         self.api_ready = False
         self._start_task = bot.loop.create_task(self.initialise())
 
-
     async def initialise(self):
         val = getattr(self.bot, "_stats_task", None)
         recreate = False
@@ -149,88 +148,106 @@ class TimeSeries(commands.Cog):
     async def write_bot_data(self):
         if not self.api_ready:
             return
-        unchunked_guilds = len(
-            [
-                guild
-                async for guild in AsyncIter(self.bot.guilds, steps=25)
-                if not guild.chunked and not guild.unavailable and guild.large
-            ]
-        )
-        p = Point("-")
-        for k, v in self.bot.stats.bot.__dict__.items():
-            if unchunked_guilds >= 8 and k == "Unique Users":
-                continue
-            p.field(k, v)
-        call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+        try:
+            unchunked_guilds = len(
+                [
+                    guild
+                    async for guild in AsyncIter(self.bot.guilds, steps=25)
+                    if not guild.chunked and not guild.unavailable and guild.large
+                ]
+            )
+            p = Point("-")
+            for k, v in self.bot.stats.bot.__dict__.items():
+                if unchunked_guilds >= 8 and k == "Unique Users":
+                    continue
+                p.field(k, v)
+            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
 
-        p = Point("Server Region")
-        for k, v in self.bot.stats.guilds_regions.__dict__.items():
-            p.field(k, v)
-        call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+            p = Point("Server Region")
+            for k, v in self.bot.stats.guilds_regions.__dict__.items():
+                p.field(k, v)
+            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
 
-        p = Point("Servers")
-        for k, v in self.bot.stats.guilds.__dict__.items():
-            if unchunked_guilds >= 8 and k == "Members":
-                continue
-            p.field(k, v)
-        call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+            p = Point("Servers")
+            for k, v in self.bot.stats.guilds.__dict__.items():
+                if unchunked_guilds >= 8 and k == "Members":
+                    continue
+                p.field(k, v)
+            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
 
-        p = Point("Server Features")
-        for k, v in self.bot.stats.guild_features.__dict__.items():
-            p.field(k, v)
-        call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+            p = Point("Server Features")
+            for k, v in self.bot.stats.guild_features.__dict__.items():
+                p.field(k, v)
+            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
 
-        p = Point("Server Verification")
-        for k, v in self.bot.stats.guild_verification.__dict__.items():
-            p.field(k, v)
-        call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+            p = Point("Server Verification")
+            for k, v in self.bot.stats.guild_verification.__dict__.items():
+                p.field(k, v)
+            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+        except Exception as err:
+            log.exception("Error while saving bot data to Influx", exc_info=err)
 
     async def write_audio_data(self):
         if not self.api_ready:
             return
-        p = Point("Audio")
-        for k, v in self.bot.stats.audio.__dict__.items():
-            p.field(k, v)
-        call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+        try:
+            p = Point("Audio")
+            for k, v in self.bot.stats.audio.__dict__.items():
+                p.field(k, v)
+            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+        except Exception as err:
+            log.exception("Error while saving audio data to Influx", exc_info=err)
 
     async def write_shard_latencies_data(self):
         if not self.api_ready:
             return
-        p = Point("Shard")
-        for k, v in self.bot.stats.shards.__dict__.items():
-            p.field(k, v)
-        call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+        try:
+            p = Point("Shard")
+            for k, v in self.bot.stats.shards.__dict__.items():
+                p.field(k, v)
+            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+        except Exception as err:
+            log.exception("Error while saving shard data to Influx", exc_info=err)
 
     async def write_currency_data(self):
         if not self.api_ready:
             return
-        p = Point("-")
-        for k, v in self.bot.stats.currency.__dict__.items():
-            p.field(k, v)
-        call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+        try:
+            p = Point("-")
+            for k, v in self.bot.stats.currency.__dict__.items():
+                p.field(k, v)
+            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+        except Exception as err:
+            log.exception("Error while saving currency data to Influx", exc_info=err)
 
     async def write_commands_data(self):
         if not self.api_ready:
             return
-        p = Point("Commands")
-        for k, v in self.commands_cache["session"].items():
-            p.field(k, v)
-        call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+        try:
+            p = Point("Commands")
+            for k, v in self.commands_cache["session"].items():
+                p.field(k, v)
+            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
 
-        p = Point("Commands Persistent")
-        for k, v in self.commands_cache["persistent"].items():
-            p.field(k, v)
-        call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+            p = Point("Commands Persistent")
+            for k, v in self.commands_cache["persistent"].items():
+                p.field(k, v)
+            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+        except Exception as err:
+            log.exception("Error while saving command data to Influx", exc_info=err)
 
     async def write_adventure_data(self):
         if not self.api_ready:
             return
         if self.bot.get_cog("Adventure") is None:
             return
-        p = Point("Adventure")
-        for k, v in self.bot.stats.adventure.__dict__.items():
-            p.field(k, v)
-        call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+        try:
+            p = Point("Adventure")
+            for k, v in self.bot.stats.adventure.__dict__.items():
+                p.field(k, v)
+            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+        except Exception as err:
+            log.exception("Error while saving adventure data to Influx", exc_info=err)
 
     @commands.Cog.listener()
     async def on_command(self, ctx: commands.Context):
@@ -240,22 +257,13 @@ class TimeSeries(commands.Cog):
             return
         command = ctx.command.qualified_name
         self.commands_cache["session"][command] += 1
-        p = Point("Commands")
-        p.field(command, self.commands_cache["session"][command])
-        call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
-
         self.commands_cache["persistent"][command] += 1
-        p = Point("Commands Persistent")
-        p.field(command, self.commands_cache["persistent"][command])
-        call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
 
     async def start_tasks(self):
         for task in [self.update_task, self.save_commands_stats]:
             self._tasks.append(asyncio.create_task(task(self.bot)))
 
     async def run_events(self):
-        if not self.api_ready:
-            return
         await asyncio.gather(
             *[
                 self.write_bot_data(),
@@ -272,12 +280,12 @@ class TimeSeries(commands.Cog):
         with contextlib.suppress(asyncio.CancelledError):
             while True:
                 try:
-                    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
-                        executor.submit(await self.run_events())
+                    await self.run_events()
                 except asyncio.CancelledError:
                     break
                 except Exception as exc:
                     log.exception("update_task", exc_info=exc)
+                    await asyncio.sleep(15)
                 else:
                     await asyncio.sleep(15)
 
@@ -299,6 +307,8 @@ class TimeSeries(commands.Cog):
     @timeseriesset.command()
     async def url(self, ctx: commands.Context, *, url: str = "http://localhost:9999"):
         """Set the InfluxDB url. Default is `http://localhost:9999`."""
+        if url.endswith("/"):
+            url = url.rstrip("/")
         await self.config.url.set(url)
         connection = await self.connect_to_influx()
         await ctx.tick() if connection else await ctx.send(

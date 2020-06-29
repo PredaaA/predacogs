@@ -448,7 +448,7 @@ async def get_votes(bot: Red) -> Mapping:
         return {}
     headers = {"Authorization": key}
     data = {}
-    with contextlib.suppress(aiohttp.ServerTimeoutError):
+    with contextlib.suppress(aiohttp.ServerTimeoutError, asyncio.TimeoutError):
         async with aiohttp.ClientSession(timeout=ClientTimeout(total=2)) as session:
             async with session.get(
                 f"https://top.gg/api/bots/{bot.user.id}", headers=headers

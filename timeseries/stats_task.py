@@ -463,7 +463,7 @@ async def get_votes(bot: Red) -> Mapping:
 
 
 def start_stats_tasks(bot: Red, config: Config):
-    bot._stats_task = asyncio.create_task(update_task(bot, config))
+    bot._stats_task = bot.loop.create_task(update_task(bot, config))
 
 
 async def run_events(bot: Red, config: Config):

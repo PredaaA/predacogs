@@ -112,12 +112,13 @@ async def write_bot_data(bot: Red, config: Config):
         temp_data = defaultdict(set)
         server_temp_data = defaultdict(set)
 
-        vote_data = await get_votes(bot) or {}
-        if vote_data:
-            if vote_data.get("monthlyPoints"):
-                counter["Monthly Votes"] = vote_data["monthlyPoints"]
-            if vote_data.get("points"):
-                counter["Votes"] = vote_data["points"]
+        if await config.topgg_stats():
+            vote_data = await get_votes(bot) or {}
+            if vote_data:
+                if vote_data.get("monthlyPoints"):
+                    counter["Monthly Votes"] = vote_data["monthlyPoints"]
+                if vote_data.get("points"):
+                    counter["Votes"] = vote_data["points"]
         server_counter["Total"] = len(bot.guilds)
         counter["Discord Latency"] = int(round(bot.latency * 1000))
         counter["Shards"] = bot.shard_count

@@ -59,6 +59,7 @@ class TimeSeries(commands.Cog):
             org="org",
             commands_stats=Counter({}),
             detailed=True,
+            topgg_stats=False,
         )
         self.commands_cache = {"session": Counter(), "persistent": Counter()}
 
@@ -346,3 +347,14 @@ class TimeSeries(commands.Cog):
         await self.config.detailed.set(not state)
         new_state = "Enabled" if not state else "Disabled"
         await ctx.send(f"Detailed stats submission: {new_state}")
+
+    @timeseriesset.command()
+    async def topggstats(self, ctx: commands.Context):
+        """Toggles whether to send your Top.gg stats.
+        
+        For this you need a Top.gg token set like this `[p]set api dbl api_key keyhere`.
+        """
+        state = await self.config.topgg_stats()
+        await self.config.detailed.set(not state)
+        new_state = "Enabled" if not state else "Disabled"
+        await ctx.send(f"Top.gg stats submission: {new_state}")

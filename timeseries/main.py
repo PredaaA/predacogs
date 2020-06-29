@@ -69,7 +69,6 @@ class TimeSeries(commands.Cog):
         self.api_ready = False
         self._start_task = bot.loop.create_task(self.initialise())
 
-
     async def initialise(self):
         val = getattr(self.bot, "_stats_task", None)
         recreate = False
@@ -254,8 +253,6 @@ class TimeSeries(commands.Cog):
             self._tasks.append(asyncio.create_task(task(self.bot)))
 
     async def run_events(self):
-        if not self.api_ready:
-            return
         await asyncio.gather(
             *[
                 self.write_bot_data(),
@@ -272,12 +269,12 @@ class TimeSeries(commands.Cog):
         with contextlib.suppress(asyncio.CancelledError):
             while True:
                 try:
-                    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
-                        executor.submit(await self.run_events())
+                    await self.run_events()
                 except asyncio.CancelledError:
                     break
                 except Exception as exc:
                     log.exception("update_task", exc_info=exc)
+                    await asyncio.sleep(15)
                 else:
                     await asyncio.sleep(15)
 

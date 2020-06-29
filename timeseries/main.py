@@ -84,7 +84,7 @@ class TimeSeries(commands.Cog):
                 else:
                     recreate = True
             if recreate:
-                self.bot._stats_task = asyncio.create_task(start_stats_tasks(self.bot, self.config))
+                self.bot._stats_task = self.bot.loop.create_task(start_stats_tasks(self.bot, self.config))
             await self.connect_to_influx()
             self.commands_cache["persistent"] = await self.config.commands_stats()
             await self.start_tasks()
@@ -264,7 +264,7 @@ class TimeSeries(commands.Cog):
 
     async def start_tasks(self):
         for task in [self.update_task, self.save_commands_stats]:
-            self._tasks.append(asyncio.create_task(task(self.bot)))
+            self._tasks.append(self.bot.loop.create_task(task(self.bot)))
 
     async def run_events(self):
         await asyncio.gather(

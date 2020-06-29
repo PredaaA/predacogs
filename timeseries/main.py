@@ -62,12 +62,13 @@ class TimeSeries(commands.Cog):
         )
         self.commands_cache = {"session": Counter(), "persistent": Counter()}
 
-        self._start_task = bot.loop.create_task(self.initialise())
         self._tasks: List[asyncio.Task] = []
         init_bot_stats(self.bot)
 
         self.client = {"client": None, "bucket": None, "write_api": None}
         self.api_ready = False
+        self._start_task = bot.loop.create_task(self.initialise())
+
 
     async def initialise(self):
         val = getattr(self.bot, "_stats_task", None)

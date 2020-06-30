@@ -123,9 +123,7 @@ class TimeSeries(commands.Cog):
             if token
             else (await self.bot.get_shared_api_tokens("timeseries")).get("api_key", "")
         )
-        client = InfluxDBClient(
-            url=config["url"], org=config["org"], token=token, enable_gzip=True,
-        )
+        client = call_sync_as_async(InfluxDBClient,  url=config["url"], org=config["org"], token=token, enable_gzip=True, timeout=2)
         if client.health().status == "pass":
             self.client = {
                 "client": client,

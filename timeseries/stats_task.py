@@ -25,6 +25,7 @@ SOFTWARE.
 import asyncio
 import concurrent
 import contextlib
+import functools
 import logging
 import re
 from collections import Counter, defaultdict
@@ -496,6 +497,10 @@ async def update_task(bot: Red, config: Config):
                 await asyncio.sleep(60)
 
 
+def _get_dict(self):
+    return {k: v.__dict__ for k, v in self.stats.__dict__.items()}
+
+
 def init_bot_stats(bot: Red):
     if not hasattr(bot, "stats"):
         bot.stats = SimpleNamespace()
@@ -517,7 +522,8 @@ def init_bot_stats(bot: Red):
         bot.stats.guild_verification = SimpleNamespace()
     if not hasattr(bot.stats, "adventure"):
         bot.stats.adventure = SimpleNamespace()
-
+    if not hasattr(bot.stats, "to_dict"):
+        bot.stats.to_dict = functools.partial(_get_dict, bot)
     if not hasattr(bot, "_stats_task"):
         bot._stats_task = None
     if not hasattr(bot, "_stats_ready"):

@@ -288,7 +288,7 @@ class TimeSeries(commands.Cog):
                     log.exception("update_task", exc_info=exc)
                     await asyncio.sleep(15)
                 else:
-                    await asyncio.sleep(15)
+                    await asyncio.sleep(60)
 
     async def save_commands_stats(self, bot):
         with contextlib.suppress(asyncio.CancelledError):

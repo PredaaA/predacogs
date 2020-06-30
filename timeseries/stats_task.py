@@ -498,7 +498,7 @@ async def update_task(bot: Red, config: Config):
 
 
 def _get_dict(self):
-    return {k: v.__dict__ for k, v in self.stats.__dict__.items()}
+    return {k: v.__dict__ for k, v in self.stats.__dict__.items() if k != "to_dict"}
 
 
 def init_bot_stats(bot: Red):

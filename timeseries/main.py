@@ -123,9 +123,7 @@ class TimeSeries(commands.Cog):
             if token
             else (await self.bot.get_shared_api_tokens("timeseries")).get("api_key", "")
         )
-        client = InfluxDBClient(
-            url=config["url"], org=config["org"], token=token, enable_gzip=True,
-        )
+        client = call_sync_as_async(InfluxDBClient,  url=config["url"], org=config["org"], token=token, enable_gzip=True, timeout=2)
         if client.health().status == "pass":
             self.client = {
                 "client": client,
@@ -290,7 +288,7 @@ class TimeSeries(commands.Cog):
                     log.exception("update_task", exc_info=exc)
                     await asyncio.sleep(15)
                 else:
-                    await asyncio.sleep(15)
+                    await asyncio.sleep(60)
 
     async def save_commands_stats(self, bot):
         with contextlib.suppress(asyncio.CancelledError):

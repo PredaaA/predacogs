@@ -20,7 +20,7 @@ _ = Translator("Nsfw", __file__)
 class Core(commands.Cog):
 
     __author__ = ["Predä", "aikaterna"]
-    __version__ = "2.3.6"
+    __version__ = "2.3.7"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -111,7 +111,10 @@ class Core(commands.Cog):
             em = await self._embed(
                 color=0x891193,
                 title=(_("Here is {name} image ...") + " \N{EYES}").format(name=name),
-                description=bold(_("[Link if you don't see image]({url})")).format(url=url),
+                description=bold(
+                    _("[Link if you don't see image]({url})").format(url=url),
+                    escape_formatting=False,
+                ),
                 image=url,
                 footer=_("Requested by {req} {emoji} • From r/{r}").format(
                     req=ctx.author.display_name, emoji=emoji(), r=subr
@@ -145,8 +148,9 @@ class Core(commands.Cog):
         em = await self._embed(
             color=0x891193,
             title=(_("Here is {name} image ...") + " \N{EYES}").format(name=name),
-            description=bold(_("[Link if you don't see image]({url})")).format(
-                url=data["img"][arg]
+            description=bold(
+                _("[Link if you don't see image]({url})").format(url=data["img"][arg]),
+                escape_formatting=False,
             ),
             image=data["img"][arg],
             footer=_("Requested by {req} {emoji} • From {source}").format(

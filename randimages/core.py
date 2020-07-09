@@ -297,8 +297,11 @@ class Core(commands.Cog):
         em = await self._embed(
             color=await ctx.embed_colour(),
             title=(_("Here is {name} ... ") + emoji).format(name=name),
-            description=bold(_("{fact}\n[Link if you don't see image]({url})")).format(
-                fact=data["fact"][fact_arg], url=data["img"][img_arg]
+            description=bold(
+                _("{fact}\n[Link if you don't see image]({url})").format(
+                    fact=data["fact"][fact_arg], url=data["img"][img_arg]
+                ),
+                escape_formatting=False,
             ),
             image=data["img"][img_arg],
             footer=_("Requested by {req} • From {source}").format(

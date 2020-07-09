@@ -23,7 +23,7 @@ _ = Translator("Image", __file__)
 class Core(commands.Cog):
 
     __author__ = "Predä"
-    __version__ = "1.1.7"
+    __version__ = "1.1.8"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -190,7 +190,10 @@ class Core(commands.Cog):
             em = await self._embed(
                 color=await ctx.embed_colour(),
                 title=(_("Here is {name} ... ") + emoji).format(name=name),
-                description=bold(_("[Link if you don't see image]({url})")).format(url=url),
+                description=bold(
+                    _("[Link if you don't see image]({url})").format(url=url),
+                    escape_formatting=False,
+                ),
                 image=url,
                 footer=_("Requested by {req} • From r/{r}").format(
                     req=ctx.author.display_name, r=subr
@@ -265,8 +268,9 @@ class Core(commands.Cog):
         em = await self._embed(
             color=await ctx.embed_colour(),
             title=(_("Here is {name} image ... ") + emoji).format(name=name),
-            description=bold(_("[Link if you don't see image]({url})")).format(
-                url=data["img"][img_arg]
+            description=bold(
+                _("[Link if you don't see image]({url})").format(url=data["img"][img_arg]),
+                escape_formatting=False,
             ),
             image=data["img"][img_arg],
             footer=_("Requested by {req} • From {source}").format(

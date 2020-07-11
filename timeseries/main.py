@@ -71,7 +71,6 @@ class TimeSeries(commands.Cog):
         self._start_task = bot.loop.create_task(self.initialise())
 
     async def initialise(self):
-        await self.wait_until_stats_ready()
         try:
             val = getattr(self.bot, "_stats_task", None)
             recreate = False
@@ -86,6 +85,7 @@ class TimeSeries(commands.Cog):
                     recreate = True
             if recreate:
                 start_stats_tasks(self.bot, self.config)
+            await self.wait_until_stats_ready()
             await self.connect_to_influx()
             self.commands_cache["persistent"] = await self.config.commands_stats()
             await self.start_tasks()

@@ -98,7 +98,6 @@ BOOBS = [
     "PerfectTits",
     "BestTits",
     "Boobies",
-    "JustOneBoob",
     "tits",
     "naturaltitties",
     "smallboobs",
@@ -267,7 +266,7 @@ RULE_34 = [
     "Rule34Overwatch",
     "WesternHentai",
 ]
-SQUIRTS = ["SquatSquirt", "GushingGirls", "squirting_gifs", "squirting"]
+SQUIRTS = ["GushingGirls", "squirting_gifs", "squirting"]
 THIGHS = ["Thighs", "ThickThighs", "thighhighs", "Thigh", "leggingsgonewild", "legsup"]
 THREESOME = ["groupsex", "Threesome", "amateur_threesomes", "Xsome"]
 TRAPS = [

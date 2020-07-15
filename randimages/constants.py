@@ -14,18 +14,7 @@ CUTE = [
 ]
 DUCKS = ["duck", "babyduckgifs"]
 FERRETS = ["ferret", "ferrets", "FerretsGoneWild"]
-MEMES = [
-    "MemeEconomy",
-    "dankmemes",
-    "memes",
-    "dank_meme",
-    "trebuchetmemes",
-    "MetalMemes",
-    "SequelMemes",
-    "DeepFriedMemes",
-    "dndmemes",
-    "wholesomememes",
-]
+MEMES = ["dankmemes", "memes"]
 PHOTOS = [
     "Nikon",
     "postprocessing",

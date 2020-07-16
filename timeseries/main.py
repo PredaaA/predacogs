@@ -25,7 +25,6 @@ SOFTWARE.
 import asyncio
 import contextlib
 import logging
-import concurrent
 from collections import Counter
 from typing import List, Mapping
 
@@ -36,7 +35,8 @@ from redbot.core.bot import Red
 from redbot.core import commands, checks, Config
 from redbot.core.utils import AsyncIter
 
-from timeseries.stats_task import start_stats_tasks, call_sync_as_async, init_bot_stats
+from .setting_cache import SettingCacheManager
+from .stats_task import start_stats_tasks, call_sync_as_async, init_bot_stats
 
 log = logging.getLogger("red.predacogs.TimeSeries")
 
@@ -48,7 +48,7 @@ class TimeSeries(commands.Cog):
     # and other stuff that I've done for a bounty.
 
     __author__ = ["Draper#6666", "Predä 。#1001"]
-    __version__ = "1.0"
+    __version__ = "1.1"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -62,6 +62,7 @@ class TimeSeries(commands.Cog):
             topgg_stats=False,
         )
         self.commands_cache = {"session": Counter(), "persistent": Counter()}
+        self.config_cache = SettingCacheManager(bot=self.bot, config=self.config)
 
         self._tasks: List[asyncio.Task] = []
         init_bot_stats(self.bot)
@@ -84,7 +85,7 @@ class TimeSeries(commands.Cog):
                 else:
                     recreate = True
             if recreate:
-                start_stats_tasks(self.bot, self.config)
+                start_stats_tasks(self.bot, self.config_cache)
             await self.wait_until_stats_ready()
             await self.connect_to_influx()
             self.commands_cache["persistent"] = await self.config.commands_stats()
@@ -124,7 +125,14 @@ class TimeSeries(commands.Cog):
             if token
             else (await self.bot.get_shared_api_tokens("timeseries")).get("api_key", "")
         )
-        client = call_sync_as_async(InfluxDBClient,  url=config["url"], org=config["org"], token=token, enable_gzip=True, timeout=2)
+        client = call_sync_as_async(
+            InfluxDBClient,
+            url=config["url"],
+            org=config["org"],
+            token=token,
+            enable_gzip=True,
+            timeout=2,
+        )
         if client.health().status == "pass":
             self.client = {
                 "client": client,
@@ -163,29 +171,39 @@ class TimeSeries(commands.Cog):
                 if unchunked_guilds >= 8 and k == "Unique Users":
                     continue
                 p.field(str(k), v)
-            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+            call_sync_as_async(
+                self.client["write_api"].write, bucket=self.client["bucket"], record=p
+            )
 
             p = Point("Server Region")
             for k, v in self.bot.stats.guilds_regions.__dict__.items():
                 p.field(str(k), v)
-            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+            call_sync_as_async(
+                self.client["write_api"].write, bucket=self.client["bucket"], record=p
+            )
 
             p = Point("Servers")
             for k, v in self.bot.stats.guilds.__dict__.items():
                 if unchunked_guilds >= 8 and k == "Members":
                     continue
                 p.field(str(k), v)
-            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+            call_sync_as_async(
+                self.client["write_api"].write, bucket=self.client["bucket"], record=p
+            )
 
             p = Point("Server Features")
             for k, v in self.bot.stats.guild_features.__dict__.items():
                 p.field(str(k), v)
-            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+            call_sync_as_async(
+                self.client["write_api"].write, bucket=self.client["bucket"], record=p
+            )
 
             p = Point("Server Verification")
             for k, v in self.bot.stats.guild_verification.__dict__.items():
                 p.field(str(k), v)
-            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+            call_sync_as_async(
+                self.client["write_api"].write, bucket=self.client["bucket"], record=p
+            )
         except Exception as err:
             log.exception("Error while saving bot data to Influx", exc_info=err)
 
@@ -196,7 +214,9 @@ class TimeSeries(commands.Cog):
             p = Point("Audio")
             for k, v in self.bot.stats.audio.__dict__.items():
                 p.field(str(k), v)
-            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+            call_sync_as_async(
+                self.client["write_api"].write, bucket=self.client["bucket"], record=p
+            )
         except Exception as err:
             log.exception("Error while saving audio data to Influx", exc_info=err)
 
@@ -207,7 +227,9 @@ class TimeSeries(commands.Cog):
             p = Point("Shard")
             for k, v in self.bot.stats.shards.__dict__.items():
                 p.field(str(k), v)
-            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+            call_sync_as_async(
+                self.client["write_api"].write, bucket=self.client["bucket"], record=p
+            )
         except Exception as err:
             log.exception("Error while saving shard data to Influx", exc_info=err)
 
@@ -218,7 +240,9 @@ class TimeSeries(commands.Cog):
             p = Point("-")
             for k, v in self.bot.stats.currency.__dict__.items():
                 p.field(str(k), v)
-            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+            call_sync_as_async(
+                self.client["write_api"].write, bucket=self.client["bucket"], record=p
+            )
         except Exception as err:
             log.exception("Error while saving currency data to Influx", exc_info=err)
 
@@ -229,12 +253,16 @@ class TimeSeries(commands.Cog):
             p = Point("Commands")
             for k, v in self.commands_cache["session"].items():
                 p.field(str(k), v)
-            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+            call_sync_as_async(
+                self.client["write_api"].write, bucket=self.client["bucket"], record=p
+            )
 
             p = Point("Commands Persistent")
             for k, v in self.commands_cache["persistent"].items():
                 p.field(str(k), v)
-            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+            call_sync_as_async(
+                self.client["write_api"].write, bucket=self.client["bucket"], record=p
+            )
         except Exception as err:
             log.exception("Error while saving command data to Influx", exc_info=err)
 
@@ -247,7 +275,9 @@ class TimeSeries(commands.Cog):
             p = Point("Adventure")
             for k, v in self.bot.stats.adventure.__dict__.items():
                 p.field(str(k), v)
-            call_sync_as_async(self.client["write_api"].write, bucket=self.client["bucket"], record=p)
+            call_sync_as_async(
+                self.client["write_api"].write, bucket=self.client["bucket"], record=p
+            )
         except Exception as err:
             log.exception("Error while saving adventure data to Influx", exc_info=err)
 
@@ -314,7 +344,8 @@ class TimeSeries(commands.Cog):
         await self.config.url.set(url)
         connection = await self.connect_to_influx()
         await ctx.tick() if connection else await ctx.send(
-            "Cannot connect to that URL. Please make sure that it is correct or to also set a bucket and organization name."
+            "Cannot connect to that URL. "
+            "Please make sure that it is correct or to also set a bucket and organization name."
         )
 
     @timeseriesset.command()
@@ -323,7 +354,8 @@ class TimeSeries(commands.Cog):
         await self.config.bucket.set(bucket)
         connection = await self.connect_to_influx()
         await ctx.tick() if connection else await ctx.send(
-            "Cannot connect with that bucket name. Please make sure that it is correct or to also set an URL and an organization name."
+            "Cannot connect with that bucket name. "
+            "Please make sure that it is correct or to also set an URL and an organization name."
         )
 
     @timeseriesset.command()
@@ -332,7 +364,8 @@ class TimeSeries(commands.Cog):
         await self.config.org.set(org)
         connection = await self.connect_to_influx()
         await ctx.tick() if connection else await ctx.send(
-            "Cannot connect with that organization name. Please make sure that it is correct or to also set an URL and a bucket name."
+            "Cannot connect with that organization name. "
+            "Please make sure that it is correct or to also set an URL and a bucket name."
         )
 
     @timeseriesset.command()
@@ -344,8 +377,8 @@ class TimeSeries(commands.Cog):
     @timeseriesset.command()
     async def detailed(self, ctx: commands.Context):
         """Toggles whether to send more detailed data (More resource intensive)."""
-        state = await self.config.detailed()
-        await self.config.detailed.set(not state)
+        state = await self.config_cache.get_set_detailed()
+        await self.config_cache.get_set_detailed(set_to=not state)
         new_state = "Enabled" if not state else "Disabled"
         await ctx.send(f"Detailed stats submission: {new_state}")
 
@@ -355,7 +388,18 @@ class TimeSeries(commands.Cog):
         
         For this you need a Top.gg token set like this `[p]set api dbl api_key keyhere`.
         """
-        state = await self.config.topgg_stats()
-        await self.config.topgg_stats.set(not state)
+        state = await self.config_cache.get_set_topgg()
+        await self.config_cache.get_set_topgg(set_to=not state)
         new_state = "Enabled" if not state else "Disabled"
         await ctx.send(f"Top.gg stats submission: {new_state}")
+
+    @timeseriesset.command()
+    async def veganmode(self, ctx: commands.Context):
+        """Toggle minimal data collection mode.
+
+        Removes all joy and happiness from the cog, strip it from all the natural goodness and set it to operate in mininal mode.
+        """
+        state = await self.config_cache.get_set_veganmode()
+        await self.config_cache.get_set_veganmode(set_to=not state)
+        new_state = "Enabled" if not state else "Disabled"
+        await ctx.send(f"Vegan mode (minimal data): {new_state}")

@@ -41,6 +41,8 @@ from redbot.core.bot import Red
 from redbot.core import bank, Config
 from redbot.core.utils import AsyncIter
 
+from timeseries.setting_cache import SettingCacheManager
+
 log = logging.getLogger("red.predacogs.stats_tasks")
 
 
@@ -103,7 +105,15 @@ def call_sync_as_async(function, *args, **kwargs) -> Any:
             return future.result()
 
 
-async def write_bot_data(bot: Red, config: Config):
+async def write_bot_data(bot: Red, config_cache: SettingCacheManager):
+    veganmode = await config_cache.get_set_veganmode()
+    if not veganmode:
+        detailed = await config_cache.get_set_detailed()
+        topgg = await config_cache.get_set_topgg()
+    else:
+        detailed = False
+        topgg = False
+
     try:
         counter = Counter()
         server_counter = Counter()
@@ -113,7 +123,7 @@ async def write_bot_data(bot: Red, config: Config):
         temp_data = defaultdict(set)
         server_temp_data = defaultdict(set)
 
-        if await config.topgg_stats():
+        if topgg:
             vote_data = await get_votes(bot) or {}
             if vote_data:
                 if vote_data.get("monthlyPoints"):
@@ -123,78 +133,76 @@ async def write_bot_data(bot: Red, config: Config):
         server_counter["Total"] = len(bot.guilds)
         counter["Discord Latency"] = int(round(bot.latency * 1000))
         counter["Shards"] = bot.shard_count
-        detailed = await config.detailed()
-        async for guild in AsyncIter(bot.guilds, steps=50):
+        async for guild in AsyncIter(bot.guilds, steps=100):
             assert isinstance(guild, discord.Guild)
             if guild.unavailable:
                 server_temp_data["Unavailable"].add(guild.id)
                 continue
-            if detailed:
-                async for feature in AsyncIter(guild.features, steps=50):
-                    features_count[f"{features.get(f'{feature}') or 'Unknown'}"] += 1
-                verify_count[f"{verify.get(f'{guild.verification_level}') or 'Unknown'}"] += 1
-                region_count[f"{vc_regions.get(f'{guild.region}') or 'Unknown'}"] += 1
-            server_counter["Channel Categories"] += len(guild.categories)
-            server_counter["Server Channels"] += len(guild.channels)
-            server_counter["Text Channels"] += len(guild.text_channels)
-            server_counter["Voice Channels"] += len(guild.voice_channels)
-            server_counter["Roles"] += len(guild.roles)
-            server_counter["Emojis"] += len(guild.emojis)
             server_counter["Members"] += len(guild.members)
-            if guild.large:
-                server_temp_data["Large"].add(guild.id)
-            if not guild.chunked:
-                server_temp_data["Unchunked"].add(guild.id)
-            if guild.premium_tier != 0:
-                server_temp_data["Nitro Boosted"].add(guild.id)
+            if not veganmode:
+                if detailed:
+                    async for feature in AsyncIter(guild.features, steps=50):
+                        features_count[f"{features.get(f'{feature}') or 'Unknown'}"] += 1
+                    verify_count[f"{verify.get(f'{guild.verification_level}') or 'Unknown'}"] += 1
+                    region_count[f"{vc_regions.get(f'{guild.region}') or 'Unknown'}"] += 1
+                server_counter["Channel Categories"] += len(guild.categories)
+                server_counter["Server Channels"] += len(guild.channels)
+                server_counter["Text Channels"] += len(guild.text_channels)
+                server_counter["Voice Channels"] += len(guild.voice_channels)
+                server_counter["Roles"] += len(guild.roles)
+                server_counter["Emojis"] += len(guild.emojis)
+                if guild.large:
+                    server_temp_data["Large"].add(guild.id)
+                if not guild.chunked:
+                    server_temp_data["Unchunked"].add(guild.id)
+                if guild.premium_tier != 0:
+                    server_temp_data["Nitro Boosted"].add(guild.id)
+                if guild.premium_tier == 1:
+                    server_temp_data["Tier 1 Nitro"].add(guild.id)
+                elif guild.premium_tier == 2:
+                    server_temp_data["Tier 2 Nitro"].add(guild.id)
+                elif guild.premium_tier == 3:
+                    server_temp_data["Tier 3 Nitro"].add(guild.id)
 
-            if guild.premium_tier == 1:
-                server_temp_data["Tier 1 Nitro"].add(guild.id)
-            elif guild.premium_tier == 2:
-                server_temp_data["Tier 2 Nitro"].add(guild.id)
-            elif guild.premium_tier == 3:
-                server_temp_data["Tier 3 Nitro"].add(guild.id)
+                async for channel in AsyncIter(guild.text_channels, steps=100):
+                    assert isinstance(channel, discord.TextChannel)
+                    if channel.is_nsfw():
+                        temp_data["NSFW Text Channels"].add(channel.id)
+                    if channel.is_news():
+                        temp_data["News Text Channels"].add(channel.id)
+                    if channel.type is discord.ChannelType.store:
+                        temp_data["Store Text Channels"].add(channel.id)
 
-            async for channel in AsyncIter(guild.text_channels, steps=50):
-                assert isinstance(channel, discord.TextChannel)
-                if channel.is_nsfw():
-                    temp_data["NSFW Text Channels"].add(channel.id)
-                if channel.is_news():
-                    temp_data["News Text Channels"].add(channel.id)
-                if channel.type is discord.ChannelType.store:
-                    temp_data["Store Text Channels"].add(channel.id)
+                async for vc in AsyncIter(guild.voice_channels, steps=100):
+                    assert isinstance(vc, discord.VoiceChannel)
+                    server_counter["Users in a VC"] += len(vc.members)
+                    if guild.me in vc.members:
+                        server_counter["Users in a VC with me"] += len(vc.members) - 1
 
-            async for vc in AsyncIter(guild.voice_channels, steps=50):
-                assert isinstance(vc, discord.VoiceChannel)
-                server_counter["Users in a VC"] += len(vc.members)
+                    async for vcm in AsyncIter(vc.members, steps=100):
+                        assert isinstance(vcm, discord.Member)
+                        if vcm.is_on_mobile():
+                            temp_data["Users in a VC on Mobile"].add(vcm.id)
 
-                if guild.me in vc.members:
-                    server_counter["Users in a VC with me"] += len(vc.members) - 1
+                async for emoji in AsyncIter(guild.emojis, steps=100):
+                    assert isinstance(emoji, discord.Emoji)
+                    if emoji.animated:
+                        server_counter["Animated Emojis"] += 1
+                    else:
+                        server_counter["Static Emojis"] += 1
 
-                async for vcm in AsyncIter(vc.members, steps=50):
-                    assert isinstance(vcm, discord.Member)
-                    if vcm.is_on_mobile():
-                        temp_data["Users in a VC on Mobile"].add(vcm.id)
-
-            async for emoji in AsyncIter(guild.emojis, steps=50):
-                assert isinstance(emoji, discord.Emoji)
-                if emoji.animated:
-                    server_counter["Animated Emojis"] += 1
-                else:
-                    server_counter["Static Emojis"] += 1
-
-            async for member in AsyncIter(guild.members, steps=50):
+            async for member in AsyncIter(guild.members, steps=100):
                 assert isinstance(member, discord.Member)
+                temp_data["Unique Users"].add(member.id)
                 if member.bot:
                     temp_data["Bots"].add(member.id)
                 else:
                     temp_data["Humans"].add(member.id)
 
-                temp_data["Unique Users"].add(member.id)
-                if member.is_on_mobile():
-                    temp_data["Mobile Users"].add(member.id)
-                streaming = False
                 if detailed:
+                    if member.is_on_mobile():
+                        temp_data["Mobile Users"].add(member.id)
+                    streaming = False
                     async for a in AsyncIter(member.activities, steps=5, delay=0.01):
                         assert isinstance(a, (discord.BaseActivity, discord.Spotify))
 
@@ -303,8 +311,10 @@ async def write_bot_data(bot: Red, config: Config):
         log.exception("Exception in write_bot_data", exc_info=err)
 
 
-async def write_adventure_data(bot: Red):
+async def write_adventure_data(bot: Red, config_cache: SettingCacheManager):
     if (adv_cog := bot.get_cog("Adventure")) is None:
+        return
+    if await config_cache.get_set_veganmode():
         return
     try:
         raw_accounts = await adv_cog.config.all_users()
@@ -383,7 +393,9 @@ async def write_adventure_data(bot: Red):
         log.exception("Exception in write_adventure_data", exc_info=err)
 
 
-async def write_audio_data(bot: Red, config: Config):
+async def write_audio_data(bot: Red, config_cache: SettingCacheManager):
+    if await config_cache.get_set_veganmode():
+        return
     try:
         marttols = bot.get_cog(
             "MartTools"
@@ -394,7 +406,7 @@ async def write_audio_data(bot: Red, config: Config):
         counter["Inactive Music Players"] = (
             counter["Music Players"] - counter["Active Music Players"]
         )
-        detailed = await config.detailed()
+        detailed = await config_cache.get_set_detailed()
         if detailed and hasattr(marttols, "fetch"):
             counter["Tracks Played"] = call_sync_as_async(marttols.fetch, "tracks_played")
             counter["Streams Played"] = call_sync_as_async(marttols.fetch, "streams_played")
@@ -424,7 +436,7 @@ async def write_audio_data(bot: Red, config: Config):
 
         for key, value in counter.items():
             if isinstance(value, str):
-                value = int(re.sub(r'\D', '', value))
+                value = int(re.sub(r"\D", "", value))
             setattr(bot.stats.audio, str(key), value)
     except Exception as err:
         log.exception("Exception in write_audio_data", exc_info=err)
@@ -463,29 +475,29 @@ async def get_votes(bot: Red) -> Mapping:
     return data
 
 
-def start_stats_tasks(bot: Red, config: Config):
-    bot._stats_task = bot.loop.create_task(update_task(bot, config))
+def start_stats_tasks(bot: Red, config_cache: SettingCacheManager):
+    bot._stats_task = bot.loop.create_task(update_task(bot, config_cache))
 
 
-async def run_events(bot: Red, config: Config):
+async def run_events(bot: Red, config_cache: SettingCacheManager):
     await asyncio.gather(
         *[
-            write_bot_data(bot, config),
+            write_bot_data(bot, config_cache),
             write_currency_data(bot),
             write_shards_data(bot),
-            write_audio_data(bot, config),
-            write_adventure_data(bot),
+            write_audio_data(bot, config_cache),
+            write_adventure_data(bot, config_cache),
         ],
         return_exceptions=True,
     )
 
 
-async def update_task(bot: Red, config: Config):
+async def update_task(bot: Red, config_cache: SettingCacheManager):
     await bot.wait_until_red_ready()
     with contextlib.suppress(asyncio.CancelledError):
         while True:
             try:
-                await run_events(bot, config)
+                await run_events(bot, config_cache)
             except asyncio.CancelledError:
                 break
             except Exception as exc:

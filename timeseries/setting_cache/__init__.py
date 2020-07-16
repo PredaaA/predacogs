@@ -39,8 +39,8 @@ class SettingCacheManager:
     async def get_set_veganmode(self, set_to: Union[bool, Ellipsis] = ...) -> bool:
         if set_to is ...:
             if self._veganmode is ...:
-                self._veganmode = await self.__config._veganmode()
+                self._veganmode = await self.__config.veganmode()
             return self._veganmode
-        await self.__config.detailed.set(set_to)
+        await self.__config.veganmode.set(set_to)
         self._veganmode = set_to
         return set_to

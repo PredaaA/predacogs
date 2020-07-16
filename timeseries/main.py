@@ -60,6 +60,7 @@ class TimeSeries(commands.Cog):
             commands_stats=Counter({}),
             detailed=True,
             topgg_stats=False,
+            veganmode=False,
         )
         self.commands_cache = {"session": Counter(), "persistent": Counter()}
         self.config_cache = SettingCacheManager(bot=self.bot, config=self.config)

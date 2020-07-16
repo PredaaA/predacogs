@@ -7,7 +7,9 @@ from redbot.core.utils.chat_formatting import box, inline, pagify
 
 import aiohttp
 import asyncio
+import logging
 
+log = logging.getLogger("red.predacogs.fivem")
 FIVEM_BASE_URL = "https://servers.fivem.net/servers/detail/{}"
 
 
@@ -15,7 +17,7 @@ class FiveM(commands.Cog):
     """Tools for FiveM servers."""
 
     __author__ = "Predä"
-    __version__ = "0.1.4"
+    __version__ = "0.1.5"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -110,33 +112,38 @@ class FiveM(commands.Cog):
         await self.bot.wait_until_ready()
         while True:
             await asyncio.sleep(10)
-            config_data = await self._get_config_data()
-            if not config_data["toggled"]:
-                # await self._set_default_status(config_data)
-                continue
-            if config_data["ip"] is None:
-                continue
-            data_players = await self._get_data(config_data["ip"], "players")
-            data_server = await self._get_data(config_data["ip"], "info")
-            if data_players is None or data_server is None:
-                await self._set_default_status(config_data)
-                continue
-            activity = discord.Activity(
-                name=config_data["text"].format(
-                    **self._format_text_status(data_players, data_server, config_data)
-                ),
-                type=self._activity_types(config_data["activity_type"]),
-            )
-            if config_data["activity_type"] == "streaming":
-                activity = discord.Streaming(
-                    url=config_data["streamer"],
-                    name=config_data["stream_title"].format(
+            try:
+                config_data = await self._get_config_data()
+                if not config_data["toggled"]:
+                    # await self._set_default_status(config_data)
+                    continue
+                if config_data["ip"] is None:
+                    continue
+                data_players = await self._get_data(config_data["ip"], "players")
+                data_server = await self._get_data(config_data["ip"], "info")
+                if data_players is None or data_server is None:
+                    await self._set_default_status(config_data)
+                    continue
+                activity = discord.Activity(
+                    name=config_data["text"].format(
                         **self._format_text_status(data_players, data_server, config_data)
                     ),
+                    type=self._activity_types(config_data["activity_type"]),
                 )
-            await self.bot.change_presence(
-                status=self._status(config_data["status"]), activity=activity
-            )
+                if config_data["activity_type"] == "streaming":
+                    activity = discord.Streaming(
+                        url=config_data["streamer"],
+                        name=config_data["stream_title"].format(
+                            **self._format_text_status(data_players, data_server, config_data)
+                        ),
+                    )
+                await self.bot.change_presence(
+                    status=self._status(config_data["status"]), activity=activity
+                )
+            except Exception as exc:
+                log.exception(
+                    "Something went wrong while trying to change bot status: ", exc_info=exc
+                )
 
     @checks.is_owner()
     @commands.group()

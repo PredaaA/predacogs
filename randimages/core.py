@@ -23,7 +23,7 @@ _ = Translator("Image", __file__)
 class Core(commands.Cog):
 
     __author__ = "Predä"
-    __version__ = "1.1.8"
+    __version__ = "1.1.9"
 
     def __init__(self, bot: Red):
         self.bot = bot

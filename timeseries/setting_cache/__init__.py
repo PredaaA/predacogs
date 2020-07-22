@@ -16,7 +16,7 @@ class SettingCacheManager:
         self.enabled = enable_cache
         self._topgg_cache: Union[bool, Ellipsis] = ...
         self._detailed: Union[bool, Ellipsis] = ...
-        self._veganmode: Union[bool, Ellipsis] = ...
+        self._lightmode: Union[bool, Ellipsis] = ...
 
     async def get_set_topgg(self, set_to: Union[bool, Ellipsis] = ...) -> bool:
         if set_to is ...:
@@ -36,11 +36,11 @@ class SettingCacheManager:
         self._detailed = set_to
         return set_to
 
-    async def get_set_veganmode(self, set_to: Union[bool, Ellipsis] = ...) -> bool:
+    async def get_set_lightmode(self, set_to: Union[bool, Ellipsis] = ...) -> bool:
         if set_to is ...:
-            if self._veganmode is ...:
-                self._veganmode = await self.__config.veganmode()
-            return self._veganmode
-        await self.__config.veganmode.set(set_to)
-        self._veganmode = set_to
+            if self._lightmode is ...:
+                self._lightmode = await self.__config.lightmode()
+            return self._lightmode
+        await self.__config.lightmode.set(set_to)
+        self._lightmode = set_to
         return set_to

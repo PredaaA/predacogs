@@ -60,7 +60,7 @@ class TimeSeries(commands.Cog):
             commands_stats=Counter({}),
             detailed=True,
             topgg_stats=False,
-            veganmode=False,
+            lightmode=False,
         )
         self.commands_cache = {"session": Counter(), "persistent": Counter()}
         self.config_cache = SettingCacheManager(bot=self.bot, config=self.config)
@@ -395,12 +395,12 @@ class TimeSeries(commands.Cog):
         await ctx.send(f"Top.gg stats submission: {new_state}")
 
     @timeseriesset.command()
-    async def veganmode(self, ctx: commands.Context):
+    async def lightmode(self, ctx: commands.Context):
         """Toggle minimal data collection mode.
 
         Removes all joy and happiness from the cog, strip it from all the natural goodness and set it to operate in mininal mode.
         """
-        state = await self.config_cache.get_set_veganmode()
-        await self.config_cache.get_set_veganmode(set_to=not state)
+        state = await self.config_cache.get_set_lightmode()
+        await self.config_cache.get_set_lightmode(set_to=not state)
         new_state = "Enabled" if not state else "Disabled"
-        await ctx.send(f"Vegan mode (minimal data): {new_state}")
+        await ctx.send(f"Light mode (minimal data): {new_state}")

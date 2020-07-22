@@ -106,8 +106,8 @@ def call_sync_as_async(function, *args, **kwargs) -> Any:
 
 
 async def write_bot_data(bot: Red, config_cache: SettingCacheManager):
-    veganmode = await config_cache.get_set_veganmode()
-    if not veganmode:
+    lightmode = await config_cache.get_set_lightmode()
+    if not lightmode:
         detailed = await config_cache.get_set_detailed()
         topgg = await config_cache.get_set_topgg()
     else:
@@ -139,7 +139,7 @@ async def write_bot_data(bot: Red, config_cache: SettingCacheManager):
                 server_temp_data["Unavailable"].add(guild.id)
                 continue
             server_counter["Members"] += len(guild.members)
-            if not veganmode:
+            if not lightmode:
                 if detailed:
                     async for feature in AsyncIter(guild.features, steps=50):
                         features_count[f"{features.get(f'{feature}') or 'Unknown'}"] += 1
@@ -314,7 +314,7 @@ async def write_bot_data(bot: Red, config_cache: SettingCacheManager):
 async def write_adventure_data(bot: Red, config_cache: SettingCacheManager):
     if (adv_cog := bot.get_cog("Adventure")) is None:
         return
-    if await config_cache.get_set_veganmode():
+    if await config_cache.get_set_lightmode():
         return
     try:
         raw_accounts = await adv_cog.config.all_users()
@@ -394,7 +394,7 @@ async def write_adventure_data(bot: Red, config_cache: SettingCacheManager):
 
 
 async def write_audio_data(bot: Red, config_cache: SettingCacheManager):
-    if await config_cache.get_set_veganmode():
+    if await config_cache.get_set_lightmode():
         return
     try:
         marttols = bot.get_cog(

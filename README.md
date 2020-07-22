@@ -60,7 +60,6 @@ You can also contact me in DM: `Predä 。#1001` (ID: `332980470650372096`) on D
 
 - [Red devs](https://github.com/Cog-Creators) for base of my remplacement commands cogs.
 - [Red Discord server community](https://discord.gg/red) for all the help in coding.
-- [Mikeshardmind (Sinbad)](https://github.com/mikeshardmind/SinbadCogs) for the command replace logic.
 - [Aikaterna](https://github.com/aikaterna) for the help on [Nsfw cog](https://github.com/PredaaA/predacogs/tree/master/nsfw).
 - [Stevy](https://github.com/AznStevy) to authorize me to publish rewritten version of [WhoPlays cog](https://github.com/PredaaA/predacogs/tree/master/whoplays).
 

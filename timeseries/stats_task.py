@@ -183,6 +183,8 @@ async def write_bot_data(bot: Red, config_cache: SettingCacheManager):
                         assert isinstance(vcm, discord.Member)
                         if vcm.is_on_mobile():
                             temp_data["Users in a VC on Mobile"].add(vcm.id)
+                        if vcm.bot:
+                            server_counter["Bots in a VC with me"] += 1
 
                 async for emoji in AsyncIter(guild.emojis, steps=100):
                     assert isinstance(emoji, discord.Emoji)

@@ -29,7 +29,7 @@ class DblToolsLite(commands.Cog):
     """Tools for Top.gg API."""
 
     __author__ = "Predä"
-    __version__ = "2.0.1_lite"
+    __version__ = "2.0.2_lite"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -62,10 +62,10 @@ class DblToolsLite(commands.Cog):
     async def cog_before_invoke(self, ctx: commands.Context):
         await self._ready_event.wait()
 
-    @commands.command()
+    @commands.command(aliases=["dblinfo"])
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def dblinfo(self, ctx: commands.Context, *, bot: discord.User):
+    async def topgginfo(self, ctx: commands.Context, *, bot: discord.User):
         """
         Show information of a chosen bot on Top.gg.
 

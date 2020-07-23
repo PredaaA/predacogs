@@ -35,7 +35,7 @@ class DblTools(commands.Cog):
     """Tools for Top.gg API."""
 
     __author__ = "Predä"
-    __version__ = "2.0.4"
+    __version__ = "2.0.5"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -260,10 +260,10 @@ class DblTools(commands.Cog):
         await self.config.daily_rewards.set_raw("weekend_bonus_amount", value=amount)
         await ctx.send(_("Weekend bonus amount set to {}").format(amount))
 
-    @commands.command()
+    @commands.command(aliases=["dblinfo"])
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def dblinfo(self, ctx: commands.Context, *, bot: discord.User):
+    async def topgginfo(self, ctx: commands.Context, *, bot: discord.User):
         """
         Show information of a chosen bot on Top.gg.
 

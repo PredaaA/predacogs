@@ -1,6 +1,7 @@
+from redbot.core.bot import Red
 from .whoplays import WhoPlays
 
 
-def setup(bot):
-    n = WhoPlays(bot)
-    bot.add_cog(n)
+def setup(bot: Red):
+    cog = WhoPlays(bot)
+    bot.add_cog(cog)

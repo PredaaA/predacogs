@@ -1,6 +1,7 @@
+from redbot.core.bot import Red
 from .spacex import SpaceX
 
 
-def setup(bot):
-    n = SpaceX(bot)
-    bot.add_cog(n)
+def setup(bot: Red):
+    cog = SpaceX(bot)
+    bot.add_cog(cog)

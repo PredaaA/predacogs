@@ -1,19 +1,10 @@
 {
-    "author": ["Predä"],
-    "install_msg": "Thank you for installing the MartTools cog!\nUse `[p]help MartTools` to get all commands.",
-    "name": "MartTools",
-    "short": "Multiple tools that are originally used on Martine (https://martinethebot.com).",
-    "description": "Multiple tools that are originally used on Martine (https://martinethebot.com).",
-    "tags": [
-        "tools",
-        "utility",
-        "information",
-        "counters",
-        "statistics"
-    ],
-    "requirements": [
-        "apsw-wheels",
-        "babel"
-    ],
-    "min_bot_version": "3.2.0a0.dev1"
+  "author": ["Predä"],
+  "install_msg": "Thank you for installing the MartTools cog!\nUse `[p]help MartTools` to get all commands.",
+  "name": "MartTools",
+  "short": "Multiple tools that are originally used on Martine (https://martinethebot.com).",
+  "description": "Multiple tools that are originally used on Martine (https://martinethebot.com).",
+  "tags": ["tools", "utility", "information", "counters", "statistics"],
+  "requirements": ["apsw-wheels", "babel"],
+  "min_bot_version": "3.3.10"
 }

@@ -1,13 +1,9 @@
 {
-    "author": ["Predä"],
-    "install_msg": "Thank you for installing the spacex cog!\nUse `[p]help SpaceX` to get all commands.",
-    "name": "SpaceX",
-    "short": "Get multiple information about SpaceX using SpaceX-API.",
-    "description": "Get multiple information about SpaceX using SpaceX-API. You can also use Space cog from kennnyshiwa (https://github.com/kennnyshiwa/kennnyshiwa-cogs) for more about space in general, space pics, Astronomy Picture of the Day from Nasa, ISS location ...",
-    "tags": [
-        "spacex",
-        "space",
-        "information"
-    ],
-    "min_bot_version": "3.2.0a0.dev1"
+  "author": ["Predä"],
+  "install_msg": "Thank you for installing the spacex cog!\nUse `[p]help SpaceX` to get all commands.",
+  "name": "SpaceX",
+  "short": "Get multiple information about SpaceX using SpaceX-API.",
+  "description": "Get multiple information about SpaceX using SpaceX-API. You can also use Space cog from kennnyshiwa (https://github.com/kennnyshiwa/kennnyshiwa-cogs) for more about space in general, space pics, Astronomy Picture of the Day from Nasa, ISS location ...",
+  "tags": ["spacex", "space", "information"],
+  "min_bot_version": "3.3.10"
 }

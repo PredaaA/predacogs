@@ -1,17 +1,10 @@
 {
-    "author": ["Predä"],
-    "install_msg": "Thank you for installing my DblTools cog!\nUse `[p]help DblTools` to get all commands.",
-    "name": "DblTools",
-    "short": "Tools to get bots information from top.gg.",
-    "description": "Tools to get bots information from top.gg, post stats, set a daily reward for votes, or give a role to new users who voted.",
-    "tags": [
-        "top.gg",
-        "botlist",
-        "stats"
-    ],
-    "requirements": [
-        "dblpy",
-        "tabulate"
-    ],
-    "min_bot_version": "3.2.0a0.dev1"
+  "author": ["Predä"],
+  "install_msg": "Thank you for installing my DblTools cog!\nUse `[p]help DblTools` to get all commands.",
+  "name": "DblTools",
+  "short": "Tools to get bots information from top.gg.",
+  "description": "Tools to get bots information from top.gg, post stats, set a daily reward for votes, or give a role to new users who voted.",
+  "tags": ["top.gg", "botlist", "stats"],
+  "requirements": ["dblpy", "tabulate"],
+  "min_bot_version": "3.3.10"
 }

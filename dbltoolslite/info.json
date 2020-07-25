@@ -1,17 +1,10 @@
 {
-    "author": ["Predä"],
-    "install_msg": "Thank you for installing my DblToolsLite cog!\nUse `[p]help DblToolsLite` to get all commands.",
-    "name": "DblToolsLite",
-    "short": "Tools to get bots information from top.gg.",
-    "description": "Tools to get bots information from top.gg, like description, votes, published server count and more.",
-    "tags": [
-        "top.gg",
-        "botlist",
-        "stats"
-    ],
-    "requirements": [
-        "dblpy",
-        "tabulate"
-    ],
-    "min_bot_version": "3.2.0a0.dev1"
+  "author": ["Predä"],
+  "install_msg": "Thank you for installing my DblToolsLite cog!\nUse `[p]help DblToolsLite` to get all commands.",
+  "name": "DblToolsLite",
+  "short": "Tools to get bots information from top.gg.",
+  "description": "Tools to get bots information from top.gg, like description, votes, published server count and more.",
+  "tags": ["top.gg", "botlist", "stats"],
+  "requirements": ["dblpy", "tabulate"],
+  "min_bot_version": "3.3.10"
 }

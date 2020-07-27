@@ -177,7 +177,7 @@ async def write_bot_data(bot: Red, config_cache: SettingCacheManager):
                     assert isinstance(vc, discord.VoiceChannel)
                     server_counter["Users in a VC"] += len(vc.members)
                     if guild.me in vc.members:
-                        server_counter["Users in a VC with me"] += len(vc.members) - 1
+                        server_counter["Users in a VC with me"] += (len(vc.members) - 1)
                         server_counter["Bots in a VC with me"] += (
                             sum(1 for m in vc.members if m.bot) - 1
                         )

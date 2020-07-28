@@ -1,5 +1,5 @@
 {
-  "author": ["Predä"],
+  "author": ["Predä", "Draper"],
   "install_msg": "Thank you for installing the MartTools cog!\nUse `[p]help MartTools` to get all commands.",
   "name": "MartTools",
   "short": "Multiple tools that are originally used on Martine (https://martinethebot.com).",

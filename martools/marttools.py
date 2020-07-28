@@ -3,7 +3,6 @@ import discord
 from redbot.core.bot import Red
 from redbot.core import Config, bank, commands
 from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.data_manager import cog_data_path
 from redbot.core.utils.chat_formatting import (
     bold,
     box,
@@ -16,18 +15,19 @@ try:
 except ImportError:
     Query = None
 
-from .statements import *
 from .utils import rgetattr
 from .listeners import Listeners
+from .statements import (
+    SELECT_PERMA_GLOBAL,
+    SELECT_PERMA_SINGLE,
+    SELECT_TEMP_GLOBAL,
+    SELECT_TEMP_SINGLE,
+)
 
-import time
 import apsw
 import lavalink
-import contextlib
-
-from copy import copy
+from typing import Union
 from datetime import datetime
-from collections import Counter, defaultdict
 
 _ = Translator("MartTools", __file__)
 
@@ -36,27 +36,23 @@ _ = Translator("MartTools", __file__)
 class MartTools(Listeners, commands.Cog):
     """Multiple tools that are originally used on Martine."""
 
-    __author__ = "Predä"
-    __version__ = "1.7"
+    __author__ = ["Predä", "Draper"]
+    __version__ = "1.8"
 
     def __init__(self, bot: Red):
+        super().__init__()
         self.bot = bot
-        self._connection = apsw.Connection(str(cog_data_path(self) / "MartTools.db"))
-        self.cursor = self._connection.cursor()
-        self.cursor.execute(PRAGMA_journal_mode)
-        self.cursor.execute(PRAGMA_wal_autocheckpoint)
-        self.cursor.execute(PRAGMA_read_uncommitted)
-        self.cursor.execute(CREATE_TABLE_PERMA)
-        self.cursor.execute(DROP_TEMP)
-        self.cursor.execute(CREATE_TABLE_TEMP)
         self.uptime = datetime.utcnow()
-        self.cursor.execute(INSERT_PERMA_DO_NOTHING, (-1000, "creation_time", time.time()))
 
-    def upsert(self, id: int, event: str):
-        self.cursor.execute(UPSERT_PERMA, (id, event))
-        self.cursor.execute(UPSERT_TEMP, (id, event))
+    def cog_unload(self):
+        self._connection.close()
 
-    def fetch(self, key, id=None) -> str:
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        """Thanks Sinbad!"""
+        pre_processed = super().format_help_for_context(ctx)
+        return f"{pre_processed}\n\nAuthors: {', '.join(self.__author__)}\nCog Version: {self.__version__}"
+
+    def fetch(self, key, id=None, raw: bool = False) -> Union[int, str]:
         if id is None:
             query = SELECT_PERMA_GLOBAL
             condition = {"event": key}
@@ -64,9 +60,11 @@ class MartTools(Listeners, commands.Cog):
             query = SELECT_PERMA_SINGLE
             condition = {"event": key, "guild_id": id}
         result = list(self.cursor.execute(query, condition))
+        if raw:
+            return result[0][0] if result else 0
         return humanize_number(result[0][0] if result else 0)
 
-    def get(self, key, id=None) -> str:
+    def get(self, key, id=None, raw: bool = False) -> Union[int, str]:
         if id is None:
             query = SELECT_TEMP_GLOBAL
             condition = {"event": key}
@@ -74,20 +72,19 @@ class MartTools(Listeners, commands.Cog):
             query = SELECT_TEMP_SINGLE
             condition = {"event": key, "guild_id": id}
         result = list(self.cursor.execute(query, condition))
+        if raw:
+            return result[0][0] if result else 0
         return humanize_number(result[0][0] if result else 0)
-
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        """Thanks Sinbad!"""
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
-
-    def cog_unload(self):
-        self._connection.close()
 
     def get_bot_uptime(self):
         delta = datetime.utcnow() - self.uptime
-        uptime = humanize_timedelta(timedelta=delta)
-        return uptime
+        return str(humanize_timedelta(timedelta=delta))
+
+    def usage_counts_cpm(self, key: str, time: int = 60):
+        delta = datetime.utcnow() - self.bot.uptime
+        minutes = delta.total_seconds() / time
+        total = self.get(key, raw=True)
+        return total / minutes
 
     @commands.command()
     @commands.guild_only()
@@ -99,10 +96,7 @@ class MartTools(Listeners, commands.Cog):
         credits_name = await bank.get_currency_name(ctx.guild)
         pos = await bank.get_leaderboard_position(ctx.author)
         bank_name = await bank.get_bank_name(ctx.guild)
-        if hasattr(bank, "_config"):
-            bank_config = bank._config
-        else:
-            bank_config = bank._conf
+        bank_config = bank._config
 
         if await bank.is_global():
             all_accounts = len(await bank_config.all_users())
@@ -154,67 +148,58 @@ class MartTools(Listeners, commands.Cog):
     @commands.command(aliases=["usagec"])
     async def usagecount(self, ctx: commands.Context):
         """
-            Show the usage count of the bot.
-            Commands processed, messages received, and music on servers.
+        Show the usage count of the bot.
+        Commands processed, messages received, and music on servers.
         """
-        uptime = str(self.get_bot_uptime())
-        commands_count = "`{}`".format(self.get("processed_commands"))
-        errors_count = "`{}`".format(self.get("command_error"))
-        messages_read = "`{}`".format(self.get("messages_read"))
-        messages_sent = "`{}`".format(self.get("msg_sent"))
-        try:
-            total_num = "`{}/{}`".format(
+        msg = _(
+            "**Commands processed:** `{commands_count}` commands. (`{cpm_commands:.2f}`/min)\n"
+            "**Commands errors:** `{errors_count}` errors.\n"
+            "**Messages received:** `{messages_read}` messages. (`{cpm_msgs:.2f}`/min)\n"
+            "**Messages sent:** `{messages_sent}` messages. (`{cpm_msgs_sent:.2f}`/min)\n"
+            "**Playing music on:** `{ll_players}` servers.\n"
+            "**Tracks played:** `{tracks_played}` tracks. (`{cpm_tracks:.2f}`/min)\n\n"
+            "**Servers joined:** `{guild_join}` servers. (`{cpm_guild_join:.2f}`/hour)\n"
+            "**Servers left:** `{guild_leave}` servers. (`{cpm_guild_leave:.2f}`/hour)"
+        ).format(
+            commands_count=self.get("processed_commands"),
+            cpm_commands=self.usage_counts_cpm("processed_commands"),
+            errors_count=self.get("command_error"),
+            messages_read=self.get("messages_read"),
+            cpm_msgs=self.usage_counts_cpm("messages_read"),
+            messages_sent=self.get("msg_sent"),
+            cpm_msgs_sent=self.usage_counts_cpm("msg_sent"),
+            ll_players="`{}/{}`".format(
                 humanize_number(len(lavalink.active_players())),
                 humanize_number(len(lavalink.all_players())),
-            )
-        except AttributeError:  # Remove at 3.2
-            total_num = "`{}/{}`".format(
-                humanize_number(len([p for p in lavalink.players if p.current is not None])),
-                humanize_number(len([p for p in lavalink.players])),
-            )
-        tracks_played = "`{}`".format(self.get("tracks_played"))
-        guild_join = "`{}`".format(self.get("guild_join"))
-        guild_leave = "`{}`".format(self.get("guild_remove"))
-        avatar = self.bot.user.avatar_url_as(static_format="png")
-        msg = (
-            bold(_("Commands processed: "))
-            + _("{} commands.\n").format(commands_count)
-            + bold(_("Commands errors: "))
-            + _("{} errors.\n").format(errors_count)
-            + bold(_("Messages received: "))
-            + _("{} messages.\n").format(messages_read)
-            + bold(_("Messages sent: "))
-            + _("{} messages.\n").format(messages_sent)
-            + bold(_("Playing music on: "))
-            + _("{} servers.\n").format(total_num)
-            + bold(_("Tracks played: "))
-            + _("{} tracks.\n\n").format(tracks_played)
-            + bold(_("Servers joined: "))
-            + _("{} servers.\n").format(guild_join)
-            + bold(_("Servers left: "))
-            + _("{} servers.").format(guild_leave)
+            ),
+            tracks_played=self.get("tracks_played"),
+            cpm_tracks=self.usage_counts_cpm("tracks_played"),
+            guild_join=self.get("guild_join"),
+            cpm_guild_join=self.usage_counts_cpm("guild_join", 3600),
+            guild_leave=self.get("guild_remove"),
+            cpm_guild_leave=self.usage_counts_cpm("guild_remove", 3600),
         )
-        try:
-            em = discord.Embed(color=await ctx.embed_colour())
-            em.add_field(
-                name=_("Usage count of {} since last restart:").format(ctx.bot.user.name),
-                value=msg,
+        if await ctx.embed_requested():
+            em = discord.Embed(
+                color=await ctx.embed_colour(),
+                title=_("Usage count of {} since last restart:").format(self.bot.user.name),
+                description=msg,
             )
-            em.set_thumbnail(url=avatar)
-            em.set_footer(text=_("Since {}").format(uptime))
+            em.set_thumbnail(url=self.bot.user.avatar_url_as(static_format="png"))
+            em.set_footer(text=_("Since {}").format(self.get_bot_uptime()))
             await ctx.send(embed=em)
-        except discord.Forbidden:
+        else:
             await ctx.send(
                 _("Usage count of {} since last restart:\n").format(ctx.bot.user.name)
                 + msg
-                + _("\n\nSince {}").format(uptime)
+                + _("\n\nSince {}").format(self.get_bot_uptime())
             )
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.command(aliases=["advusagec"])
     async def advusagecount(self, ctx: commands.Context):
         """
-        Same as [p]usagecount command but with more stats.
+        Permanent stats since first time that the cog has been loaded.
         """
         avatar = self.bot.user.avatar_url_as(static_format="png")
         query = SELECT_PERMA_SINGLE
@@ -222,16 +207,10 @@ class MartTools(Listeners, commands.Cog):
         result = list(self.cursor.execute(query, condition))
         delta = datetime.utcnow() - datetime.utcfromtimestamp(result[0][0])
         uptime = humanize_timedelta(timedelta=delta)
-        try:
-            total_num = "{}/{}".format(
-                humanize_number(len(lavalink.active_players())),
-                humanize_number(len(lavalink.all_players())),
-            )
-        except AttributeError:  # Remove at 3.2
-            total_num = "{}/{}".format(
-                humanize_number(len([p for p in lavalink.players if p.current is not None])),
-                humanize_number(len([p for p in lavalink.players])),
-            )
+        ll_players = "{}/{}".format(
+            humanize_number(len(lavalink.active_players())),
+            humanize_number(len(lavalink.all_players())),
+        )
 
         em = discord.Embed(
             title=_("Usage count of {}:").format(ctx.bot.user.name),
@@ -358,11 +337,11 @@ class MartTools(Listeners, commands.Cog):
                 _(
                     "Users Who Joined VC : {users_joined_bot_music_room}\n"
                     "Tracks Played       : {tracks_played}\n"
-                    "Number Of Players   : {total_num}"
+                    "Number Of Players   : {ll_players}"
                 ).format(
                     users_joined_bot_music_room=self.fetch("users_joined_bot_music_room"),
                     tracks_played=self.fetch("tracks_played"),
-                    total_num=total_num,
+                    ll_players=ll_players,
                 ),
                 lang="prolog",
             ),
@@ -422,7 +401,7 @@ class MartTools(Listeners, commands.Cog):
         if not guild_prefixes:
             to_send = [f"`\u200b{p}\u200b`" for p in default_prefixes]
             plural = _("Prefixes") if len(default_prefixes) >= 2 else _("Prefix")
-            try:
+            if await ctx.embed_requested():
                 em = discord.Embed(
                     color=await ctx.embed_colour(),
                     title=_("{} of {}:").format(plural, bot_name),
@@ -430,12 +409,12 @@ class MartTools(Listeners, commands.Cog):
                 )
                 em.set_thumbnail(url=avatar)
                 await ctx.send(embed=em)
-            except discord.Forbidden:
+            else:
                 await ctx.send(bold(_("{} of {}:\n")).format(plural, bot_name) + " ".join(to_send))
         else:
             to_send = [f"`\u200b{p}\u200b`" for p in guild_prefixes]
             plural = _("prefixes") if len(default_prefixes) >= 2 else _("prefix")
-            try:
+            if await ctx.embed_requested():
                 em = discord.Embed(
                     color=await ctx.embed_colour(),
                     title=_("Server {} of {}:").format(plural, bot_name),
@@ -443,7 +422,7 @@ class MartTools(Listeners, commands.Cog):
                 )
                 em.set_thumbnail(url=avatar)
                 await ctx.send(embed=em)
-            except discord.Forbidden:
+            else:
                 await ctx.send(
                     bold(_("Server {} of {name}:\n")).format(plural, bot_name) + " ".join(to_send)
                 )
@@ -451,25 +430,28 @@ class MartTools(Listeners, commands.Cog):
     @commands.command(aliases=["serverc", "serversc"])
     async def servercount(self, ctx: commands.Context):
         """Send servers stats of the bot."""
+        visible_users = sum(len(s.members) for s in self.bot.guilds)
+        total_users = sum(s.member_count for s in self.bot.guilds)
         msg = _(
             "{name} is running on `{shard_count}` {shards}.\n"
             "Serving `{servs}` servers (`{channels}` channels).\n"
-            "For a total of `{users}` users (`{unique}` unique).\n"
-            "(`{users}` visible now, `{real_total}` total)"
+            "For a total of `{visible_users}` users (`{unique}` unique).\n"
+            "(`{visible_users}` visible now, `{total_users}` total, `{percentage_chunked:.2f}%` chunked)"
         ).format(
             name=ctx.bot.user.name,
             shard_count=humanize_number(self.bot.shard_count),
             shards=_("shards") if self.bot.shard_count > 1 else _("shard"),
             servs=humanize_number(len(self.bot.guilds)),
             channels=humanize_number(sum(len(s.channels) for s in self.bot.guilds)),
-            users=humanize_number(sum(len(s.members) for s in self.bot.guilds)),
+            visible_users=humanize_number(visible_users),
             unique=humanize_number(len(self.bot.users)),
-            real_total=humanize_number(sum(s.member_count for s in self.bot.guilds)),
+            total_users=humanize_number(total_users),
+            percentage_chunked=visible_users / total_users * 100,
         )
-        try:
+        if await ctx.embed_requested():
             em = discord.Embed(color=await ctx.embed_colour(), description=msg)
             await ctx.send(embed=em)
-        except discord.Forbidden:
+        else:
             await ctx.send(msg)
 
     @commands.command(aliases=["servreg"])
@@ -527,10 +509,10 @@ class MartTools(Listeners, commands.Cog):
             _("{flag}: {guilds_len} and {users_len}").format(
                 flag=regions_dict[region_name],
                 guilds_len=(
-                    f"`{values['guilds']:,} {_('server') if values['guilds'] < 2 else _('servers')}`"
+                    f"`{humanize_number(values['guilds'])} {_('server') if values['guilds'] < 2 else _('servers')}`"
                 ),
                 users_len=(
-                    f"`{values['users']:,} {_('user') if values['users'] < 2 else _('users')}`"
+                    f"`{humanize_number(values['users'])} {_('user') if values['users'] < 2 else _('users')}`"
                 ),
             )
             for region_name, values in regions_stats.items()
@@ -540,11 +522,11 @@ class MartTools(Listeners, commands.Cog):
             _("user") if sum(k["users"] for k in regions_stats.values()) < 2 else _("users")
         )
         footer = _("For a total of {guilds} and {users}").format(
-            guilds=f"{len(self.bot.guilds):,} {guilds_word}",
-            users=f"{sum(k['users'] for k in regions_stats.values()):,} {users_word}",
+            guilds=f"{humanize_number(len(self.bot.guilds))} {guilds_word}",
+            users=f"{humanize_number(sum(k['users'] for k in regions_stats.values()))} {users_word}",
         )
 
-        try:
+        if await ctx.embed_requested():
             em = discord.Embed(
                 color=await ctx.embed_colour(),
                 title=_("Servers regions stats:"),
@@ -552,6 +534,6 @@ class MartTools(Listeners, commands.Cog):
             )
             em.set_footer(text=footer)
             await ctx.send(embed=em)
-        except discord.Forbidden:
+        else:
             msg = bold(_("Servers regions stats:\n\n")) + "\n".join(msg) + "\n" + bold(footer)
             await ctx.send(msg)

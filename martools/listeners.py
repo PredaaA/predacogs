@@ -1,8 +1,23 @@
 import discord
-
+from redbot.core.bot import Red
 from redbot.core import commands
+from redbot.core.data_manager import cog_data_path
 
-from martools.utils import rgetattr
+import apsw
+import time
+
+from .utils import rgetattr
+from .statements import (
+    PRAGMA_journal_mode,
+    PRAGMA_wal_autocheckpoint,
+    PRAGMA_read_uncommitted,
+    CREATE_TABLE_PERMA,
+    DROP_TEMP,
+    CREATE_TABLE_TEMP,
+    INSERT_PERMA_DO_NOTHING,
+    UPSERT_PERMA,
+    UPSERT_TEMP,
+)
 
 try:
     from redbot.cogs.audio.audio_dataclasses import Query
@@ -11,6 +26,23 @@ except ImportError:
 
 
 class Listeners:
+    def __init__(self):
+        self.bot: Red
+
+        self._connection = apsw.Connection(str(cog_data_path(self) / "MartTools.db"))
+        self.cursor = self._connection.cursor()
+        self.cursor.execute(PRAGMA_journal_mode)
+        self.cursor.execute(PRAGMA_wal_autocheckpoint)
+        self.cursor.execute(PRAGMA_read_uncommitted)
+        self.cursor.execute(CREATE_TABLE_PERMA)
+        self.cursor.execute(DROP_TEMP)
+        self.cursor.execute(CREATE_TABLE_TEMP)
+        self.cursor.execute(INSERT_PERMA_DO_NOTHING, (-1000, "creation_time", time.time()))
+
+    def upsert(self, id: int, event: str):
+        self.cursor.execute(UPSERT_PERMA, (id, event))
+        self.cursor.execute(UPSERT_TEMP, (id, event))
+
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error, unhandled_by_cog=False):
         if not unhandled_by_cog:
@@ -128,7 +160,9 @@ class Listeners:
         self.upsert(rgetattr(guild, "id", -1), "tracks_played")
         cog = self.bot.get_cog("Audio")
         if hasattr(cog, "local_folder_current_path"):
-            query = Query.process_input(query=track.uri, _local_folder_current_path=cog.local_folder_current_path)
+            query = Query.process_input(
+                query=track.uri, _local_folder_current_path=cog.local_folder_current_path
+            )
         else:
             query = Query.process_input(query=track.uri)
         if track.is_stream:

@@ -85,7 +85,7 @@ class MartTools(Listeners, commands.Cog):
         return str(humanize_timedelta(timedelta=delta))
 
     def usage_counts_cpm(self, key: str, time: int = 60):
-        delta = datetime.utcnow() - self.bot.uptime
+        delta = datetime.utcnow() - self.uptime
         minutes = delta.total_seconds() / time
         total = self.get(key, raw=True)
         return total / minutes

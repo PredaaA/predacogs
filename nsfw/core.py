@@ -22,6 +22,10 @@ class Core(commands.Cog):
     __author__ = ["Predä", "aikaterna"]
     __version__ = "2.3.7"
 
+    async def red_delete_data_for_user(self, **kwargs):
+        """Nothing to delete."""
+        return
+
     def __init__(self, bot: Red):
         self.bot = bot
         self.session = aiohttp.ClientSession()

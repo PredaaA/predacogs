@@ -39,6 +39,10 @@ class MartTools(Listeners, commands.Cog):
     __author__ = ["Predä", "Draper"]
     __version__ = "1.8"
 
+    async def red_delete_data_for_user(self, **kwargs):
+        """Nothing to delete."""
+        return
+
     def __init__(self, bot: Red):
         super().__init__()
         self.bot = bot

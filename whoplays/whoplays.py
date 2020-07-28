@@ -17,6 +17,10 @@ class WhoPlays(commands.Cog):
     __author__ = ["Stevy", "Predä"]
     __version__ = "0.5.4"
 
+    async def red_delete_data_for_user(self, **kwargs):
+        """Nothing to delete."""
+        return
+
     def __init__(self, bot: Red):
         self.bot = bot
 

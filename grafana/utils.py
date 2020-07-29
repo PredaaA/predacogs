@@ -1,4 +1,3 @@
-from types import SimpleNamespace
 from discord.ext.commands import BadArgument
 
 

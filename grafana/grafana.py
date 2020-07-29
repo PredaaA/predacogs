@@ -1,7 +1,6 @@
 import time
 from datetime import datetime, timedelta
 from io import BytesIO
-from urllib.parse import quote
 
 import aiohttp
 import discord
@@ -9,7 +8,6 @@ from redbot.core import Config, commands
 from redbot.core.bot import Red
 from redbot.core.commands.converter import TimedeltaConverter
 from redbot.core.utils.chat_formatting import box, humanize_list
-
 
 from .utils import Panel
 
@@ -84,16 +82,15 @@ class Grafana(commands.Cog):
         if panels := await self.config.panels():
             await ctx.send(box(humanize_list(list(panels.keys()))))
         else:
-            await ctx.send("No panels configured")
+            await ctx.send("No panels configured.")
 
     @graph.group(name="set")
     @commands.is_owner()
-    async def set_graphs(self, ctx):
+    async def set_graphs(self, ctx: commands.Context):
         """Setup grafana cog."""
-        pass
 
     @set_graphs.command(name="url")
-    async def grafana_url(self, ctx, *, url: str):
+    async def grafana_url(self, ctx: commands.Context, *, url: str):
         """Setup url of your Grafana instance.
 
         Default: `http://localhost:3000`"""
@@ -101,7 +98,7 @@ class Grafana(commands.Cog):
         await ctx.tick()
 
     @set_graphs.command()
-    async def dashboard(self, ctx, *, did: str):
+    async def dashboard(self, ctx: commands.Context, *, did: str):
         """Set dashboard id.
 
         This command needs id from URL.
@@ -123,13 +120,12 @@ class Grafana(commands.Cog):
         await ctx.tick()
 
     @set_graphs.group()
-    async def panels(self, ctx):
+    async def panels(self, ctx: commands.Context):
         """Setup graphs on dashboard."""
-        pass
 
     @panels.command(name="import")
     @commands.max_concurrency(1)
-    async def graphs_import(self, ctx):
+    async def graphs_import(self, ctx: commands.Context):
         """Automatically import all graphs from dashboard, overwriting already saved."""
         try:
             async with self.bot.session.get(
@@ -150,19 +146,17 @@ class Grafana(commands.Cog):
                 f"Unable to import graphs, are url and dashboard set?\n{e.status}: {e.message}"
             )
         except aiohttp.ClientConnectorError as e:
-            await ctx.send(
-                f"Unable to import graphs, are url and dashboard set?"
-            )
+            await ctx.send(f"Unable to import graphs, are url and dashboard set?")
 
     @panels.command(name="remove")
-    async def graphs_remove(self, ctx, *, panel: Panel):
+    async def graphs_remove(self, ctx: commands.Context, *, panel: Panel):
         """Remove certain graph from list"""
         async with self.config.panels() as panels:
             del panels[panel.name]
         await ctx.tick()
 
     @panels.command(name="add")
-    async def graphs_add(self, ctx, pid: int, *, name: str):
+    async def graphs_add(self, ctx: commands.Context, pid: int, *, name: str):
         """Add certain graph to list manually"""
         async with self.config.panels() as panels:
             panels[name.casefold().replace(" ", "_")] = pid

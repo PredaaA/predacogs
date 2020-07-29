@@ -94,6 +94,21 @@ class Grafana(commands.Cog):
         """Setup url of your Grafana instance.
 
         Default: `http://localhost:3000`"""
+        async with self.session.get(f"{url}/api/health") as r:
+            if r.status != 200:
+                await ctx.send(f"Incorrect URL. HTTP error returned: {r.status}")
+                return
+            try:
+                if j := await r.json():
+                    if j.get("database") != "ok":
+                        await ctx.send("API didnt returned right state of DB, is your Grafana ok?")
+                        return
+                else:
+                    await ctx.send("Server returned not a JSON. Is it a Grafana server?")
+                    return
+            except aiohttp.ContentTypeError:
+                await ctx.send("Server returned not a JSON. Is it a Grafana server?")
+                return
         await self.config.url.set(url)
         await ctx.tick()
 

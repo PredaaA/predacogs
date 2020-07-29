@@ -13,6 +13,15 @@ from tabulate import tabulate
 from .utils import Panel
 
 
+async def find_panel(panels: dict, pid: int):
+    """Find panel from dict by id
+    (find in dict by value)"""
+    for panel in panels:
+        if panel["id"] == pid:
+            return panel
+
+
+
 class Grafana(commands.Cog):
 
     __author__ = "Predä"
@@ -178,7 +187,7 @@ class Grafana(commands.Cog):
                 await ctx.tick()
         except aiohttp.ClientResponseError as e:
             await ctx.send(
-                f"Unable to import graphs, are url and dashboard set?\n{e.status}: {e.message}"
+                f"Unable to import graphs, are URL and dashboard ID set?\n{e.status}: {e.message}"
             )
         except aiohttp.ClientConnectorError as e:
             await ctx.send(f"Unable to import graphs, are url and dashboard set?")
@@ -193,6 +202,19 @@ class Grafana(commands.Cog):
     @panels.command(name="add")
     async def graphs_add(self, ctx: commands.Context, pid: int, *, name: str):
         """Add certain graph to list manually"""
+        try:
+            async with self.session.get(
+                f"{await self.config.url()}/api/dashboards/uid/{await self.config.dashboard_id()}",
+                raise_for_status=True,
+            ) as r:
+                r = await r.json()
+                if not await find_panel(r, pid):
+                    await ctx.send("This panel is not found on current set dashboard.")
+                    return
+        except aiohttp.ClientResponseError as e:
+            await ctx.send(
+                f"Unable to import graphs, are URL and dashboard ID set?\n{e.status}: {e.message}"
+            )
         async with self.config.panels() as panels:
             panels[name.casefold().replace(" ", "_")] = pid
         await ctx.tick()

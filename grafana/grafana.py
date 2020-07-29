@@ -10,16 +10,7 @@ from redbot.core.commands.converter import TimedeltaConverter
 from redbot.core.utils.chat_formatting import box, humanize_list
 from tabulate import tabulate
 
-from .utils import Panel
-
-
-async def find_panel(panels: dict, pid: int):
-    """Find panel from dict by id
-    (find in dict by value)"""
-    for panel in panels:
-        if panel["id"] == pid:
-            return panel
-
+from .utils import Panel, find_panel
 
 
 class Grafana(commands.Cog):

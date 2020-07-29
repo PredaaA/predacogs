@@ -83,7 +83,10 @@ class Grafana(commands.Cog):
     @graph.command(name="list")
     async def list_graphs(self, ctx: commands.Context):
         """List all panels that can be used with `[p]graph` command."""
-        await ctx.send(box(humanize_list(list((await self.config.panels()).keys()))))
+        if panels := await self.config.panels():
+            await ctx.send(box(humanize_list(list(panels.keys()))))
+        else:
+            await ctx.send("No panels configured")
 
     @graph.group(name="set")
     @commands.is_owner()
@@ -104,7 +107,10 @@ class Grafana(commands.Cog):
         """Set dashboard id.
 
         This command needs id from URL.
-        Example: http://localhost:3000/d/**AbCdEf0G**/dashboard"""
+        Example: ```
+        http://localhost:3000/d/AbCdEf0G/dashboard
+                                ^ here ^
+        ```"""
         async with self.session.get(f"{await self.config.url()}/api/dashboards/uid/{did}") as r:
             try:
                 rj = await r.json()

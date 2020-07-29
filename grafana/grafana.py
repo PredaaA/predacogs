@@ -22,12 +22,11 @@ class Grafana(commands.Cog):
         self.bot = bot
         self.session = aiohttp.ClientSession()
         self.config = Config.get_conf(self, identifier=0xEA016D013C7B488894399820F2BE9874)
-        default_global = {
-            "url": "http://localhost:3000",
-            "dashboard_id": None,
-            "panels": {},
-        }
-        self.config.register_global(**default_global)
+        self.config.register_global(
+            url="http://localhost:3000",
+            dashboard_id=None,
+            panels={},
+        )
 
     def cog_unload(self):
         self.bot.loop.create_task(self.session.close())

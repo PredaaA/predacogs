@@ -8,6 +8,7 @@ from redbot.core import Config, commands
 from redbot.core.bot import Red
 from redbot.core.commands.converter import TimedeltaConverter
 from redbot.core.utils.chat_formatting import box, humanize_list
+from tabulate import tabulate
 
 from .utils import Panel
 
@@ -89,6 +90,11 @@ class Grafana(commands.Cog):
     async def set_graphs(self, ctx: commands.Context):
         """Setup grafana cog."""
 
+    @set_graphs.command(name="showsettings", aliases=["settings"])
+    async def graphs_settings(self, ctx: commands.Context):
+        """Show current settings."""
+        await ctx.send(box(tabulate(await self.config.all())))
+
     @set_graphs.command(name="url")
     async def grafana_url(self, ctx: commands.Context, *, url: str):
         """Setup url of your Grafana instance.
@@ -110,7 +116,10 @@ class Grafana(commands.Cog):
                 await ctx.send("Server returned not a JSON. Is it a Grafana server?")
                 return
         await self.config.url.set(url)
-        await ctx.tick()
+        await ctx.send(
+            f"Don't forget to setup dashboard via `{ctx.clean_prefix}graph set dashboard` too.\n"
+            f"After that you can use `{ctx.clean_prefix}graph set panels import` to import your panels."
+        )
 
     @set_graphs.command()
     async def dashboard(self, ctx: commands.Context, *, did: str):
@@ -132,7 +141,10 @@ class Grafana(commands.Cog):
                 )
                 return
         await self.config.dashboard_id.set(did)
-        await ctx.tick()
+        await ctx.send(
+            f"Make sure that you setup URL via `{ctx.clean_prefix}graph set url`.\n"
+            f"After that you can use `{ctx.clean_prefix}graph set panels import` to import your panels."
+        )
 
     @set_graphs.group()
     async def panels(self, ctx: commands.Context):

@@ -95,7 +95,7 @@ class Grafana(commands.Cog):
         """Show current settings."""
         config_without_panels = await self.config.all()
         del config_without_panels["panels"]
-        await ctx.send(box(tabulate(config_without_panels)))
+        await ctx.send(box(tabulate(config_without_panels.items())))
 
     @set_graphs.command(name="url")
     async def grafana_url(self, ctx: commands.Context, *, url: str):

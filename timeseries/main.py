@@ -50,6 +50,10 @@ class TimeSeries(commands.Cog):
     __author__ = ["Draper#6666", "Predä 。#1001"]
     __version__ = "1.1"
 
+    async def red_delete_data_for_user(self, **kwargs):
+        """Nothing to delete."""
+        return
+
     def __init__(self, bot: Red):
         self.bot = bot
         self.config = Config.get_conf(self, identifier=332980470202044161, force_registration=True)

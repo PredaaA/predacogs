@@ -208,7 +208,7 @@ class Grafana(commands.Cog):
                 raise_for_status=True,
             ) as r:
                 r = await r.json()
-                if not await find_panel(r, pid):
+                if not await find_panel(r["dashboard"]["panels"], pid):
                     await ctx.send("This panel is not found on current set dashboard.")
                     return
         except aiohttp.ClientResponseError as e:

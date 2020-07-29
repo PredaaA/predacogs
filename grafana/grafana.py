@@ -130,16 +130,20 @@ class Grafana(commands.Cog):
         http://localhost:3000/d/AbCdEf0G/dashboard
                                 ^ here ^
         ```"""
-        async with self.session.get(f"{await self.config.url()}/api/dashboards/uid/{did}") as r:
-            try:
-                rj = await r.json()
-            except aiohttp.ContentTypeError:
-                rj = {}
-            if r.status != 200:
-                await ctx.send(
-                    f"Unable to found provided dashboard: {rj.get('message') or 'Unknown error, did you set up an url?'}"
-                )
-                return
+        try:
+            async with self.session.get(f"{await self.config.url()}/api/dashboards/uid/{did}") as r:
+                try:
+                    rj = await r.json()
+                except aiohttp.ContentTypeError:
+                    rj = {}
+                if r.status != 200:
+                    await ctx.send(
+                        f"Unable to found provided dashboard: {rj.get('message') or 'Unknown error, did you set up an url?'}"
+                    )
+                    return
+        except aiohttp.ClientConnectorError:
+            await ctx.send("Server did not respond. Make sure that URL setting is set correctly")
+            return
         await self.config.dashboard_id.set(did)
         await ctx.send(
             f"Make sure that you setup URL via `{ctx.clean_prefix}graph set url`.\n"

@@ -23,7 +23,7 @@ async def find_panel(panels: dict, pid: int):
 
 
 class Grafana(commands.Cog):
-
+    """Grafana graphs in your Discord!"""
     __author__ = "Predä"
     __version__ = "1.0"
 
@@ -194,14 +194,14 @@ class Grafana(commands.Cog):
 
     @panels.command(name="remove")
     async def graphs_remove(self, ctx: commands.Context, *, panel: Panel):
-        """Remove certain graph from list"""
+        """Remove certain graph from list."""
         async with self.config.panels() as panels:
             del panels[panel.name]
         await ctx.tick()
 
     @panels.command(name="add")
     async def graphs_add(self, ctx: commands.Context, pid: int, *, name: str):
-        """Add certain graph to list manually"""
+        """Add certain graph to list manually."""
         try:
             async with self.session.get(
                 f"{await self.config.url()}/api/dashboards/uid/{await self.config.dashboard_id()}",

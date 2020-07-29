@@ -15,7 +15,8 @@ from .utils import Panel, find_panel
 
 class Grafana(commands.Cog):
     """Grafana graphs in your Discord!"""
-    __author__ = "Predä"
+
+    __author__ = ["Predä", "Fixator10"]
     __version__ = "1.0"
 
     def __init__(self, bot: Red):
@@ -23,9 +24,7 @@ class Grafana(commands.Cog):
         self.session = aiohttp.ClientSession()
         self.config = Config.get_conf(self, identifier=0xEA016D013C7B488894399820F2BE9874)
         self.config.register_global(
-            url="http://localhost:3000",
-            dashboard_id=None,
-            panels={},
+            url="http://localhost:3000", dashboard_id=None, panels={},
         )
 
     def cog_unload(self):
@@ -34,7 +33,7 @@ class Grafana(commands.Cog):
     def format_help_for_context(self, ctx: commands.Context) -> str:
         """Thanks Sinbad!"""
         pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}"
+        return f"{pre_processed}\n\nAuthors: {', '.join(self.__author__)}\nCog Version: {self.__version__}"
 
     async def fetch_grafana(self, **kwargs):
         from_time = kwargs.get("timedelta")

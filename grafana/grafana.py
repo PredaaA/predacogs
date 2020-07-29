@@ -17,14 +17,12 @@ from .utils import Panel
 class Grafana(commands.Cog):
 
     __author__ = "Predä"
-    __version__ = "0.0.0"  # TODO: Preda, change this in PR or after PR
+    __version__ = "1.0"
 
     def __init__(self, bot: Red):
         self.bot = bot
         self.session = aiohttp.ClientSession()
-        self.config = Config.get_conf(
-            self, identifier=0xEA016D013C7B488894399820F2BE9874
-        )  # TODO: Check ID and change to something else if needed
+        self.config = Config.get_conf(self, identifier=0xEA016D013C7B488894399820F2BE9874)
         default_global = {
             "url": "http://localhost:3000",
             "dashboard_id": None,

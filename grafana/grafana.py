@@ -131,7 +131,9 @@ class Grafana(commands.Cog):
                                 ^ here ^
         ```"""
         try:
-            async with self.session.get(f"{await self.config.url()}/api/dashboards/uid/{did}") as r:
+            async with self.session.get(
+                f"{await self.config.url()}/api/dashboards/uid/{did}"
+            ) as r:
                 try:
                     rj = await r.json()
                 except aiohttp.ContentTypeError:
@@ -142,7 +144,7 @@ class Grafana(commands.Cog):
                     )
                     return
         except aiohttp.ClientConnectorError:
-            await ctx.send("Server did not respond. Make sure that URL setting is set correctly")
+            await ctx.send("Server did not respond. Make sure that URL setting is set correctly.")
             return
         await self.config.dashboard_id.set(did)
         await ctx.send(

@@ -1,0 +1,10 @@
+{
+  "author": ["Predä", "Fixator10"],
+  "install_msg": "Thank you for installing the Grafana cog!\nUse `[p]help Grafana` to get all commands.",
+  "name": "Grafana",
+  "short": "Grafana graphs in your Discord!",
+  "description": "Grafana graphs in your Discord!",
+  "tags": ["graphs", "grafana", "stats", "statistics"],
+  "requirements": ["tabulate"],
+  "min_bot_version": "3.3.10"
+}

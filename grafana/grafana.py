@@ -46,7 +46,7 @@ class Grafana(commands.Cog):
             "width": 1000,
             "height": 500,
         }
-        async with self.bot.session.get(
+        async with self.session.get(
             f"{await self.config.url()}/render/d-solo/" f"{await self.config.dashboard_id()}",
             params=params,
         ) as resp:
@@ -128,7 +128,7 @@ class Grafana(commands.Cog):
     async def graphs_import(self, ctx: commands.Context):
         """Automatically import all graphs from dashboard, overwriting already saved."""
         try:
-            async with self.bot.session.get(
+            async with self.session.get(
                 f"{await self.config.url()}/api/dashboards/uid/{await self.config.dashboard_id()}",
                 raise_for_status=True,
             ) as r:

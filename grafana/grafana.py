@@ -48,9 +48,10 @@ class Grafana(commands.Cog):
             "panelId": kwargs.get("panelid"),
             "width": 1000,
             "height": 500,
+            "tz": "UTC",
         }
         async with self.session.get(
-            f"{await self.config.url()}/render/d-solo/" f"{await self.config.dashboard_id()}",
+            f"{await self.config.url()}/render/d-solo/{await self.config.dashboard_id()}",
             params=params,
         ) as resp:
             if resp.status != 200:

@@ -242,7 +242,13 @@ async def write_bot_data(bot: Red, config_cache: SettingCacheManager):
                             else:
                                 temp_data["Humans with Custom Status"].add(member.id)
                     if not streaming:
-                        if member.status is discord.Status.online:
+                        if member.status is not discord.Status.offline:
+                            temp_data["Users Connected"].add(member.id)
+                            if member.bot:
+                                temp_data["Bots Connected"].add(member.id)
+                            else:
+                                temp_data["Humans Connected"].add(member.id)
+                        elif member.status is discord.Status.online:
                             temp_data["Users Online"].add(member.id)
                             if member.bot:
                                 temp_data["Bots Online"].add(member.id)

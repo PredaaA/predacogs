@@ -248,7 +248,7 @@ async def write_bot_data(bot: Red, config_cache: SettingCacheManager):
                                 temp_data["Bots Connected"].add(member.id)
                             else:
                                 temp_data["Humans Connected"].add(member.id)
-                        elif member.status is discord.Status.online:
+                        if member.status is discord.Status.online:
                             temp_data["Users Online"].add(member.id)
                             if member.bot:
                                 temp_data["Bots Online"].add(member.id)

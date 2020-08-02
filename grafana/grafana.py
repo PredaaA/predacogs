@@ -105,20 +105,28 @@ class Grafana(commands.Cog):
         """Setup url of your Grafana instance.
 
         Default: `http://localhost:3000`"""
-        async with self.session.get(f"{url}/api/health") as r:
-            if r.status != 200:
-                await ctx.send(f"Incorrect URL. HTTP error returned: {r.status}")
-                return
+        async with ctx.typing():
             try:
-                if j := await r.json():
-                    if j.get("database") != "ok":
-                        await ctx.send("API didnt returned right state of DB, is your Grafana ok?")
+                async with self.session.get(f"{url}/api/health") as r:
+                    if r.status != 200:
+                        await ctx.send(f"Incorrect URL. HTTP error returned: {r.status}")
                         return
-                else:
-                    await ctx.send("Server returned not a JSON. Is it a Grafana server?")
-                    return
-            except aiohttp.ContentTypeError:
-                await ctx.send("Server returned not a JSON. Is it a Grafana server?")
+                    try:
+                        if j := await r.json():
+                            if j.get("database") != "ok":
+                                await ctx.send("API didnt returned right state of DB, is your Grafana ok?")
+                                return
+                        else:
+                            await ctx.send("Server returned not a JSON. Is it a Grafana server?")
+                            return
+                    except aiohttp.ContentTypeError:
+                        await ctx.send("Server returned not a JSON. Is it a Grafana server?")
+                        return
+            except aiohttp.InvalidURL:
+                await ctx.send("This is not a valid URL. Check your input and try again.")
+                return
+            except aiohttp.ClientConnectorError:
+                await ctx.send("Server did not respond. Check your input and try again.")
                 return
         await self.config.url.set(url)
         await ctx.send(

@@ -122,10 +122,10 @@ class Grafana(commands.Cog):
                                 )
                                 return
                         else:
-                            await ctx.send("Server returned not a JSON. Is it a Grafana server?")
+                            await ctx.send("That URL hasn't returned a JSON. Is it a Grafana server?")
                             return
                     except aiohttp.ContentTypeError:
-                        await ctx.send("Server returned not a JSON. Is it a Grafana server?")
+                        await ctx.send("That URL hasn't returned a JSON. Is it a Grafana server?")
                         return
             except aiohttp.InvalidURL:
                 await ctx.send("This is not a valid URL. Check your input and try again.")

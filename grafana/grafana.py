@@ -105,6 +105,9 @@ class Grafana(commands.Cog):
         """Setup url of your Grafana instance.
 
         Default: `http://localhost:3000`"""
+        if not url.startswith("http"):
+            url = "http://" + url
+        url = url.rstrip("/")
         async with ctx.typing():
             try:
                 async with self.session.get(f"{url}/api/health") as r:
@@ -114,7 +117,9 @@ class Grafana(commands.Cog):
                     try:
                         if j := await r.json():
                             if j.get("database") != "ok":
-                                await ctx.send("API didnt returned right state of DB, is your Grafana ok?")
+                                await ctx.send(
+                                    "API didnt returned right state of DB, is your Grafana ok?"
+                                )
                                 return
                         else:
                             await ctx.send("Server returned not a JSON. Is it a Grafana server?")
@@ -153,7 +158,8 @@ class Grafana(commands.Cog):
                     rj = {}
                 if r.status != 200:
                     await ctx.send(
-                        f"Unable to found provided dashboard: {rj.get('message') or 'Unknown error, did you set up an url?'}"
+                        "Unable to found provided dashboard: "
+                        f"{rj.get('message') or 'Unknown error, did you set up an url?'}"
                     )
                     return
         except aiohttp.ClientConnectorError:
@@ -181,7 +187,7 @@ class Grafana(commands.Cog):
                 r = await r.json()
                 await self.config.panels.set(
                     {
-                        p["title"].casefold().replace(" ", "_"): p["id"]
+                        p["title"].casefold().replace(" ", "_") or f"panel_{p['id']}": p["id"]
                         for p in r["dashboard"]["panels"]
                         if p["type"] != "row"
                     }
@@ -191,8 +197,8 @@ class Grafana(commands.Cog):
             await ctx.send(
                 f"Unable to import graphs, are URL and dashboard ID set?\n{e.status}: {e.message}"
             )
-        except aiohttp.ClientConnectorError as e:
-            await ctx.send(f"Unable to import graphs, are url and dashboard set?")
+        except aiohttp.ClientConnectorError:
+            await ctx.send(f"Unable to import graphs, are URL and dashboard ID set?")
 
     @panels.command(name="remove")
     async def graphs_remove(self, ctx: commands.Context, *, panel: Panel):
@@ -217,6 +223,8 @@ class Grafana(commands.Cog):
             await ctx.send(
                 f"Unable to import graphs, are URL and dashboard ID set?\n{e.status}: {e.message}"
             )
+        except aiohttp.ClientConnectorError:
+            await ctx.send(f"Unable to import graphs, are URL and dashboard ID set?")
         async with self.config.panels() as panels:
             panels[name.casefold().replace(" ", "_")] = pid
         await ctx.tick()

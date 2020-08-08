@@ -5,5 +5,6 @@
   "short": "Send random NSFW images from random subreddits and Nekobot API.",
   "description": "Send random NSFW images from random subreddits and Nekobot API in NSFW only channels.",
   "tags": ["nsfw", "reddit", "images"],
-  "min_bot_version": "3.3.10"
+  "min_bot_version": "3.3.10",
+  "end_user_data_statement": "This cog does not persistently store data or metadata about users."
 }

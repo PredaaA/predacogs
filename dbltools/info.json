@@ -6,5 +6,6 @@
   "description": "Tools to get bots information from top.gg, post stats, set a daily reward for votes, or give a role to new users who voted.",
   "tags": ["top.gg", "botlist", "stats"],
   "requirements": ["dblpy", "tabulate"],
-  "min_bot_version": "3.3.10"
+  "min_bot_version": "3.3.10",
+  "end_user_data_statement": "This cog does not persistently store data or metadata about users."
 }

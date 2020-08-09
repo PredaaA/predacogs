@@ -131,7 +131,8 @@ async def write_bot_data(bot: Red, config_cache: SettingCacheManager):
                 if vote_data.get("points"):
                     counter["Votes"] = vote_data["points"]
         server_counter["Total"] = len(bot.guilds)
-        counter["Discord Latency"] = int(round(bot.latency * 1000))
+        with contextlib.suppress(OverflowError):
+            counter["Discord Latency"] = int(round(bot.latency * 1000))
         counter["Shards"] = bot.shard_count
         async for guild in AsyncIter(bot.guilds, steps=100):
             assert isinstance(guild, discord.Guild)

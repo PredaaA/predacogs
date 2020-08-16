@@ -10,7 +10,7 @@ from .utils import rgetattr
 from .statements import (
     PRAGMA_journal_mode,
     PRAGMA_wal_autocheckpoint,
-    PRAGMA_read_uncommitted,
+    # PRAGMA_read_uncommitted,
     CREATE_TABLE_PERMA,
     DROP_TEMP,
     CREATE_TABLE_TEMP,
@@ -33,7 +33,7 @@ class Listeners:
         self.cursor = self._connection.cursor()
         self.cursor.execute(PRAGMA_journal_mode)
         self.cursor.execute(PRAGMA_wal_autocheckpoint)
-        self.cursor.execute(PRAGMA_read_uncommitted)
+        # self.cursor.execute(PRAGMA_read_uncommitted)
         self.cursor.execute(CREATE_TABLE_PERMA)
         self.cursor.execute(DROP_TEMP)
         self.cursor.execute(CREATE_TABLE_TEMP)

@@ -214,9 +214,9 @@ def nsfwcheck():
     async def predicate(ctx: commands.Context):
         if not ctx.guild:
             return True
-        if ctx.message.channel.is_nsfw():
+        if ctx.channel.is_nsfw():
             return True
-        if ctx.invoked_with == "help" and not ctx.message.channel.is_nsfw():
+        if ctx.invoked_with == "help" and not ctx.channel.is_nsfw():
             return False
         if ctx.invoked_with not in [k for k in ctx.bot.all_commands]:
             # For this weird issue with last version of discord.py (1.2.3) with non-existing commands.

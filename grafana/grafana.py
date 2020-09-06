@@ -1,6 +1,7 @@
 import time
 from datetime import datetime, timedelta
 from io import BytesIO
+from typing import Optional
 
 import aiohttp
 import discord
@@ -64,8 +65,9 @@ class Grafana(commands.Cog):
     async def graph(
         self,
         ctx: commands.Context,
+        from_time: Optional[TimedeltaConverter] = timedelta(days=1),
+        *,
         panel: Panel,
-        from_time: TimedeltaConverter = timedelta(days=1),
     ):
         """Render an image of a selected panel of [botname] metrics."""
         async with ctx.typing():
@@ -122,7 +124,9 @@ class Grafana(commands.Cog):
                                 )
                                 return
                         else:
-                            await ctx.send("That URL hasn't returned a JSON. Is it a Grafana server?")
+                            await ctx.send(
+                                "That URL hasn't returned a JSON. Is it a Grafana server?"
+                            )
                             return
                     except aiohttp.ContentTypeError:
                         await ctx.send("That URL hasn't returned a JSON. Is it a Grafana server?")

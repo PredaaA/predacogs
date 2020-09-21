@@ -4,7 +4,6 @@ from redbot.core import checks, commands
 from redbot.core.i18n import Translator, cog_i18n
 
 import contextlib
-from typing import Union
 
 from . import constants as sub
 from .core import Core, nsfwcheck

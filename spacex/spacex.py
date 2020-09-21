@@ -15,7 +15,6 @@ class SpaceX(Core):
     @commands.group()
     async def spacex(self, ctx: commands.Context):
         """SpaceX group commands."""
-        pass
 
     @spacex.command()
     @commands.bot_has_permissions(embed_links=True)

@@ -343,7 +343,6 @@ class FiveM(commands.Cog):
     @commands.group()
     async def fivem(self, ctx: commands.Context):
         """Multiple checks for a FiveM server."""
-        pass
 
     @fivem.command(name="players")
     async def fivem_players(self, ctx: commands.Context, *, ip: str):

@@ -17,7 +17,6 @@ import math
 import aiohttp
 import logging
 import asyncio
-import calendar
 from typing import Mapping
 from tabulate import tabulate
 from collections import Counter

@@ -58,7 +58,7 @@ class Grafana(commands.Cog):
                     return None, {}
                 return BytesIO(await resp.read()), params
         except aiohttp.ClientConnectionError:
-            return None
+            return None, {}
 
     @commands.group(invoke_without_command=True)
     @commands.cooldown(1, 2, commands.BucketType.user)

@@ -18,7 +18,7 @@ class Grafana(commands.Cog):
     """Grafana graphs in your Discord!"""
 
     __author__ = ["Predä", "Fixator10"]
-    __version__ = "1.0"
+    __version__ = "1.0.1"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""
@@ -28,9 +28,7 @@ class Grafana(commands.Cog):
         self.bot = bot
         self.session = aiohttp.ClientSession()
         self.config = Config.get_conf(self, identifier=0xEA016D013C7B488894399820F2BE9874)
-        self.config.register_global(
-            url="http://localhost:3000", dashboard_id=None, panels={},
-        )
+        self.config.register_global(url="http://localhost:3000", dashboard_id=None, panels={})
 
     def cog_unload(self):
         self.bot.loop.create_task(self.session.close())
@@ -51,13 +49,16 @@ class Grafana(commands.Cog):
             "height": 500,
             "tz": "UTC",
         }
-        async with self.session.get(
-            f"{await self.config.url()}/render/d-solo/{await self.config.dashboard_id()}",
-            params=params,
-        ) as resp:
-            if resp.status != 200:
-                return None, {}
-            return BytesIO(await resp.read()), params
+        try:
+            async with self.session.get(
+                f"{await self.config.url()}/render/d-solo/{await self.config.dashboard_id()}",
+                params=params,
+            ) as resp:
+                if resp.status != 200:
+                    return None, {}
+                return BytesIO(await resp.read()), params
+        except aiohttp.ClientConnectionError:
+            return None
 
     @commands.group(invoke_without_command=True)
     @commands.cooldown(1, 2, commands.BucketType.user)

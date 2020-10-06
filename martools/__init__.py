@@ -17,7 +17,7 @@ async def setup_after_ready(bot: Red):
                 command.name = f"m{command.name}"
             for alias in command.aliases:
                 if bot.get_command(alias):
-                    command.aliases[command.aliases.index(alias)] = f"i{alias}"
+                    command.aliases[command.aliases.index(alias)] = f"m{alias}"
     bot.add_cog(cog)
 
 

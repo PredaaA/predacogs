@@ -276,7 +276,7 @@ class DblTools(commands.Cog):
         """
         Show information of a chosen bot on Top.gg.
 
-        `bot`: Can be a mention or ID of a bot.
+        `bot`: Can be a mention or ID of a bot. If not provided will default to the used bot.
         """
         if bot is None:
             bot = self.bot.user
@@ -380,7 +380,7 @@ class DblTools(commands.Cog):
         """
         Send the widget of a chosen bot on Top.gg.
 
-        `bot`: Can be a mention or ID of a bot.
+        `bot`: Can be a mention or ID of a bot. If not provided will default to the used bot.
         """
         if bot is None:
             bot = self.bot.user

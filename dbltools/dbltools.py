@@ -34,7 +34,7 @@ class DblTools(commands.Cog):
     """Tools for Top.gg API."""
 
     __author__ = "Predä"
-    __version__ = "2.0.6"
+    __version__ = "2.0.7"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""
@@ -230,6 +230,12 @@ class DblTools(commands.Cog):
     @dailyrewards.command()
     async def toggle(self, ctx: commands.Context):
         """Set wether you want [p]daily command usable or not."""
+        if not await bank.is_global():
+            return await ctx.send(
+                _(
+                    "The bot's bank need to be global to use this feature.\nPlease use `{prefix}bankset toggleglobal` and try again."
+                ).format(ctx.clean_prefix)
+            )
         toggled = await self.config.daily_rewards.get_raw("toggled")
         await self.config.daily_rewards.set_raw("toggled", value=not toggled)
         msg = _("Daily command enabled.") if not toggled else _("Daily command disabled.")
@@ -254,6 +260,12 @@ class DblTools(commands.Cog):
     @dailyrewards.command()
     async def weekend(self, ctx: commands.Context):
         """Set weekend bonus."""
+        if not await bank.is_global():
+            return await ctx.send(
+                _(
+                    "The bot's bank need to be global to use this feature.\nPlease use `{prefix}bankset toggleglobal` and try again."
+                ).format(ctx.clean_prefix)
+            )
         toggled = await self.config.daily_rewards.get_raw("weekend_bonus_toggled")
         await self.config.daily_rewards.set_raw("weekend_bonus_toggled", value=not toggled)
         msg = _("Weekend bonus enabled.") if not toggled else _("Weekend bonus disabled.")
@@ -262,6 +274,12 @@ class DblTools(commands.Cog):
     @dailyrewards.command()
     async def weekendamount(self, ctx: commands.Context, amount: int = None):
         """Set the amount of currency that users will receive on week-end bonus."""
+        if not await bank.is_global():
+            return await ctx.send(
+                _(
+                    "The bot's bank need to be global to use this feature.\nPlease use `{prefix}bankset toggleglobal` and try again."
+                ).format(ctx.clean_prefix)
+            )
         if not amount:
             return await ctx.send_help()
         if amount >= await bank.get_max_balance():
@@ -456,6 +474,12 @@ class DblTools(commands.Cog):
         config = await self.config.all()
         if not config["daily_rewards"]["toggled"]:
             return
+        if not await bank.is_global():
+            return await ctx.send(
+                _(
+                    "The bot's bank need to be global to use this feature. It can be fixed by bot owner."
+                ).format(ctx.clean_prefix)
+            )
         author = ctx.author
         cur_time = int(time.time())
         next_daily = await self.config.user(author).next_daily()

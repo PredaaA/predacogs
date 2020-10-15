@@ -29,7 +29,7 @@ class DblToolsLite(commands.Cog):
     """Tools for Top.gg API."""
 
     __author__ = "Predä"
-    __version__ = "2.0.2_lite"
+    __version__ = "2.0.3_lite"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""

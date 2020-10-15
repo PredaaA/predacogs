@@ -238,6 +238,12 @@ class DblTools(commands.Cog):
     @dailyrewards.command()
     async def amount(self, ctx: commands.Context, amount: int = None):
         """Set the amount of currency that users will receive on daily rewards."""
+        if not await bank.is_global():
+            return await ctx.send(
+                _(
+                    "The bot's bank need to be global to use this feature.\nPlease use `{prefix}bankset toggleglobal` and try again."
+                ).format(ctx.clean_prefix)
+            )
         if not amount:
             return await ctx.send_help()
         if amount >= await bank.get_max_balance():
@@ -266,14 +272,14 @@ class DblTools(commands.Cog):
     @commands.command(aliases=["dblinfo"])
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def topgginfo(self, ctx: commands.Context, *, bot: discord.User):
+    async def topgginfo(self, ctx: commands.Context, *, bot: discord.User = None):
         """
         Show information of a chosen bot on Top.gg.
 
-        `bot`: Can be a mention or ID of a bot.
+        `bot`: Can be a mention or ID of a bot. If not provided will default to the used bot.
         """
         if bot is None:
-            return await ctx.send(_("This is not a valid Discord user."))
+            bot = self.bot.user
         if not bot.bot:
             return await ctx.send(_("This is not a bot user, please try again with a bot."))
 
@@ -370,14 +376,14 @@ class DblTools(commands.Cog):
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 1, commands.BucketType.user)
-    async def dblwidget(self, ctx: commands.Context, *, bot: discord.User):
+    async def dblwidget(self, ctx: commands.Context, *, bot: discord.User = None):
         """
         Send the widget of a chosen bot on Top.gg.
 
-        `bot`: Can be a mention or ID of a bot.
+        `bot`: Can be a mention or ID of a bot. If not provided will default to the used bot.
         """
         if bot is None:
-            return await ctx.send(_("This is not a valid Discord user."))
+            bot = self.bot.user
         if not bot.bot:
             return await ctx.send(_("This is not a bot user, please try again with a bot."))
 

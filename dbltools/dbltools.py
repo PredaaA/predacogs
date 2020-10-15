@@ -238,6 +238,8 @@ class DblTools(commands.Cog):
     @dailyrewards.command()
     async def amount(self, ctx: commands.Context, amount: int = None):
         """Set the amount of currency that users will receive on daily rewards."""
+        if not await bank.is_global():
+            return await ctx.send(_("The bot's bank need to be global to use this feature.\nPlease use `{prefix}bankset toggleglobal` and try again.").format(ctx.clean_prefix))
         if not amount:
             return await ctx.send_help()
         if amount >= await bank.get_max_balance():

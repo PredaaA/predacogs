@@ -72,6 +72,7 @@ class DblToolsLite(commands.Cog):
     async def topgginfo(self, ctx: commands.Context, *, bot: discord.User = None):
         """
         Show information of a chosen bot on Top.gg.
+
         `bot`: Can be a mention or ID of a bot.
         """
         if bot is None:

@@ -31,10 +31,10 @@ class Nsfw(Core):
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def cleandm(self, ctx: commands.Context, number: int):
         """
-            Delete a number specified of DM's from the bot.
+        Delete a number specified of DM's from the bot.
 
-            `<number>`: Number of messages from the bot you want
-            to delete in your DM's.
+        `<number>`: Number of messages from the bot you want
+        to delete in your DM's.
         """
         if ctx.guild:
             return await ctx.send(_("This command works only for DM's messages !"))

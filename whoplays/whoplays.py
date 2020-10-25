@@ -10,8 +10,8 @@ import operator
 
 class WhoPlays(commands.Cog):
     """
-        Look at what games people in the server are playing.
-        Rewritten for V3, from https://github.com/AznStevy/Maybe-Useful-Cogs/blob/master/whoplays/whoplays.py
+    Look at what games people in the server are playing.
+    Rewritten for V3, from https://github.com/AznStevy/Maybe-Useful-Cogs/blob/master/whoplays/whoplays.py
     """
 
     __author__ = ["Stevy", "Predä"]

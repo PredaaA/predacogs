@@ -169,10 +169,10 @@ class SpaceX(Core):
     @commands.bot_has_permissions(embed_links=True)
     async def rocket(self, ctx: commands.Context, details: Optional[bool] = False, *, rocket: str):
         """
-            Get informations about SpaceX rockets.
+        Get informations about SpaceX rockets.
 
-            `[details]`: Set to `True` for more details.
-            `<rocket>`: Name of an actual SpaceX rocket.
+        `[details]`: Set to `True` for more details.
+        `<rocket>`: Name of an actual SpaceX rocket.
         """
         if not rocket:
             return await ctx.send_help()
@@ -210,9 +210,9 @@ class SpaceX(Core):
     @spacex.command()
     async def rockets(self, ctx: commands.Context, details: bool = False):
         """
-            Get informations of all SpaceX rockets.
+        Get informations of all SpaceX rockets.
 
-            `[details]`: Set to True for more details.
+        `[details]`: Set to True for more details.
         """
         async with ctx.typing():
             resp = await self._get_data(ctx, "rockets")

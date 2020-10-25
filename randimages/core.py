@@ -23,7 +23,7 @@ _ = Translator("Image", __file__)
 class Core(commands.Cog):
 
     __author__ = "Predä"
-    __version__ = "1.1.9"
+    __version__ = "1.1.91"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""
@@ -316,8 +316,8 @@ class Core(commands.Cog):
 
     async def _maybe_embed(self, ctx: commands.Context, embed: Union[discord.Embed, str]):
         """
-            Function to choose if type of the message is an embed or not
-            and if not send a simple message.
+        Function to choose if type of the message is an embed or not
+        and if not send a simple message.
         """
         try:
             if isinstance(embed, discord.Embed):
@@ -331,11 +331,10 @@ class Core(commands.Cog):
         self, ctx: commands.Context, name: str, emoji: str, sub: list, details: bool = False
     ):
         """Main function called in all Reddit API commands."""
-        async with ctx.typing():
-            if details:
-                embed = await self._make_embed_reddit_details(ctx, sub, name, emoji)
-            else:
-                embed = await self._make_embed_reddit_simple(ctx, sub, name, emoji)
+        if details:
+            embed = await self._make_embed_reddit_details(ctx, sub, name, emoji)
+        else:
+            embed = await self._make_embed_reddit_simple(ctx, sub, name, emoji)
         return await self._maybe_embed(ctx, embed)
 
     async def _send_other_msg(
@@ -351,15 +350,14 @@ class Core(commands.Cog):
         facts_arg: Optional[str] = None,
     ):
         """Main function called in all others APIs commands."""
-        async with ctx.typing():
-            if facts:
-                embed = await self._make_embed_others_facts(
-                    ctx, name, emoji, img_url, facts_url, facts_arg, img_arg, source
-                )
-            else:
-                embed = await self._make_embed_others_simple(
-                    ctx, name, emoji, img_url, img_arg, source
-                )
+        if facts:
+            embed = await self._make_embed_others_facts(
+                ctx, name, emoji, img_url, facts_url, facts_arg, img_arg, source
+            )
+        else:
+            embed = await self._make_embed_others_simple(
+                ctx, name, emoji, img_url, img_arg, source
+            )
         return await self._maybe_embed(ctx, embed)
 
     @staticmethod

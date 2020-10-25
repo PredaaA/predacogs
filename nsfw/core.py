@@ -20,7 +20,7 @@ _ = Translator("Nsfw", __file__)
 class Core(commands.Cog):
 
     __author__ = ["Predä", "aikaterna"]
-    __version__ = "2.3.7"
+    __version__ = "2.3.8"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""
@@ -165,8 +165,8 @@ class Core(commands.Cog):
 
     async def _maybe_embed(self, ctx: commands.Context, embed: Union[discord.Embed, str]):
         """
-            Function to choose if type of the message is an embed or not
-            and if not send a simple message.
+        Function to choose if type of the message is an embed or not
+        and if not send a simple message.
         """
         try:
             if isinstance(embed, discord.Embed):
@@ -178,16 +178,14 @@ class Core(commands.Cog):
 
     async def _send_msg(self, ctx: commands.Context, name: str, sub: str = None):
         """Main function called in all Reddit API commands."""
-        async with ctx.typing():
-            embed = await self._make_embed(ctx, sub, name)
+        embed = await self._make_embed(ctx, sub, name)
         return await self._maybe_embed(ctx, embed=embed)
 
     async def _send_other_msg(
         self, ctx: commands.Context, name: str, arg: str, source: str, url: str = None
     ):
         """Main function called in all others APIs commands."""
-        async with ctx.typing():
-            embed = await self._make_embed_other(ctx, name, url, arg, source)
+        embed = await self._make_embed_other(ctx, name, url, arg, source)
         return await self._maybe_embed(ctx, embed)
 
     @staticmethod
@@ -207,8 +205,8 @@ class Core(commands.Cog):
 
 def nsfwcheck():
     """
-        Custom check that hide all commands used with it in the help formatter
-        and block usage of them if used in a non-nsfw channel.
+    Custom check that hide all commands used with it in the help formatter
+    and block usage of them if used in a non-nsfw channel.
     """
 
     async def predicate(ctx: commands.Context):

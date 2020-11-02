@@ -15,7 +15,7 @@ try:
 except ImportError:
     Query = None
 
-from .utils import rgetattr
+from .utils import rgetattr, threadexec
 from .listeners import Listeners
 from .statements import (
     SELECT_PERMA_GLOBAL,
@@ -63,7 +63,9 @@ class MartTools(Listeners, commands.Cog):
         else:
             query = SELECT_PERMA_SINGLE
             condition = {"event": key, "guild_id": id}
-        result = list(self.cursor.execute(query, condition))
+
+        output = threadexec(self.cursor.execute, query, condition)
+        result = list(output)
         if raw:
             return result[0][0] if result else 0
         return humanize_number(result[0][0] if result else 0)
@@ -75,7 +77,8 @@ class MartTools(Listeners, commands.Cog):
         else:
             query = SELECT_TEMP_SINGLE
             condition = {"event": key, "guild_id": id}
-        result = list(self.cursor.execute(query, condition))
+        output = threadexec(self.cursor.execute, query, condition)
+        result = list(output)
         if raw:
             return result[0][0] if result else 0
         return humanize_number(result[0][0] if result else 0)
@@ -208,7 +211,8 @@ class MartTools(Listeners, commands.Cog):
         avatar = self.bot.user.avatar_url_as(static_format="png")
         query = SELECT_PERMA_SINGLE
         condition = {"event": "creation_time", "guild_id": -1000}
-        result = list(self.cursor.execute(query, condition))
+        output = threadexec(self.cursor.execute, query, condition)
+        result = list(output)
         delta = datetime.utcnow() - datetime.utcfromtimestamp(result[0][0])
         uptime = humanize_timedelta(timedelta=delta)
         ll_players = "{}/{}".format(

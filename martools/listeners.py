@@ -6,7 +6,7 @@ from redbot.core.data_manager import cog_data_path
 import apsw
 import time
 
-from .utils import rgetattr
+from .utils import rgetattr, threadexec
 from .statements import (
     PRAGMA_journal_mode,
     PRAGMA_wal_autocheckpoint,
@@ -31,17 +31,18 @@ class Listeners:
 
         self._connection = apsw.Connection(str(cog_data_path(self) / "MartTools.db"))
         self.cursor = self._connection.cursor()
-        self.cursor.execute(PRAGMA_journal_mode)
-        self.cursor.execute(PRAGMA_wal_autocheckpoint)
-        # self.cursor.execute(PRAGMA_read_uncommitted)
-        self.cursor.execute(CREATE_TABLE_PERMA)
-        self.cursor.execute(DROP_TEMP)
-        self.cursor.execute(CREATE_TABLE_TEMP)
-        self.cursor.execute(INSERT_PERMA_DO_NOTHING, (-1000, "creation_time", time.time()))
+
+        threadexec(self.cursor.execute, PRAGMA_journal_mode)
+        threadexec(self.cursor.execute, PRAGMA_wal_autocheckpoint)
+        threadexec(self.cursor.execute, CREATE_TABLE_PERMA)
+        threadexec(self.cursor.execute, DROP_TEMP)
+        threadexec(self.cursor.execute, CREATE_TABLE_TEMP)
+        threadexec(self.cursor.execute, INSERT_PERMA_DO_NOTHING, (-1000, "creation_time", time.time()))
 
     def upsert(self, id: int, event: str):
-        self.cursor.execute(UPSERT_PERMA, (id, event))
-        self.cursor.execute(UPSERT_TEMP, (id, event))
+        threadexec(self.cursor.execute, UPSERT_PERMA, (id, event))
+        threadexec(self.cursor.execute, UPSERT_TEMP, (id, event))
+
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error, unhandled_by_cog=False):

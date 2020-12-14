@@ -73,7 +73,6 @@ class MartTools(Listeners, commands.Cog):
         threadexec(self.cursor.execute, PRAGMA_wal_autocheckpoint)
         threadexec(self.cursor.execute, CREATE_TABLE)
         threadexec(self.cursor.execute, CREATE_VERSION_TABLE)
-        threadexec(self.cursor.execute, INSERT_DO_NOTHING, ("creation_time", time.time()))
 
         try:
             check_result = list(threadexec(self.cursor.execute, "SELECT * FROM bot_stats_perma"))
@@ -83,6 +82,8 @@ class MartTools(Listeners, commands.Cog):
         else:
             if check_result:
                 await self.__migrate_data()
+
+        threadexec(self.cursor.execute, INSERT_DO_NOTHING, ("creation_time", time.time()))
 
         await self.__populate_cache()
 
@@ -97,7 +98,7 @@ class MartTools(Listeners, commands.Cog):
 
         old_value = list(
             threadexec(
-                self.cursor.execute, SELECT_OLD, {"guild_id": -1000, "event": "creation_time"}
+                self.cursor.execute, SELECT_OLD, {"event": "creation_time", "guild_id": -1000}
             )
         )
         threadexec(

@@ -6,6 +6,7 @@ __red_end_user_data_statement__ = (
 )
 
 
-def setup(bot: Red):
+async def setup(bot: Red):
     cog = MartTools(bot)
     bot.add_cog(cog)
+    await cog.initialize()

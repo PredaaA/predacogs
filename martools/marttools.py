@@ -1,34 +1,36 @@
-import discord
-
-from redbot.core.bot import Red
-from redbot.core import Config, bank, commands
-from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils.chat_formatting import (
-    bold,
-    box,
-    humanize_timedelta,
-    humanize_number,
-)
-
-try:
-    from redbot.cogs.audio.audio_dataclasses import Query
-except ImportError:
-    Query = None
-
-from .utils import rgetattr, threadexec
-from .listeners import Listeners
-from .statements import (
-    SELECT_PERMA_GLOBAL,
-    SELECT_PERMA_SINGLE,
-    SELECT_TEMP_GLOBAL,
-    SELECT_TEMP_SINGLE,
-)
+import asyncio
+import time
+import logging
+from collections import Counter
+from datetime import datetime
+from typing import Union
 
 import apsw
+import discord
 import lavalink
-from typing import Union
-from datetime import datetime
+from redbot.cogs.audio.audio_dataclasses import Query
+from redbot.core import Config, bank, commands
+from redbot.core.bot import Red
+from redbot.core.cog_manager import cog_data_path
+from redbot.core.i18n import Translator, cog_i18n
+from redbot.core.utils.chat_formatting import bold, box, humanize_number, humanize_timedelta
 
+from .listeners import Listeners
+from .statements import (
+    CREATE_TABLE,
+    CREATE_VERSION_TABLE,
+    DROP_OLD_PERMA,
+    DROP_OLD_TEMP,
+    GET_EVENT_VALUE,
+    INSERT_DO_NOTHING,
+    SELECT_OLD,
+    UPSERT,
+    PRAGMA_journal_mode,
+    PRAGMA_wal_autocheckpoint,
+)
+from .utils import events_names, threadexec
+
+log = logging.getLogger("red.predacogs.martools")
 _ = Translator("MartTools", __file__)
 
 
@@ -37,51 +39,99 @@ class MartTools(Listeners, commands.Cog):
     """Multiple tools that are originally used on Martine."""
 
     __author__ = ["Predä", "Draper"]
-    __version__ = "1.8"
+    __version__ = "2.0.0a"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""
         return
 
     def __init__(self, bot: Red):
-        super().__init__()
         self.bot = bot
+        self._connection = apsw.Connection(str(cog_data_path(self) / "MartTools.db"))
+        self.cursor = self._connection.cursor()
+        self.cache = {"perma": Counter(), "session": Counter()}
         self.uptime = datetime.utcnow()
 
+        self.dump_cache_task = self.bot.loop.create_task(self.__dump_cache_to_db())
+
     def cog_unload(self):
+        self.dump_cache_task.cancel()
+
+        for event_name, value in self.cache["perma"].items():
+            threadexec(self.cursor.execute, UPSERT, (event_name, value))
+
         self._connection.close()
+        del self.cache
 
     def format_help_for_context(self, ctx: commands.Context) -> str:
         """Thanks Sinbad!"""
         pre_processed = super().format_help_for_context(ctx)
         return f"{pre_processed}\n\nAuthors: {', '.join(self.__author__)}\nCog Version: {self.__version__}"
 
-    def fetch(self, key, id=None, raw: bool = False) -> Union[int, str]:
-        if id is None:
-            query = SELECT_PERMA_GLOBAL
-            condition = {"event": key}
-        else:
-            query = SELECT_PERMA_SINGLE
-            condition = {"event": key, "guild_id": id}
+    async def initialize(self):
+        threadexec(self.cursor.execute, PRAGMA_journal_mode)
+        threadexec(self.cursor.execute, PRAGMA_wal_autocheckpoint)
+        threadexec(self.cursor.execute, CREATE_TABLE)
+        threadexec(self.cursor.execute, CREATE_VERSION_TABLE)
+        threadexec(self.cursor.execute, INSERT_DO_NOTHING, ("creation_time", time.time()))
 
-        output = threadexec(self.cursor.execute, query, condition)
-        result = list(output)
-        if raw:
-            return result[0][0] if result else 0
-        return humanize_number(result[0][0] if result else 0)
-
-    def get(self, key, id=None, raw: bool = False) -> Union[int, str]:
-        if id is None:
-            query = SELECT_TEMP_GLOBAL
-            condition = {"event": key}
+        try:
+            check_result = list(threadexec(self.cursor.execute, "SELECT * FROM bot_stats_perma"))
+        except apsw.SQLError:
+            await self.__populate_cache()
+            return
         else:
-            query = SELECT_TEMP_SINGLE
-            condition = {"event": key, "guild_id": id}
-        output = threadexec(self.cursor.execute, query, condition)
-        result = list(output)
+            if check_result:
+                await self.__migrate_data()
+
+        await self.__populate_cache()
+
+    async def __migrate_data(self):
+        for event_name in events_names:
+            result = list(threadexec(self.cursor.execute, SELECT_OLD, {"event": event_name}))
+            if not result:
+                continue
+
+            old_value = result[0][0]
+            threadexec(self.cursor.execute, UPSERT, (event_name, old_value))
+
+        threadexec(self.cursor.execute, DROP_OLD_TEMP)
+        threadexec(self.cursor.execute, DROP_OLD_PERMA)
+        threadexec(
+            self.cursor.execute,
+            (
+                "INSERT INTO version (version_num) "
+                "VALUES (2) "
+                "ON CONFLICT (version_num) "
+                "DO NOTHING"
+            ),
+        )
+
+    async def __populate_cache(self):
+        for event_name in events_names:
+            result = list(threadexec(self.cursor.execute, GET_EVENT_VALUE, {"event": event_name}))
+            if not result:
+                continue
+
+            self.cache["perma"][event_name] = result[0][0]
+
+        result = list(threadexec(self.cursor.execute, GET_EVENT_VALUE, {"event": "creation_time"}))
+        self.cache["perma"]["creation_time"] = result[0][0] if result else 0
+
+    async def __dump_cache_to_db(self):
+        await self.bot.wait_until_red_ready()
+        while True:
+            await asyncio.sleep(300)
+            try:
+                for event_name, value in self.cache["perma"].items():
+                    threadexec(self.cursor.execute, UPSERT, (event_name, value))
+            except Exception:
+                log.exception("Something went wrong in __dump_cache_to_db task:")
+
+    def get_value(self, key: str, perma: bool = False, raw: bool = False) -> Union[int, str]:
         if raw:
-            return result[0][0] if result else 0
-        return humanize_number(result[0][0] if result else 0)
+            return self.cache["perma" if perma else "session"][key]
+        return humanize_number(self.cache["perma" if perma else "session"][key])
 
     def get_bot_uptime(self):
         delta = datetime.utcnow() - self.uptime
@@ -90,7 +140,7 @@ class MartTools(Listeners, commands.Cog):
     def usage_counts_cpm(self, key: str, time: int = 60):
         delta = datetime.utcnow() - self.uptime
         minutes = delta.total_seconds() / time
-        total = self.get(key, raw=True)
+        total = self.get_value(key, raw=True)
         return total / minutes
 
     @commands.command()
@@ -168,22 +218,22 @@ class MartTools(Listeners, commands.Cog):
             "**Servers joined:** `{guild_join}` servers. (`{cpm_guild_join:.2f}`/hour)\n"
             "**Servers left:** `{guild_leave}` servers. (`{cpm_guild_leave:.2f}`/hour)"
         ).format(
-            commands_count=self.get("processed_commands"),
+            commands_count=self.get_value("processed_commands"),
             cpm_commands=self.usage_counts_cpm("processed_commands"),
-            errors_count=self.get("command_error"),
-            messages_read=self.get("messages_read"),
+            errors_count=self.get_value("command_error"),
+            messages_read=self.get_value("messages_read"),
             cpm_msgs=self.usage_counts_cpm("messages_read"),
-            messages_sent=self.get("msg_sent"),
+            messages_sent=self.get_value("msg_sent"),
             cpm_msgs_sent=self.usage_counts_cpm("msg_sent"),
             ll_players="`{}/{}`".format(
                 humanize_number(len(lavalink.active_players())),
                 humanize_number(len(lavalink.all_players())),
             ),
-            tracks_played=self.get("tracks_played"),
+            tracks_played=self.get_value("tracks_played"),
             cpm_tracks=self.usage_counts_cpm("tracks_played"),
-            guild_join=self.get("guild_join"),
+            guild_join=self.get_value("guild_join"),
             cpm_guild_join=self.usage_counts_cpm("guild_join", 3600),
-            guild_leave=self.get("guild_remove"),
+            guild_leave=self.get_value("guild_remove"),
             cpm_guild_leave=self.usage_counts_cpm("guild_remove", 3600),
         )
         if await ctx.embed_requested():
@@ -209,11 +259,9 @@ class MartTools(Listeners, commands.Cog):
         Permanent stats since first time that the cog has been loaded.
         """
         avatar = self.bot.user.avatar_url_as(static_format="png")
-        query = SELECT_PERMA_SINGLE
-        condition = {"event": "creation_time", "guild_id": -1000}
-        output = threadexec(self.cursor.execute, query, condition)
-        result = list(output)
-        delta = datetime.utcnow() - datetime.utcfromtimestamp(result[0][0])
+        delta = datetime.utcnow() - datetime.utcfromtimestamp(
+            self.get_value("creation_time", perma=True, raw=True)
+        )
         uptime = humanize_timedelta(timedelta=delta)
         ll_players = "{}/{}".format(
             humanize_number(len(lavalink.active_players())),
@@ -235,11 +283,11 @@ class MartTools(Listeners, commands.Cog):
                     "DMs Received        : {dms_received}\n"
                 ).format_map(
                     {
-                        "messages_read": self.fetch("messages_read"),
-                        "msg_sent": self.fetch("msg_sent"),
-                        "messages_deleted": self.fetch("messages_deleted"),
-                        "messages_edited": self.fetch("messages_edited"),
-                        "dms_received": self.fetch("dms_received"),
+                        "messages_read": self.get_value("messages_read", perma=True),
+                        "msg_sent": self.get_value("msg_sent"),
+                        "messages_deleted": self.get_value("messages_deleted", perma=True),
+                        "messages_edited": self.get_value("messages_edited", perma=True),
+                        "dms_received": self.get_value("dms_received", perma=True),
                     }
                 ),
                 lang="prolog",
@@ -255,9 +303,9 @@ class MartTools(Listeners, commands.Cog):
                     "Sessions Resumed    : {sessions_resumed}\n"
                 ).format_map(
                     {
-                        "processed_commands": self.fetch("processed_commands"),
-                        "command_error": self.fetch("command_error"),
-                        "sessions_resumed": self.fetch("sessions_resumed"),
+                        "processed_commands": self.get_value("processed_commands", perma=True),
+                        "command_error": self.get_value("command_error", perma=True),
+                        "sessions_resumed": self.get_value("sessions_resumed", perma=True),
                     }
                 ),
                 lang="prolog",
@@ -271,8 +319,8 @@ class MartTools(Listeners, commands.Cog):
                     "Guilds Joined       : {guild_join}\n" "Guilds Left         : {guild_remove}\n"
                 ).format_map(
                     {
-                        "guild_join": self.fetch("guild_join"),
-                        "guild_remove": self.fetch("guild_remove"),
+                        "guild_join": self.get_value("guild_join", perma=True),
+                        "guild_remove": self.get_value("guild_remove", perma=True),
                     }
                 ),
                 lang="prolog",
@@ -289,10 +337,10 @@ class MartTools(Listeners, commands.Cog):
                     "Unbanned Users      : {members_unbanned}\n"
                 ).format_map(
                     {
-                        "new_members": self.fetch("new_members"),
-                        "members_left": self.fetch("members_left"),
-                        "members_banned": self.fetch("members_banned"),
-                        "members_unbanned": self.fetch("members_unbanned"),
+                        "new_members": self.get_value("new_members", perma=True),
+                        "members_left": self.get_value("members_left", perma=True),
+                        "members_banned": self.get_value("members_banned", perma=True),
+                        "members_unbanned": self.get_value("members_unbanned", perma=True),
                     }
                 ),
                 lang="prolog",
@@ -308,9 +356,9 @@ class MartTools(Listeners, commands.Cog):
                     "Roles Updated       : {roles_updated}\n"
                 ).format_map(
                     {
-                        "roles_added": self.fetch("roles_added"),
-                        "roles_removed": self.fetch("roles_removed"),
-                        "roles_updated": self.fetch("roles_updated"),
+                        "roles_added": self.get_value("roles_added", perma=True),
+                        "roles_removed": self.get_value("roles_removed", perma=True),
+                        "roles_updated": self.get_value("roles_updated", perma=True),
                     }
                 ),
                 lang="prolog",
@@ -328,11 +376,11 @@ class MartTools(Listeners, commands.Cog):
                     "Emoji Updated       : {emojis_updated}\n"
                 ).format_map(
                     {
-                        "reactions_added": self.fetch("reactions_added"),
-                        "reactions_removed": self.fetch("reactions_removed"),
-                        "emojis_added": self.fetch("emojis_added"),
-                        "emojis_removed": self.fetch("emojis_removed"),
-                        "emojis_updated": self.fetch("emojis_updated"),
+                        "reactions_added": self.get_value("reactions_added", perma=True),
+                        "reactions_removed": self.get_value("reactions_removed", perma=True),
+                        "emojis_added": self.get_value("emojis_added", perma=True),
+                        "emojis_removed": self.get_value("emojis_removed", perma=True),
+                        "emojis_updated": self.get_value("emojis_updated", perma=True),
                     }
                 ),
                 lang="prolog",
@@ -347,8 +395,10 @@ class MartTools(Listeners, commands.Cog):
                     "Tracks Played       : {tracks_played}\n"
                     "Number Of Players   : {ll_players}"
                 ).format(
-                    users_joined_bot_music_room=self.fetch("users_joined_bot_music_room"),
-                    tracks_played=self.fetch("tracks_played"),
+                    users_joined_bot_music_room=self.get_value(
+                        "users_joined_bot_music_room", perma=True
+                    ),
+                    tracks_played=self.get_value("tracks_played", perma=True),
                     ll_players=ll_players,
                 ),
                 lang="prolog",
@@ -373,18 +423,18 @@ class MartTools(Listeners, commands.Cog):
                         "Twitch Tracks       : {twitch_tracks}\n"
                         "Other Tracks        : {other_tracks}\n"
                     ).format(
-                        streams_played=self.fetch("streams_played"),
-                        yt_streams_played=self.fetch("yt_streams_played"),
-                        mixer_streams_played=self.fetch("mixer_streams_played"),
-                        ttv_streams_played=self.fetch("ttv_streams_played"),
-                        other_streams_played=self.fetch("other_streams_played"),
-                        youtube_tracks=self.fetch("youtube_tracks"),
-                        soundcloud_tracks=self.fetch("soundcloud_tracks"),
-                        bandcamp_tracks=self.fetch("bandcamp_tracks"),
-                        vimeo_tracks=self.fetch("vimeo_tracks"),
-                        mixer_tracks=self.fetch("mixer_tracks"),
-                        twitch_tracks=self.fetch("twitch_tracks"),
-                        other_tracks=self.fetch("other_tracks"),
+                        streams_played=self.get_value("streams_played", perma=True),
+                        yt_streams_played=self.get_value("yt_streams_played", perma=True),
+                        mixer_streams_played=self.get_value("mixer_streams_played", perma=True),
+                        ttv_streams_played=self.get_value("ttv_streams_played", perma=True),
+                        other_streams_played=self.get_value("other_streams_played", perma=True),
+                        youtube_tracks=self.get_value("youtube_tracks", perma=True),
+                        soundcloud_tracks=self.get_value("soundcloud_tracks", perma=True),
+                        bandcamp_tracks=self.get_value("bandcamp_tracks", perma=True),
+                        vimeo_tracks=self.get_value("vimeo_tracks", perma=True),
+                        mixer_tracks=self.get_value("mixer_tracks", perma=True),
+                        twitch_tracks=self.get_value("twitch_tracks", perma=True),
+                        other_tracks=self.get_value("other_tracks", perma=True),
                     ),
                     lang="prolog",
                 ),

@@ -7,136 +7,63 @@ PRAGMA wal_autocheckpoint;
 PRAGMA_read_uncommitted = """
 PRAGMA read_uncommitted = 1;
 """
-CREATE_TABLE_PERMA = """CREATE TABLE IF NOT EXISTS
-   bot_stats_perma 
-        (
-        guild_id INTEGER NOT NULL,
-        event TEXT NOT NULL,
-        quantity INTEGER DEFAULT 1,
-        PRIMARY KEY 
-          (
-            guild_id, 
-            event
-          )
-        );
-"""
-CREATE_TABLE_TEMP = """CREATE TABLE IF NOT EXISTS
-   bot_stats_temp 
-        (
-        guild_id INTEGER NOT NULL,
-        event TEXT NOT NULL,
-        quantity INTEGER DEFAULT 1,
-        PRIMARY KEY 
-          (
-            guild_id, 
-            event
-          )
-        );
-"""
-
-
-UPSERT_PERMA = """INSERT INTO 
-bot_stats_perma 
+CREATE_TABLE = """CREATE TABLE IF NOT EXISTS
+  bot_stats 
   (
-    guild_id, 
-    event
-  ) 
+    event TEXT NOT NULL,
+    quantity INTEGER DEFAULT 1,
+    PRIMARY KEY (event)
+  );
+"""
+CREATE_VERSION_TABLE = """CREATE TABLE IF NOT EXISTS
+  version 
+  (
+    version_num INTEGER DEFAULT 1,
+    PRIMARY KEY (version_num)
+  );
+"""
+GET_VERSION = """
+SELECT version_num
+FROM version
+"""
+
+UPSERT = """INSERT INTO 
+bot_stats 
+  (event, quantity) 
 VALUES 
-  (
-    ?, 
-    ?
-  )
+  (?, ?)
 ON CONFLICT
-  (
-    guild_id, 
-    event
-  ) 
+  (event) 
 DO UPDATE 
-  SET quantity = quantity + 1;
+  SET quantity = quantity;
 """
 
-INSERT_PERMA_DO_NOTHING = """INSERT INTO 
-bot_stats_perma 
-  (
-    guild_id, 
-    event,
-    quantity
-  ) 
+INSERT_DO_NOTHING = """INSERT INTO 
+bot_stats 
+  (event, quantity) 
 VALUES 
-  (
-    ?,
-    ?,
-    ?
-  )
+  (?, ?)
 ON CONFLICT
-  (
-    guild_id, 
-    event
-  ) 
+  (event) 
 DO NOTHING;
 """
 
-UPSERT_TEMP = """INSERT INTO 
-bot_stats_temp 
-  (
-    guild_id, 
-    event
-  ) 
-VALUES 
-  (
-    ?, 
-    ?
-  )
-ON CONFLICT
-  (
-    guild_id, 
-    event
-  ) 
-DO UPDATE 
-  SET quantity = quantity + 1;
-"""
-DROP_TEMP = """
-DROP TABLE IF EXISTS bot_stats_temp;
-"""
-
-SELECT_TEMP = """
-SELECT * 
-FROM bot_stats_temp
+GET_EVENT_VALUE = """
+SELECT quantity
+FROM bot_stats
 WHERE event 
 LIKE :event;
 """
 
-SELECT_PERMA = """
-SELECT * 
-FROM bot_stats_perma
-WHERE event 
-LIKE :event;
-"""
-
-SELECT_PERMA_GLOBAL = """
+SELECT_OLD = """
 SELECT sum(quantity) 
 FROM bot_stats_perma 
 WHERE event = :event
 GROUP BY event;
 """
-
-SELECT_TEMP_GLOBAL = """
-SELECT sum(quantity) 
-FROM bot_stats_temp 
-WHERE event = :event
-GROUP BY event;
+DROP_OLD_TEMP = """
+DROP TABLE IF EXISTS bot_stats_temp
 """
-
-SELECT_PERMA_SINGLE = """
-SELECT sum(quantity) 
-FROM bot_stats_perma 
-WHERE event = :event AND guild_id = :guild_id
-GROUP BY event;
-"""
-
-SELECT_TEMP_SINGLE = """
-SELECT sum(quantity) 
-FROM bot_stats_temp 
-WHERE event = :event AND guild_id = :guild_id
-GROUP BY event;
+DROP_OLD_PERMA = """
+DROP TABLE IF EXISTS bot_stats_perma
 """

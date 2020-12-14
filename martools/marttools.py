@@ -52,10 +52,13 @@ class MartTools(Listeners, commands.Cog):
         self.cache = {"perma": Counter(), "session": Counter()}
         self.uptime = datetime.utcnow()
 
+        self.init_task = self.bot.loop.create_task(self.initialize())
         self.dump_cache_task = self.bot.loop.create_task(self.__dump_cache_to_db())
 
     def cog_unload(self):
         self.dump_cache_task.cancel()
+        if self.init_task:
+            self.init_task.cancel()
 
         for event_name, value in self.cache["perma"].items():
             threadexec(self.cursor.execute, UPSERT, (event_name, value))

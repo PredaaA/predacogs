@@ -95,6 +95,9 @@ class MartTools(Listeners, commands.Cog):
             old_value = result[0][0]
             threadexec(self.cursor.execute, UPSERT, (event_name, old_value))
 
+        old_value = list(threadexec(self.cursor.execute, SELECT_OLD, {"event": "creation_time"}))
+        threadexec(self.cursor.execute, UPSERT, ("creation_time", old_value if old_value else time.time()))
+
         threadexec(self.cursor.execute, DROP_OLD_TEMP)
         threadexec(self.cursor.execute, DROP_OLD_PERMA)
         threadexec(
@@ -116,7 +119,7 @@ class MartTools(Listeners, commands.Cog):
             self.cache["perma"][event_name] = result[0][0]
 
         result = list(threadexec(self.cursor.execute, GET_EVENT_VALUE, {"event": "creation_time"}))
-        self.cache["perma"]["creation_time"] = result[0][0] if result else 0
+        self.cache["perma"]["creation_time"] = result[0][0] if result else time.time()
 
     async def __dump_cache_to_db(self):
         await self.bot.wait_until_red_ready()

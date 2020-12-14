@@ -95,8 +95,16 @@ class MartTools(Listeners, commands.Cog):
             old_value = result[0][0]
             threadexec(self.cursor.execute, UPSERT, (event_name, old_value))
 
-        old_value = list(threadexec(self.cursor.execute, SELECT_OLD, {"event": "creation_time"}))
-        threadexec(self.cursor.execute, UPSERT, ("creation_time", old_value[0][0] if old_value else time.time()))
+        old_value = list(
+            threadexec(
+                self.cursor.execute, SELECT_OLD, {"guild_id": -1000, "event": "creation_time"}
+            )
+        )
+        threadexec(
+            self.cursor.execute,
+            UPSERT,
+            ("creation_time", old_value[0][0] if old_value else time.time()),
+        )
 
         threadexec(self.cursor.execute, DROP_OLD_TEMP)
         threadexec(self.cursor.execute, DROP_OLD_PERMA)

@@ -1,3 +1,5 @@
+import contextlib
+
 import discord
 from redbot.cogs.audio.audio_dataclasses import Query
 from redbot.core import commands
@@ -9,8 +11,9 @@ class Listeners:
     cache: dict
 
     def upsert(self, key: str, value: int = 1):
-        self.cache["perma"][key] += value
-        self.cache["session"][key] += value
+        with contextlib.suppress(AttributeError):
+            self.cache["perma"][key] += value
+            self.cache["session"][key] += value
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error, unhandled_by_cog=False):

@@ -424,27 +424,23 @@ class MartTools(Listeners, commands.Cog):
                     _(
                         "Streams             : {streams_played}\n"
                         "YouTube Streams     : {yt_streams_played}\n"
-                        "Mixer Streams       : {mixer_streams_played}\n"
                         "Twitch Streams      : {ttv_streams_played}\n"
                         "Other Streams       : {streams_played}\n"
                         "YouTube Tracks      : {youtube_tracks}\n"
                         "Soundcloud Tracks   : {soundcloud_tracks}\n"
                         "Bandcamp Tracks     : {bandcamp_tracks}\n"
                         "Vimeo Tracks        : {vimeo_tracks}\n"
-                        "Mixer Tracks        : {mixer_tracks}\n"
                         "Twitch Tracks       : {twitch_tracks}\n"
                         "Other Tracks        : {other_tracks}\n"
                     ).format(
                         streams_played=self.get_value("streams_played", perma=True),
                         yt_streams_played=self.get_value("yt_streams_played", perma=True),
-                        mixer_streams_played=self.get_value("mixer_streams_played", perma=True),
                         ttv_streams_played=self.get_value("ttv_streams_played", perma=True),
                         other_streams_played=self.get_value("other_streams_played", perma=True),
                         youtube_tracks=self.get_value("youtube_tracks", perma=True),
                         soundcloud_tracks=self.get_value("soundcloud_tracks", perma=True),
                         bandcamp_tracks=self.get_value("bandcamp_tracks", perma=True),
                         vimeo_tracks=self.get_value("vimeo_tracks", perma=True),
-                        mixer_tracks=self.get_value("mixer_tracks", perma=True),
                         twitch_tracks=self.get_value("twitch_tracks", perma=True),
                         other_tracks=self.get_value("other_tracks", perma=True),
                     ),

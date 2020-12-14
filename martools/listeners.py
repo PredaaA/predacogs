@@ -125,8 +125,6 @@ class Listeners:
             self.upsert("streams_played")
         if track.is_stream and query.is_youtube:
             self.upsert("yt_streams_played")
-        if track.is_stream and query.is_mixer:
-            self.upsert("mixer_streams_played")
         if track.is_stream and query.is_twitch:
             self.upsert("ttv_streams_played")
         if track.is_stream and query.is_other:
@@ -139,8 +137,6 @@ class Listeners:
             self.upsert("bandcamp_tracks")
         if query.is_vimeo:
             self.upsert("vimeo_tracks")
-        if query.is_mixer:
-            self.upsert("mixer_tracks")
         if query.is_twitch:
             self.upsert("twitch_tracks")
         if query.is_other:

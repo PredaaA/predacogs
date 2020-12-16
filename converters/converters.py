@@ -41,22 +41,21 @@ class Converters(commands.Cog):
         """Convert a unix timestamp to a readable datetime."""
         try:
             convert = datetime.utcfromtimestamp(int(timestamp)).strftime("%Y-%m-%d %H:%M:%S")
+            g = datetime.fromtimestamp(int(timestamp))
+            curr = datetime.fromtimestamp(int(datetime.now().timestamp()))
+            secs = str((curr - g).total_seconds())
+            seconds = secs[1:][:-2] if "-" in secs else secs[:-2] if ".0" in secs else secs
+            delta = humanize_timedelta(seconds=int(seconds))
+            when = (
+                _("It will be in {}.").format(delta) if g > curr else _("It was {} ago.").format(delta)
+            )
+            await ctx.send(
+                _("Successfully converted `{timestamp}` to `{convert}`\n{when}").format(
+                    timestamp=int(timestamp), convert=convert, when=when
+                )
+            )
         except (ValueError, OverflowError, OSError):
             return await ctx.send(_("`{}` is not a valid timestamp.").format(timestamp))
-        g = datetime.fromtimestamp(int(timestamp))
-        curr = datetime.fromtimestamp(int(datetime.now().timestamp()))
-        secs = str((curr - g).total_seconds())
-        seconds = secs[1:][:-2] if "-" in secs else secs[:-2] if ".0" in secs else secs
-        delta = humanize_timedelta(seconds=int(seconds))
-        when = (
-            _("It will be in {}.").format(delta) if g > curr else _("It was {} ago.").format(delta)
-        )
-
-        await ctx.send(
-            _("Successfully converted `{timestamp}` to `{convert}`\n{when}").format(
-                timestamp=int(timestamp), convert=convert, when=when
-            )
-        )
 
     @conv.command()
     async def tounix(self, ctx: commands.Context, *, date: str):

@@ -19,4 +19,4 @@ jobs:
       - name: Black Formatter
         uses: lgeiger/black-action@v1.0.1
         with:
-          args: "--check --diff ."
+          args: "-l 99 --check --diff ."

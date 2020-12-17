@@ -37,12 +37,13 @@ class Listeners:
         threadexec(self.cursor.execute, CREATE_TABLE_PERMA)
         threadexec(self.cursor.execute, DROP_TEMP)
         threadexec(self.cursor.execute, CREATE_TABLE_TEMP)
-        threadexec(self.cursor.execute, INSERT_PERMA_DO_NOTHING, (-1000, "creation_time", time.time()))
+        threadexec(
+            self.cursor.execute, INSERT_PERMA_DO_NOTHING, (-1000, "creation_time", time.time())
+        )
 
     def upsert(self, id: int, event: str):
         threadexec(self.cursor.execute, UPSERT_PERMA, (id, event))
         threadexec(self.cursor.execute, UPSERT_TEMP, (id, event))
-
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error, unhandled_by_cog=False):

@@ -14,8 +14,6 @@ def rgetattr(obj, attr, *args):
 def threadexec(func, *args) -> List:
     result = []
     with ThreadPoolExecutor(max_workers=1) as executor:
-        for future in as_completed(
-                [executor.submit(func, *args)]
-        ):
+        for future in as_completed([executor.submit(func, *args)]):
             result = future.result()
     return result

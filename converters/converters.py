@@ -47,7 +47,9 @@ class Converters(commands.Cog):
             seconds = secs[1:][:-2] if "-" in secs else secs[:-2] if ".0" in secs else secs
             delta = humanize_timedelta(seconds=int(seconds))
             when = (
-                _("It will be in {}.").format(delta) if g > curr else _("It was {} ago.").format(delta)
+                _("It will be in {}.").format(delta)
+                if g > curr
+                else _("It was {} ago.").format(delta)
             )
             await ctx.send(
                 _("Successfully converted `{timestamp}` to `{convert}`\n{when}").format(

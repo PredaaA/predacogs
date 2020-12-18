@@ -18,7 +18,7 @@ class Converters(commands.Cog):
     """Some converters."""
 
     __author__ = "Predä"
-    __version__ = "0.3.7"
+    __version__ = "0.3.8"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""
@@ -81,8 +81,6 @@ class Converters(commands.Cog):
         for pattern in patterns:
             with contextlib.suppress(ValueError):
                 convert = int(datetime.strptime(date, pattern).timestamp())
-            if None:
-                break
         try:
             given = datetime.fromtimestamp(int(convert))
         except UnboundLocalError:

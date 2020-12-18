@@ -10,7 +10,7 @@ from datetime import datetime
 
 import contextlib
 
-_ = Translator("DblTools", __file__)
+_ = Translator("Converters", __file__)
 
 
 @cog_i18n(_)

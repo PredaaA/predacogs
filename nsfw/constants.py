@@ -206,7 +206,6 @@ FUTA = [
     "FutanariPegging",
     "HorsecockFuta",
     "Rule34_Futanari",
-    "rule34futanari",
     "hugefutanari",
     "Futadomworld",
 ]

@@ -27,25 +27,18 @@ SELECT version_num
 FROM version
 """
 
-UPSERT = """INSERT INTO 
+UPSERT = """INSERT or REPLACE INTO 
 bot_stats 
   (event, quantity) 
 VALUES 
   (?, ?)
-ON CONFLICT
-  (event) 
-DO UPDATE 
-  SET quantity = quantity;
 """
 
-INSERT_DO_NOTHING = """INSERT INTO 
+INSERT_DO_NOTHING = """INSERT or IGNORE INTO 
 bot_stats 
   (event, quantity) 
 VALUES 
   (?, ?)
-ON CONFLICT
-  (event) 
-DO NOTHING;
 """
 
 GET_EVENT_VALUE = """
@@ -55,6 +48,7 @@ WHERE event
 LIKE :event;
 """
 
+# Only used for old data migrate.
 SELECT_OLD = """
 SELECT sum(quantity) 
 FROM bot_stats_perma 

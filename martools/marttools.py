@@ -114,12 +114,7 @@ class MartTools(Listeners, commands.Cog):
         threadexec(self.cursor.execute, DROP_OLD_PERMA)
         threadexec(
             self.cursor.execute,
-            (
-                "INSERT INTO version (version_num) "
-                "VALUES (2) "
-                "ON CONFLICT (version_num) "
-                "DO NOTHING"
-            ),
+            ("INSERT or IGNORE INTO version (version_num) VALUES (2)"),
         )
 
     async def __populate_cache(self):
@@ -299,7 +294,7 @@ class MartTools(Listeners, commands.Cog):
                 ).format_map(
                     {
                         "messages_read": self.get_value("messages_read", perma=True),
-                        "msg_sent": self.get_value("msg_sent"),
+                        "msg_sent": self.get_value("msg_sent", perma=True),
                         "messages_deleted": self.get_value("messages_deleted", perma=True),
                         "messages_edited": self.get_value("messages_edited", perma=True),
                         "dms_received": self.get_value("dms_received", perma=True),

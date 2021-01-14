@@ -178,7 +178,7 @@ async def write_bot_data(bot: Red, config_cache: SettingCacheManager):
                     assert isinstance(vc, discord.VoiceChannel)
                     server_counter["Users in a VC"] += len(vc.members)
                     if guild.me in vc.members:
-                        server_counter["Users in a VC with me"] += (len(vc.members) - 1)
+                        server_counter["Users in a VC with me"] += len(vc.members) - 1
                         server_counter["Bots in a VC with me"] += (
                             sum(1 for m in vc.members if m.bot) - 1
                         )
@@ -317,8 +317,8 @@ async def write_bot_data(bot: Red, config_cache: SettingCacheManager):
             setattr(bot.stats.guild_features, str(key), value)
         for key, value in verify_count.items():
             setattr(bot.stats.guild_verification, str(key), value)
-    except Exception as err:
-        log.exception("Exception in write_bot_data", exc_info=err)
+    except Exception:
+        log.exception("Exception in write_bot_data")
 
 
 async def write_adventure_data(bot: Red, config_cache: SettingCacheManager):
@@ -399,17 +399,14 @@ async def write_adventure_data(bot: Red, config_cache: SettingCacheManager):
         setattr(bot.stats.adventure, "Adventures", total_adventure)
         setattr(bot.stats.adventure, "Win Percentage", win_per * 100)
         setattr(bot.stats.adventure, "Loss Percentage", loss_per * 100)
-    except Exception as err:
-        log.exception("Exception in write_adventure_data", exc_info=err)
+    except Exception:
+        log.exception("Exception in write_adventure_data")
 
 
 async def write_audio_data(bot: Red, config_cache: SettingCacheManager):
     if await config_cache.get_set_lightmode():
         return
     try:
-        marttols = bot.get_cog(
-            "MartTools"
-        )  # If you have Marttools cog loaded it will give you extra audio data
         counter = Counter()
         counter["Active Music Players"] = len(lavalink.active_players())
         counter["Music Players"] = len(lavalink.all_players())
@@ -417,39 +414,29 @@ async def write_audio_data(bot: Red, config_cache: SettingCacheManager):
             counter["Music Players"] - counter["Active Music Players"]
         )
         detailed = await config_cache.get_set_detailed()
-        if detailed and hasattr(marttols, "fetch"):
-            counter["Tracks Played"] = call_sync_as_async(marttols.fetch, "tracks_played")
-            counter["Streams Played"] = call_sync_as_async(marttols.fetch, "streams_played")
-            counter["YouTube Streams Played"] = call_sync_as_async(
-                marttols.fetch, "yt_streams_played"
-            )
-            counter["Mixer Streams Played"] = call_sync_as_async(
-                marttols.fetch, "mixer_streams_played"
-            )
-            counter["Twitch Streams Played"] = call_sync_as_async(
-                marttols.fetch, "ttv_streams_played"
-            )
-            counter["Other Streams Played"] = call_sync_as_async(
-                marttols.fetch, "other_streams_played"
-            )
-            counter["YouTube Videos Played"] = call_sync_as_async(marttols.fetch, "youtube_tracks")
-            counter["SoundCloud Tracks Played"] = call_sync_as_async(
-                marttols.fetch, "soundcloud_tracks"
-            )
-            counter["Bandcamp Tracks Played"] = call_sync_as_async(
-                marttols.fetch, "bandcamp_tracks"
-            )
-            counter["Vimeo Tracks Played"] = call_sync_as_async(marttols.fetch, "vimeo_tracks")
-            counter["Mixer Tracks Played"] = call_sync_as_async(marttols.fetch, "mixer_tracks")
-            counter["TwichTV Videos Played"] = call_sync_as_async(marttols.fetch, "twitch_tracks")
-            counter["Other Tracks Played"] = call_sync_as_async(marttols.fetch, "other_tracks")
+        # If you have MartTools cog loaded it will give you extra audio data
+        mart_tools_cog = bot.get_cog("MartTools")
+        if detailed and hasattr(mart_tools_cog, "get_value"):
+            counter["Tracks Played"] = mart_tools_cog.get_value("tracks_played", raw=True)
+            counter["Streams Played"] = mart_tools_cog.get_value("streams_played", raw=True)
+            counter["YouTube Streams Played"] = mart_tools_cog.get_value("yt_streams_played", raw=True)
+            counter["Mixer Streams Played"] = mart_tools_cog.get_value("mixer_streams_played", raw=True)
+            counter["Twitch Streams Played"] = mart_tools_cog.get_value("ttv_streams_played", raw=True)
+            counter["Other Streams Played"] = mart_tools_cog.get_value("other_streams_played", raw=True)
+            counter["YouTube Videos Played"] = mart_tools_cog.get_value("youtube_tracks", raw=True)
+            counter["SoundCloud Tracks Played"] = mart_tools_cog.get_value("soundcloud_tracks", raw=True)
+            counter["Bandcamp Tracks Played"] = mart_tools_cog.get_value("bandcamp_tracks", raw=True)
+            counter["Vimeo Tracks Played"] = mart_tools_cog.get_value("vimeo_tracks", raw=True)
+            counter["Mixer Tracks Played"] = mart_tools_cog.get_value("mixer_tracks", raw=True)
+            counter["TwichTV Videos Played"] = mart_tools_cog.get_value("twitch_tracks", raw=True)
+            counter["Other Tracks Played"] = mart_tools_cog.get_value("other_tracks", raw=True)
 
         for key, value in counter.items():
             if isinstance(value, str):
                 value = int(re.sub(r"\D", "", value))
             setattr(bot.stats.audio, str(key), value)
-    except Exception as err:
-        log.exception("Exception in write_audio_data", exc_info=err)
+    except Exception:
+        log.exception("Exception in write_audio_data")
 
 
 async def write_shards_data(bot: Red):
@@ -524,26 +511,22 @@ def _get_dict(self):
 
 
 def init_bot_stats(bot: Red):
+    bot_stats = (
+        "guilds",
+        "bot",
+        "shards",
+        "audio",
+        "currency",
+        "guilds_regions",
+        "guilds_features",
+        "guild_verification",
+        "adventure",
+    )
     if not hasattr(bot, "stats"):
         bot.stats = SimpleNamespace()
-    if not hasattr(bot.stats, "guilds"):
-        bot.stats.guilds = SimpleNamespace()
-    if not hasattr(bot.stats, "bot"):
-        bot.stats.bot = SimpleNamespace()
-    if not hasattr(bot.stats, "shards"):
-        bot.stats.shards = SimpleNamespace()
-    if not hasattr(bot.stats, "audio"):
-        bot.stats.audio = SimpleNamespace()
-    if not hasattr(bot.stats, "currency"):
-        bot.stats.currency = SimpleNamespace()
-    if not hasattr(bot.stats, "guilds_regions"):
-        bot.stats.guilds_regions = SimpleNamespace()
-    if not hasattr(bot.stats, "guild_features"):
-        bot.stats.guild_features = SimpleNamespace()
-    if not hasattr(bot.stats, "guild_verification"):
-        bot.stats.guild_verification = SimpleNamespace()
-    if not hasattr(bot.stats, "adventure"):
-        bot.stats.adventure = SimpleNamespace()
+    for stat_obj in bot_stats:
+        if not hasattr(bot.stats, stat_obj):
+            setattr(bot.stats, stat_obj)
     if not hasattr(bot.stats, "to_dict"):
         bot.stats.to_dict = functools.partial(_get_dict, bot)
     if not hasattr(bot, "_stats_task"):

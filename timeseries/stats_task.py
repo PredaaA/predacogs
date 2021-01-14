@@ -526,7 +526,7 @@ def init_bot_stats(bot: Red):
         bot.stats = SimpleNamespace()
     for stat_obj in bot_stats:
         if not hasattr(bot.stats, stat_obj):
-            setattr(bot.stats, stat_obj)
+            setattr(bot.stats, stat_obj, SimpleNamespace())
     if not hasattr(bot.stats, "to_dict"):
         bot.stats.to_dict = functools.partial(_get_dict, bot)
     if not hasattr(bot, "_stats_task"):

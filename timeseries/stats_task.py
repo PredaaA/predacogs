@@ -417,19 +417,45 @@ async def write_audio_data(bot: Red, config_cache: SettingCacheManager):
         # If you have MartTools cog loaded it will give you extra audio data
         mart_tools_cog = bot.get_cog("MartTools")
         if detailed and hasattr(mart_tools_cog, "get_value"):
-            counter["Tracks Played"] = mart_tools_cog.get_value("tracks_played", raw=True)
-            counter["Streams Played"] = mart_tools_cog.get_value("streams_played", raw=True)
-            counter["YouTube Streams Played"] = mart_tools_cog.get_value("yt_streams_played", raw=True)
-            counter["Mixer Streams Played"] = mart_tools_cog.get_value("mixer_streams_played", raw=True)
-            counter["Twitch Streams Played"] = mart_tools_cog.get_value("ttv_streams_played", raw=True)
-            counter["Other Streams Played"] = mart_tools_cog.get_value("other_streams_played", raw=True)
-            counter["YouTube Videos Played"] = mart_tools_cog.get_value("youtube_tracks", raw=True)
-            counter["SoundCloud Tracks Played"] = mart_tools_cog.get_value("soundcloud_tracks", raw=True)
-            counter["Bandcamp Tracks Played"] = mart_tools_cog.get_value("bandcamp_tracks", raw=True)
-            counter["Vimeo Tracks Played"] = mart_tools_cog.get_value("vimeo_tracks", raw=True)
-            counter["Mixer Tracks Played"] = mart_tools_cog.get_value("mixer_tracks", raw=True)
-            counter["TwichTV Videos Played"] = mart_tools_cog.get_value("twitch_tracks", raw=True)
-            counter["Other Tracks Played"] = mart_tools_cog.get_value("other_tracks", raw=True)
+            counter["Tracks Played"] = mart_tools_cog.get_value(
+                "tracks_played", perma=True, raw=True
+            )
+            counter["Streams Played"] = mart_tools_cog.get_value(
+                "streams_played", perma=True, raw=True
+            )
+            counter["YouTube Streams Played"] = mart_tools_cog.get_value(
+                "yt_streams_played", perma=True, raw=True
+            )
+            counter["Mixer Streams Played"] = mart_tools_cog.get_value(
+                "mixer_streams_played", perma=True, raw=True
+            )
+            counter["Twitch Streams Played"] = mart_tools_cog.get_value(
+                "ttv_streams_played", perma=True, raw=True
+            )
+            counter["Other Streams Played"] = mart_tools_cog.get_value(
+                "other_streams_played", perma=True, raw=True
+            )
+            counter["YouTube Videos Played"] = mart_tools_cog.get_value(
+                "youtube_tracks", perma=True, raw=True
+            )
+            counter["SoundCloud Tracks Played"] = mart_tools_cog.get_value(
+                "soundcloud_tracks", perma=True, raw=True
+            )
+            counter["Bandcamp Tracks Played"] = mart_tools_cog.get_value(
+                "bandcamp_tracks", perma=True, raw=True
+            )
+            counter["Vimeo Tracks Played"] = mart_tools_cog.get_value(
+                "vimeo_tracks", perma=True, raw=True
+            )
+            counter["Mixer Tracks Played"] = mart_tools_cog.get_value(
+                "mixer_tracks", perma=True, raw=True
+            )
+            counter["TwichTV Videos Played"] = mart_tools_cog.get_value(
+                "twitch_tracks", perma=True, raw=True
+            )
+            counter["Other Tracks Played"] = mart_tools_cog.get_value(
+                "other_tracks", perma=True, raw=True
+            )
 
         for key, value in counter.items():
             if isinstance(value, str):

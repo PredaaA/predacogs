@@ -544,7 +544,7 @@ def init_bot_stats(bot: Red):
         "audio",
         "currency",
         "guilds_regions",
-        "guilds_features",
+        "guild_features",
         "guild_verification",
         "adventure",
     )

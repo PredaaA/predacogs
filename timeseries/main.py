@@ -48,7 +48,7 @@ class TimeSeries(commands.Cog):
     # and other stuff that I've done for a bounty.
 
     __author__ = ["Draper#6666", "Predä 。#1001"]
-    __version__ = "1.1.13"
+    __version__ = "1.1.14"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""

@@ -16,7 +16,7 @@
   <a href="https://www.patreon.com/predaaA">
     <img src="https://img.shields.io/badge/Follow%20me-Patreon-orange.svg">
     </a>
-  <a href="https://discord.gg/3EeJCjR">
+  <a href="https://discord.gg/k6DU655">
     <img src="https://discordapp.com/api/guilds/337224005901615104/widget.png?style=shield">
     </a>
 </p>

@@ -257,7 +257,6 @@ MILF = [
     "HotMILFs",
     "MILFs",
     "maturemilf",
-    "puremilf",
     "amateur_milfs",
     "cougars",
     "AgedBeauty",

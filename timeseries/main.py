@@ -339,7 +339,7 @@ class TimeSeries(commands.Cog):
         Settings for InfluxDB API.
 
         Be sure to have an instance running.
-        https://github.com/PredaaA/predacogs/tree/dev/timeseries/influxdb_setup.md
+        https://github.com/PredaaA/predacogs/tree/dev/timeseries/README.md
         https://v2.docs.influxdata.com/v2.0/get-started/
         """
 

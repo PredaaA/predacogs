@@ -48,7 +48,7 @@ class TimeSeries(commands.Cog):
     # and other stuff that I've done for a bounty.
 
     __author__ = ["Draper#6666", "Predä 。#1001"]
-    __version__ = "1.1.14"
+    __version__ = "1.1.15"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""
@@ -95,8 +95,8 @@ class TimeSeries(commands.Cog):
             await self.connect_to_influx()
             self.commands_cache["persistent"] = await self.config.commands_stats()
             await self.start_tasks()
-        except Exception as err:
-            log.exception("Exception in cog initialise", exc_info=err)
+        except Exception:
+            log.exception("Exception in cog initialise:")
 
     async def wait_until_stats_ready(self):
         """Wait until stats task has done its first loop."""
@@ -209,8 +209,8 @@ class TimeSeries(commands.Cog):
             call_sync_as_async(
                 self.client["write_api"].write, bucket=self.client["bucket"], record=p
             )
-        except Exception as err:
-            log.exception("Error while saving bot data to Influx", exc_info=err)
+        except Exception:
+            log.exception("Error while saving bot data to Influx:")
 
     async def write_audio_data(self):
         if not self.api_ready:
@@ -222,8 +222,8 @@ class TimeSeries(commands.Cog):
             call_sync_as_async(
                 self.client["write_api"].write, bucket=self.client["bucket"], record=p
             )
-        except Exception as err:
-            log.exception("Error while saving audio data to Influx", exc_info=err)
+        except Exception:
+            log.exception("Error while saving audio data to Influx:")
 
     async def write_shard_latencies_data(self):
         if not self.api_ready:
@@ -235,8 +235,8 @@ class TimeSeries(commands.Cog):
             call_sync_as_async(
                 self.client["write_api"].write, bucket=self.client["bucket"], record=p
             )
-        except Exception as err:
-            log.exception("Error while saving shard data to Influx", exc_info=err)
+        except Exception:
+            log.exception("Error while saving shard data to Influx:")
 
     async def write_currency_data(self):
         if not self.api_ready:
@@ -248,8 +248,8 @@ class TimeSeries(commands.Cog):
             call_sync_as_async(
                 self.client["write_api"].write, bucket=self.client["bucket"], record=p
             )
-        except Exception as err:
-            log.exception("Error while saving currency data to Influx", exc_info=err)
+        except Exception:
+            log.exception("Error while saving currency data to Influx:")
 
     async def write_commands_data(self):
         if not self.api_ready:
@@ -268,8 +268,8 @@ class TimeSeries(commands.Cog):
             call_sync_as_async(
                 self.client["write_api"].write, bucket=self.client["bucket"], record=p
             )
-        except Exception as err:
-            log.exception("Error while saving command data to Influx", exc_info=err)
+        except Exception:
+            log.exception("Error while saving command data to Influx:")
 
     async def write_adventure_data(self):
         if not self.api_ready:
@@ -283,8 +283,8 @@ class TimeSeries(commands.Cog):
             call_sync_as_async(
                 self.client["write_api"].write, bucket=self.client["bucket"], record=p
             )
-        except Exception as err:
-            log.exception("Error while saving adventure data to Influx", exc_info=err)
+        except Exception:
+            log.exception("Error while saving adventure data to Influx:")
 
     @commands.Cog.listener()
     async def on_command(self, ctx: commands.Context):
@@ -337,8 +337,10 @@ class TimeSeries(commands.Cog):
     async def timeseriesset(self, ctx: commands.Context):
         """
         Settings for InfluxDB API.
-        
-        Be sure to have an instance running. https://v2.docs.influxdata.com/v2.0/get-started/
+
+        Be sure to have an instance running.
+        https://github.com/PredaaA/predacogs/tree/dev/timeseries/influxdb_setup.md
+        https://v2.docs.influxdata.com/v2.0/get-started/
         """
 
     @timeseriesset.command()
@@ -390,7 +392,7 @@ class TimeSeries(commands.Cog):
     @timeseriesset.command()
     async def topggstats(self, ctx: commands.Context):
         """Toggles whether to send your Top.gg stats.
-        
+
         For this you need a Top.gg token set like this `[p]set api dbl api_key keyhere`.
         """
         state = await self.config_cache.get_set_topgg()

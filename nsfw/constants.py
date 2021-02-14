@@ -58,7 +58,6 @@ ASS = [
     "datgap",
     "HungryButts",
     "Upshorts",
-    "TwistButt",
     "SnakeButt",
     "ButtsAndBareFeet",
     "HighResASS",

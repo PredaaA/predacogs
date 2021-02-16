@@ -370,7 +370,7 @@ THREESOME = [
     "RealThreesomes",
     "SpitRoasted",
 ]
-TRAPS = [
+TRANS = [
     "Transex",
     "DeliciousTraps",
     "traps",

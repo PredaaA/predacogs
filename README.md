@@ -26,6 +26,7 @@
 ```
 [p] is your prefix
 ```
+
 ```md
 - [p]load downloader
 - [p]repo add preda https://github.com/predaAa/predacogs
@@ -54,8 +55,7 @@ Feel free to open a PR or an issue for any suggestion about my cogs !
 
 ## Contact
 
-For any suggestions or issues, feel free to ask in the #support-othercogs channel of [Red - Cog Support server](https://discord.gg/GET4DVk).<br>
-You can also contact me in DM: `Predä 。#1001` (ID: `332980470650372096`) on Discord.
+For any suggestions or issues, feel free to ask in the #support-othercogs channel of [Red - Cog Support server](https://discord.gg/GET4DVk).
 
 ## Credits
 

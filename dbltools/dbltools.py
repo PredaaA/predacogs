@@ -158,7 +158,7 @@ class DblTools(commands.Cog):
         await self.bot.wait_until_ready()
         await self._ready_event.wait()
         config = await self.config.all()
-        if not member.guild.id == config["support_server_role"]["guild_id"]:
+        if member.guild.id != config["support_server_role"]["guild_id"]:
             return
         if not config["support_server_role"]["role_id"]:
             return
@@ -445,7 +445,7 @@ class DblTools(commands.Cog):
         votes = []
         for user_id, value in votes_count.most_common():
             user = self.bot.get_user(int(user_id))
-            votes.append((user if user else user_id, humanize_number(value)))
+            votes.append((user or user_id, humanize_number(value)))
         msg = tabulate(votes, tablefmt="orgtbl")
         embeds = []
         pages = 1

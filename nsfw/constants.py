@@ -161,7 +161,6 @@ CUMSHOTS = [
     "cumshots",
     "facialcumshots",
     "pulsatingcumshots",
-    "ImpresssedByCum",
     "GirlsFinishingTheJob",
     "amateurcumsluts",
     "unexpectedcum",

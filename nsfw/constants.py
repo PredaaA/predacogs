@@ -36,7 +36,6 @@ ASS = [
     "pawg",
     "AssholeBehindThong",
     "girlsinyogapants",
-    "girlsinleggings",
     "bigasses",
     "asshole",
     "AssOnTheGlass",

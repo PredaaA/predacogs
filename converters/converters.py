@@ -18,7 +18,7 @@ class Converters(commands.Cog):
     """Some converters."""
 
     __author__ = "Predä"
-    __version__ = "0.3.8"
+    __version__ = "0.3.9"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""
@@ -125,7 +125,7 @@ class Converters(commands.Cog):
     @celsius.command(name="kelvin", aliases=["k"])
     async def celsius_to_kelvin(self, ctx: commands.Context, temperature: float):
         """Convert degree Celsius to Kelvin."""
-        kelvin = round((temperature + 273.15), 1)
+        kelvin = round(temperature + 273.15, 1)
         msg = _("{temp:,}° Celsius is equal to {k:,}° Kelvin.").format(temp=temperature, k=kelvin)
         await ctx.send(msg)
 
@@ -174,14 +174,14 @@ class Converters(commands.Cog):
     @kelvin.command(name="celsius", aliases=["c"])
     async def kelvin_to_celsius(self, ctx: commands.Context, temperature: float):
         """Convert Kelvin degree to Celsius."""
-        celsius = round((temperature - 273.15) * (9 / 5) + 32, 1)
+        celsius = round(temperature - 273.15, 1)
         msg = _("{temp:,}° Kelvin is equal to {c:,}° Celsius.").format(temp=temperature, c=celsius)
         await ctx.send(msg)
 
     @kelvin.command(name="fahrenheit", aliases=["f"])
     async def kelvin_to_fahrenheit(self, ctx: commands.Context, temperature: float):
         """Convert Kelvin degree to Fahrenheit."""
-        fahrenheit = round((temperature - 273.15), 1)
+        fahrenheit = round((temperature - 273.15) * (9 / 5) + 32, 1)
         msg = _("{temp:,}° Kelvin is equal to {f:,}° Fahrenheit.").format(
             temp=temperature, f=fahrenheit
         )

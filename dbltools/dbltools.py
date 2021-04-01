@@ -34,7 +34,7 @@ class DblTools(commands.Cog):
     """Tools for Top.gg API."""
 
     __author__ = "Predä"
-    __version__ = "2.0.7"
+    __version__ = "2.0.8"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""
@@ -185,11 +185,11 @@ class DblTools(commands.Cog):
                     config["support_server_role"]["role_id"] = None
 
     @commands.group()
+    @commands.is_owner()
     async def dblset(self, ctx: commands.Context):
         """Group commands for settings of DblTools cog."""
 
     @dblset.command()
-    @checks.is_owner()
     async def poststats(self, ctx: commands.Context):
         """Set if you want to send your bot stats (Guilds and shards count) to Top.gg API."""
         toggled = await self.config.post_guild_count()

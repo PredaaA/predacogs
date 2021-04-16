@@ -137,7 +137,7 @@ BOOBS = [
     "smallboobs",
     "tits",
 ]
-BOTTOMLESS = ["Bottomless", "Pantiesdown", "nopanties", "upskirt"]
+BOTTOMLESS = ["Bottomless", "nopanties", "upskirt"]
 COSPLAY = [
     "CosplayBeauties",
     "CosplayBoobs",

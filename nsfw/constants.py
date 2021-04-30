@@ -28,7 +28,7 @@ FOUR_K = [
     "UHDnsfw",
     "closeup",
 ]
-AHEGAO = ["AhegaoGirls", "EyeRollOrgasm", "MouthWideOpen", "O_Faces", "RealAhegao", "ahegao"]
+AHEGAO = ["AhegaoGirls", "EyeRollOrgasm", "O_Faces", "RealAhegao", "ahegao"]
 ASS = [
     "AssOnTheGlass",
     "AssReveal",

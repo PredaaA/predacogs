@@ -26,7 +26,7 @@ error_message = _(
 
 
 def check_weekend():
-    return True if datetime.today().weekday() in [4, 5, 6] else False
+    return datetime.today().weekday() in [4, 5, 6]
 
 
 async def download_widget(session: aiohttp.ClientSession, url: str):

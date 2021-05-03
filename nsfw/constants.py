@@ -11,8 +11,7 @@ def emoji():
         "\N{BANANA}",
         "\N{KISS MARK}",
     ]
-    emoji = choice(EMOJIS)
-    return emoji
+    return choice(EMOJIS)
 
 
 REDDIT_BASEURL = "https://api.reddit.com/r/{}/random"

@@ -153,86 +153,60 @@ class FiveM(commands.Cog):
     @commands.group()
     async def fivemset(self, ctx: commands.Context):
         """Commands group for FiveM cog."""
-        if not ctx.invoked_subcommand:
-            # Logic from Trusty's welcome.py https://github.com/TrustyJAID/Trusty-cogs/blob/master/welcome/welcome.py#L71
-            # TODO This is just a first approach to show current settings.
-            settings = await self.config.get_raw()
-            settings_name = dict(
-                toggled="Custom status toggled:",
-                ip="FiveM IP address:",
-                text="Custom status text:",
-                status="Custom status:",
-                activity_type="Activity type:",
-                streamer="Streamer:",
-                stream_title="Stream title:",
+        if ctx.invoked_subcommand:
+            return
+        # Logic from Trusty's welcome.py https://github.com/TrustyJAID/Trusty-cogs/blob/master/welcome/welcome.py#L71
+        # TODO This is just a first approach to show current settings.
+        settings = await self.config.get_raw()
+        settings_name = dict(
+            toggled="Custom status toggled:",
+            ip="FiveM IP address:",
+            text="Custom status text:",
+            status="Custom status:",
+            activity_type="Activity type:",
+            streamer="Streamer:",
+            stream_title="Stream title:",
+        )
+        if ctx.channel.permissions_for(ctx.me).embed_links:
+            em = discord.Embed(
+                color=await ctx.embed_colour(), title=f"FiveM settings for {self.bot.user}"
             )
-            if ctx.channel.permissions_for(ctx.me).embed_links:
-                em = discord.Embed(
-                    color=await ctx.embed_colour(), title=f"FiveM settings for {self.bot.user}"
-                )
-                msg = ""
-                for attr, name in settings_name.items():
-                    if attr == "toggled":
-                        if settings[attr]:
-                            msg += f"**{name}** Yes\n"
-                        else:
-                            msg += f"**{name}** No\n"
-                    elif attr == "ip":
-                        if settings[attr]:
-                            msg += f"**{name}** {inline(settings[attr])}\n"
-                        else:
-                            msg += f"**{name}** Not set\n"
-                    elif attr == "text":
-                        if settings[attr]:
-                            msg += f"**{name}**\n{inline(settings[attr])}\n"
-                        else:
-                            msg += f"**{name}** Not set\n"
-                    elif attr == "streamer":
-                        if settings[attr]:
-                            msg += f"**{name}** {inline(settings[attr])}\n"
-                        else:
-                            msg += f"**{name}** Not set\n"
-                    elif attr == "stream_title":
-                        if settings[attr]:
-                            msg += f"**{name}** {inline(settings[attr])}\n"
-                        else:
-                            msg += f"**{name}** Not set\n"
-                    else:
+            msg = ""
+            for attr, name in settings_name.items():
+                if attr in ["ip", "streamer", "stream_title"]:
+                    if settings[attr]:
                         msg += f"**{name}** {inline(settings[attr])}\n"
-                em.description = msg
-                await ctx.send(embed=em)
-            else:
-                msg = "```\n"
-                for attr, name in settings_name.items():
-                    if attr == "toggled":
-                        if settings[attr]:
-                            msg += f"{name} Yes\n"
-                        else:
-                            msg += f"{name} No\n"
-                    elif attr == "ip":
-                        if settings[attr]:
-                            msg += f"{name} {settings[attr]}\n"
-                        else:
-                            msg += f"{name} Not set\n"
-                    elif attr == "text":
-                        if settings[attr]:
-                            msg += f"{name}\n{settings[attr]}\n"
-                        else:
-                            msg += f"{name} Not set\n"
-                    elif attr == "streamer":
-                        if settings[attr]:
-                            msg += f"{name} {settings[attr]}\n"
-                        else:
-                            msg += f"**{name}** Not set\n"
-                    elif attr == "stream_title":
-                        if settings[attr]:
-                            msg += f"{name} {settings[attr]}\n"
-                        else:
-                            msg += f"{name} Not set\n"
                     else:
+                        msg += f"**{name}** Not set\n"
+                elif attr == "text":
+                    if settings[attr]:
+                        msg += f"**{name}**\n{inline(settings[attr])}\n"
+                    else:
+                        msg += f"**{name}** Not set\n"
+                elif attr == "toggled":
+                    msg += f"**{name}** Yes\n" if settings[attr] else f"**{name}** No\n"
+                else:
+                    msg += f"**{name}** {inline(settings[attr])}\n"
+            em.description = msg
+            await ctx.send(embed=em)
+        else:
+            msg = "```\n"
+            for attr, name in settings_name.items():
+                if attr in ["ip", "stream_title"]:
+                    msg += f"{name} {settings[attr]}\n" if settings[attr] else f"{name} Not set\n"
+                elif attr == "streamer":
+                    if settings[attr]:
                         msg += f"{name} {settings[attr]}\n"
-                msg += "```"
-                await ctx.send(msg)
+                    else:
+                        msg += f"**{name}** Not set\n"
+                elif attr == "text":
+                    msg += f"{name}\n{settings[attr]}\n" if settings[attr] else f"{name} Not set\n"
+                elif attr == "toggled":
+                    msg += f"{name} Yes\n" if settings[attr] else f"{name} No\n"
+                else:
+                    msg += f"{name} {settings[attr]}\n"
+            msg += "```"
+            await ctx.send(msg)
 
     @fivemset.command()
     async def ip(self, ctx: commands.Context, *, ip: str):
@@ -283,7 +257,7 @@ class FiveM(commands.Cog):
         - dnd
         """
         statuses = ["online", "dnd", "idle"]
-        if not status.lower() in statuses:
+        if status.lower() not in statuses:
             await ctx.send_help()
             return
 
@@ -301,7 +275,7 @@ class FiveM(commands.Cog):
         - listening
         """
         activity_types = ["playing", "watching", "listening"]
-        if not activity.lower() in activity_types:
+        if activity.lower() not in activity_types:
             await ctx.send_help()
             return
 

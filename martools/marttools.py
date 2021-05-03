@@ -174,10 +174,7 @@ class MartTools(Listeners, commands.Cog):
         member_account = await bank.get_account(ctx.author)
         created_at = str(member_account.created_at)
         no = "1970-01-01 00:00:00"
-        overall = 0
-        for key, value in accounts.items():
-            overall += value["balance"]
-
+        overall = sum(value["balance"] for key, value in accounts.items())
         em = discord.Embed(color=await ctx.embed_colour())
         em.set_author(name=_("{} stats:").format(bank_name), icon_url=icon)
         em.add_field(
@@ -560,12 +557,11 @@ class MartTools(Listeners, commands.Cog):
             regions[region]["guilds"] += 1
 
         def sort_keys(key: str):
-            keys = (
+            return (
                 (key[1]["guilds"], key[1]["users"])
                 if sort != "users"
                 else (key[1]["users"], key[1]["guilds"])
             )
-            return keys
 
         regions_stats = dict(sorted(regions.items(), key=lambda x: sort_keys(x), reverse=True))
 

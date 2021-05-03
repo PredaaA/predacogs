@@ -162,10 +162,11 @@ class Core(commands.Cog):
             if data["links"]["reddit"] is not None
             else "",
         }
-        description = (
-            "Date: **{date}**\n" "{flight_num}" "Links: **{article}{wikipedia}{reddit}**"
+        return (
+            "Date: **{date}**\n"
+            "{flight_num}"
+            "Links: **{article}{wikipedia}{reddit}**"
         ).format(**description_kwargs)
-        return description
 
     @staticmethod
     async def _launchpads_texts(data: dict):
@@ -183,7 +184,7 @@ class Core(commands.Cog):
             "vehicles": ", ".join(data["vehicles_launched"]),
             "site_name_ext": data["site_name_long"],
         }
-        description = (
+        return (
             "Status: **{status}**\n"
             "Region: **{region}**\n"
             "Location: **{location}**\n"
@@ -193,7 +194,6 @@ class Core(commands.Cog):
             "Vehicle{s} launched: **{vehicles}**\n"
             "Site name long: **{site_name_ext}**"
         ).format(**description_kwargs)
-        return description
 
     @staticmethod
     async def _landpads_texts(data: dict):
@@ -209,14 +209,13 @@ class Core(commands.Cog):
                 long=data["location"]["longitude"],
             ),
         }
-        description = (
+        return (
             "Status: **{status}**\n"
             "Landing type: **{landing_t}**\n"
             "Attempted landings: **{att_lands}**\n"
             "Success landings: **{succ_lands}**\n"
             "Location: **{location}**"
         ).format(**description_kwargs)
-        return description
 
     @staticmethod
     async def _missions_texts(data: dict):
@@ -228,12 +227,11 @@ class Core(commands.Cog):
             if data["twitter"] is not None
             else "",
         }
-        description = (
+        return (
             data["description"]
             + "\n**[Wikipedia page]({})**".format(data["wikipedia"])
             + "{website}{twitter}"
         ).format(**description_kwargs)
-        return description
 
     async def _roadster_texts(self, data: dict):
         date, delta = await self._unix_convert(data["launch_date_unix"])
@@ -249,14 +247,13 @@ class Core(commands.Cog):
             "m_distance_km": round(data["mars_distance_km"], 2),
             "m_distance_mi": round(data["mars_distance_mi"], 2),
         }
-        roadster_stats = (
+        return (
             "Launch date: **{launch_date} {ago} ago**\n"
             "Launch mass: **{mass_kg:,} kg / {mass_lbs:,} lbs**\n"
             "Actual speed: **{speed_km:,} km/h / {speed_mph:,} mph**\n"
             "Earth distance: **{e_distance_km:,} km / {e_distance_mi:,} mi**\n"
             "Mars distance: **{m_distance_km:,} km / {m_distance_mi:,} mi**\n"
         ).format(**roadster_stats_kwargs)
-        return roadster_stats
 
     @staticmethod
     async def _rockets_texts(data: dict):
@@ -315,11 +312,14 @@ class Core(commands.Cog):
             "Fuel amount: **{sec_fuel_amount} tons**\n"
             "Burn time: **{sec_burn_time} secs**\n"
         ).format(**stages_stats_kwargs)
-        payload_weights_stats = ""
-        for p in data["payload_weights"]:
-            payload_weights_stats += (
-                "Name: **{p_name}**\n" "Weight: **{kg_mass:,} kg / {lb_mass:,} lbs**\n"
+        payload_weights_stats = "".join(
+            (
+                "Name: **{p_name}**\n"
+                "Weight: **{kg_mass:,} kg / {lb_mass:,} lbs**\n"
             ).format(p_name=p["name"], kg_mass=p["kg"], lb_mass=p["lb"])
+            for p in data["payload_weights"]
+        )
+
         engines_stats_kwargs = {
             "number": data["engines"]["number"],
             "type": data["engines"]["type"],

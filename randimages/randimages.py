@@ -33,7 +33,7 @@ class RandImages(Core):
             name=_("birb"),
             emoji="\N{BIRD}",
             source="alexflipnote API",
-            img_url="https://api.alexflipnote.xyz/birb",
+            img_url="https://api.alexflipnote.dev/birb",
             img_arg="file",
             facts=False,
         )
@@ -83,7 +83,7 @@ class RandImages(Core):
             name=_("your coffee"),
             emoji="\N{HOT BEVERAGE}",
             source="alexflipnote API",
-            img_url="https://coffee.alexflipnote.xyz/random.json",
+            img_url="https://coffee.alexflipnote.dev/random.json",
             img_arg="file",
             facts=False,
         )

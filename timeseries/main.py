@@ -30,17 +30,19 @@ from typing import List, Mapping
 
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import ASYNCHRONOUS
-
+from redbot.core import Config, checks, commands
 from redbot.core.bot import Red
-from redbot.core import commands, checks, Config
 from redbot.core.utils import AsyncIter
 
 from .setting_cache import SettingCacheManager
-from .stats_task import start_stats_tasks, call_sync_as_async, init_bot_stats
+from .stats_task import call_sync_as_async, init_bot_stats, start_stats_tasks
 
 log = logging.getLogger("red.predacogs.TimeSeries")
 
 
+# TODO: That cog need some love. It will probably be rewrote at some point like all other cogs of this repo. (https://github.com/PredaaA/predacogs/issues/57)
+# I will also probably convert from influxdb to another solution, but that will be very later.
+# In the meantime the cog should be less resources intensive with some duplicated things removed.
 class TimeSeries(commands.Cog):
     """Get multiple stats of your bot sent to an InfluxDB instance."""
 
@@ -48,7 +50,7 @@ class TimeSeries(commands.Cog):
     # and other stuff that I've done for a bounty.
 
     __author__ = ["Draper#6666", "Predä 。#1001"]
-    __version__ = "1.1.15"
+    __version__ = "1.1.20"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""

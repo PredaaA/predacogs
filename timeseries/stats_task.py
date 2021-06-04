@@ -29,16 +29,15 @@ import functools
 import logging
 import re
 from collections import Counter, defaultdict
-from typing import Mapping, Any
 from types import SimpleNamespace
+from typing import Any, Mapping
 
 import aiohttp
 import discord
 import lavalink
 from aiohttp import ClientTimeout
-
+from redbot.core import bank
 from redbot.core.bot import Red
-from redbot.core import bank, Config
 from redbot.core.utils import AsyncIter
 
 from timeseries.setting_cache import SettingCacheManager
@@ -134,68 +133,68 @@ async def write_bot_data(bot: Red, config_cache: SettingCacheManager):
         with contextlib.suppress(OverflowError):
             counter["Discord Latency"] = int(round(bot.latency * 1000))
         counter["Shards"] = bot.shard_count
-        async for guild in AsyncIter(bot.guilds, steps=100):
+        for guild in bot.guilds:
             assert isinstance(guild, discord.Guild)
             if guild.unavailable:
                 server_temp_data["Unavailable"].add(guild.id)
                 continue
-            server_counter["Members"] += len(guild.members)
+
+            server_counter["Members"] += getattr(guild, "member_count", 0)
             if not lightmode:
                 if detailed:
-                    async for feature in AsyncIter(guild.features, steps=50):
+                    for feature in guild.features:
                         features_count[f"{features.get(f'{feature}') or 'Unknown'}"] += 1
                     verify_count[f"{verify.get(f'{guild.verification_level}') or 'Unknown'}"] += 1
                     region_count[f"{vc_regions.get(f'{guild.region}') or 'Unknown'}"] += 1
-                server_counter["Channel Categories"] += len(guild.categories)
-                server_counter["Server Channels"] += len(guild.channels)
-                server_counter["Text Channels"] += len(guild.text_channels)
-                server_counter["Voice Channels"] += len(guild.voice_channels)
                 server_counter["Roles"] += len(guild.roles)
-                server_counter["Emojis"] += len(guild.emojis)
                 if guild.large:
                     server_temp_data["Large"].add(guild.id)
                 if not guild.chunked:
                     server_temp_data["Unchunked"].add(guild.id)
-                if guild.premium_tier != 0:
+                guild_premium_tier = guild.premium_tier
+                if guild_premium_tier != 0:
                     server_temp_data["Nitro Boosted"].add(guild.id)
-                if guild.premium_tier == 1:
+                if guild_premium_tier == 1:
                     server_temp_data["Tier 1 Nitro"].add(guild.id)
-                elif guild.premium_tier == 2:
+                elif guild_premium_tier == 2:
                     server_temp_data["Tier 2 Nitro"].add(guild.id)
-                elif guild.premium_tier == 3:
+                elif guild_premium_tier == 3:
                     server_temp_data["Tier 3 Nitro"].add(guild.id)
 
-                async for channel in AsyncIter(guild.text_channels, steps=100):
-                    assert isinstance(channel, discord.TextChannel)
-                    if channel.is_nsfw():
-                        temp_data["NSFW Text Channels"].add(channel.id)
-                    if channel.is_news():
-                        temp_data["News Text Channels"].add(channel.id)
-                    if channel.type is discord.ChannelType.store:
-                        temp_data["Store Text Channels"].add(channel.id)
+                for channel in guild.channels:
+                    server_counter["Server Channels"] += 1
 
-                async for vc in AsyncIter(guild.voice_channels, steps=100):
-                    assert isinstance(vc, discord.VoiceChannel)
-                    server_counter["Users in a VC"] += len(vc.members)
-                    if guild.me in vc.members:
-                        server_counter["Users in a VC with me"] += len(vc.members) - 1
-                        server_counter["Bots in a VC with me"] += (
-                            sum(1 for m in vc.members if m.bot) - 1
-                        )
+                    if isinstance(channel, discord.TextChannel):
+                        server_counter["Text Channels"] += 1
+                        if channel.is_nsfw():
+                            temp_data["NSFW Text Channels"].add(channel.id)
+                        if channel.is_news():
+                            temp_data["News Text Channels"].add(channel.id)
+                        if channel.type is discord.ChannelType.store:
+                            temp_data["Store Text Channels"].add(channel.id)
+                    elif isinstance(channel, discord.VoiceChannel):
+                        server_counter["Voice Channels"] += 1
+                        counter["Users in a VC"] += len(channel.members)
+                        if guild.me in channel.members:
+                            counter["Users in a VC with me"] += len(channel.members) - 1
+                            server_counter["Bots in a VC with me"] += (
+                                sum(1 for m in channel.members if m.bot) - 1
+                            )
+                            for m in channel.members:
+                                if m.is_on_mobile():
+                                    temp_data["Users in a VC on Mobile"].add(m.id)
+                    elif isinstance(channel, discord.CategoryChannel):
+                        server_counter["Channel Categories"] += 1
 
-                    async for vcm in AsyncIter(vc.members, steps=100):
-                        assert isinstance(vcm, discord.Member)
-                        if vcm.is_on_mobile():
-                            temp_data["Users in a VC on Mobile"].add(vcm.id)
-
-                async for emoji in AsyncIter(guild.emojis, steps=100):
+                for emoji in guild.emojis:
                     assert isinstance(emoji, discord.Emoji)
+                    server_counter["Emojis"] += 1
                     if emoji.animated:
                         server_counter["Animated Emojis"] += 1
                     else:
                         server_counter["Static Emojis"] += 1
 
-            async for member in AsyncIter(guild.members, steps=100):
+            async for member in AsyncIter(guild.members, steps=1000):
                 assert isinstance(member, discord.Member)
                 temp_data["Unique Users"].add(member.id)
                 if member.bot:
@@ -203,6 +202,7 @@ async def write_bot_data(bot: Red, config_cache: SettingCacheManager):
                 else:
                     temp_data["Humans"].add(member.id)
 
+                # Not sure about let that next part in the future.
                 if detailed:
                     if member.is_on_mobile():
                         temp_data["Mobile Users"].add(member.id)
@@ -517,19 +517,16 @@ async def run_events(bot: Red, config_cache: SettingCacheManager):
 
 async def update_task(bot: Red, config_cache: SettingCacheManager):
     await bot.wait_until_red_ready()
-    with contextlib.suppress(asyncio.CancelledError):
-        while True:
-            try:
-                await run_events(bot, config_cache)
-            except asyncio.CancelledError:
-                break
-            except Exception as exc:
-                log.exception("update_task", exc_info=exc)
-                await asyncio.sleep(10)
-            else:
-                if not bot._stats_ready.is_set():
-                    bot._stats_ready.set()
-                await asyncio.sleep(60)
+    while True:
+        try:
+            await run_events(bot, config_cache)
+        except Exception as exc:
+            log.exception("update_task", exc_info=exc)
+            await asyncio.sleep(10)
+        else:
+            if not bot._stats_ready.is_set():
+                bot._stats_ready.set()
+            await asyncio.sleep(60)
 
 
 def _get_dict(self):

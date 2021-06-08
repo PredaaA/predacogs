@@ -4,7 +4,7 @@
   "name": "TimeSeries",
   "short": "Sends multiple stats of your bot to an InfluxDB bucket.",
   "description": "Sends multiple stats of your bot to an InfluxDB bucket.",
-  "requirements": ["influxdb-client"],
+  "requirements": ["influxdb-client==1.16.0"],
   "tags": ["stats", "influxdb", "grafana"],
   "min_bot_version": "3.3.10",
   "end_user_data_statement": "This cog does not persistently store data or metadata about users."

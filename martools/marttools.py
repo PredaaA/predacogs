@@ -1,15 +1,16 @@
 import asyncio
-import time
 import logging
+import time
 from collections import Counter
 from datetime import datetime
 from typing import Union
 
-import apsw
 import discord
 import lavalink
+import sqlite3
+from databases import Database
 from redbot.cogs.audio.audio_dataclasses import Query
-from redbot.core import Config, bank, commands
+from redbot.core import bank, commands
 from redbot.core.bot import Red
 from redbot.core.cog_manager import cog_data_path
 from redbot.core.i18n import Translator, cog_i18n
@@ -22,13 +23,14 @@ from .statements import (
     DROP_OLD_PERMA,
     DROP_OLD_TEMP,
     GET_EVENT_VALUE,
-    INSERT_DO_NOTHING,
+    INSERT_OR_IGNORE,
     SELECT_OLD,
     UPSERT,
     PRAGMA_journal_mode,
+    PRAGMA_read_uncommitted,
     PRAGMA_wal_autocheckpoint,
 )
-from .utils import events_names, threadexec
+from .utils import EVENTS_NAMES
 
 log = logging.getLogger("red.predacogs.martools")
 _ = Translator("MartTools", __file__)
@@ -39,7 +41,7 @@ class MartTools(Listeners, commands.Cog):
     """Multiple tools that are originally used on Martine."""
 
     __author__ = ["Predä", "Draper"]
-    __version__ = "2.0.0"
+    __version__ = "3.0.0"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""
@@ -47,24 +49,19 @@ class MartTools(Listeners, commands.Cog):
 
     def __init__(self, bot: Red):
         self.bot = bot
-        self._connection = apsw.Connection(str(cog_data_path(self) / "MartTools.db"))
-        self.cursor = self._connection.cursor()
+        self.cursor = Database(f"sqlite:///{cog_data_path(self)}/MartTools.db")
         self.cache = {"perma": Counter(), "session": Counter()}
         self.uptime = datetime.utcnow()
 
         self.init_task = self.bot.loop.create_task(self.initialize())
-        self.dump_cache_task = self.bot.loop.create_task(self.__dump_cache_to_db())
+        self.dump_cache_task = self.bot.loop.create_task(self._dump_cache_to_db_task())
 
     def cog_unload(self):
         self.dump_cache_task.cancel()
         if self.init_task:
             self.init_task.cancel()
 
-        for event_name, value in self.cache["perma"].items():
-            threadexec(self.cursor.execute, UPSERT, (event_name, value))
-
-        self._connection.close()
-        del self.cache
+        asyncio.create_task(self._dump_cache_to_db())
 
     def format_help_for_context(self, ctx: commands.Context) -> str:
         """Thanks Sinbad!"""
@@ -72,71 +69,66 @@ class MartTools(Listeners, commands.Cog):
         return f"{pre_processed}\n\nAuthors: {', '.join(self.__author__)}\nCog Version: {self.__version__}"
 
     async def initialize(self):
-        threadexec(self.cursor.execute, PRAGMA_journal_mode)
-        threadexec(self.cursor.execute, PRAGMA_wal_autocheckpoint)
-        threadexec(self.cursor.execute, CREATE_TABLE)
-        threadexec(self.cursor.execute, CREATE_VERSION_TABLE)
+        await self.cursor.connect()
+        await self.cursor.execute(PRAGMA_journal_mode)
+        await self.cursor.execute(PRAGMA_wal_autocheckpoint)
+        await self.cursor.execute(PRAGMA_read_uncommitted)
+        await self.cursor.execute(CREATE_TABLE)
+        await self.cursor.execute(CREATE_VERSION_TABLE)
+        await self.cursor.execute(
+            INSERT_OR_IGNORE, {"event": "creation_time", "quantity": time.time()}
+        )
 
         try:
-            check_result = list(threadexec(self.cursor.execute, "SELECT * FROM bot_stats_perma"))
-        except apsw.SQLError:
-            await self.__populate_cache()
+            check_result = list(await self.cursor.fetch_all("SELECT * FROM bot_stats_perma"))
+        except sqlite3.OperationalError:
+            await self._populate_cache()
             return
         else:
             if check_result:
-                await self.__migrate_data()
+                await self._migrate_data()
 
-        threadexec(self.cursor.execute, INSERT_DO_NOTHING, ("creation_time", time.time()))
+        await self._populate_cache()
 
-        await self.__populate_cache()
+    async def _migrate_data(self):
+        for event_name in EVENTS_NAMES:
+            result = await self.cursor.fetch_val(SELECT_OLD, {"event": event_name})
+            if result:
+                await self.cursor.execute(UPSERT, {"event": event_name, "quantity": result})
 
-    async def __migrate_data(self):
-        for event_name in events_names:
-            result = list(threadexec(self.cursor.execute, SELECT_OLD, {"event": event_name}))
-            if not result:
-                continue
-
-            old_value = result[0][0]
-            threadexec(self.cursor.execute, UPSERT, (event_name, old_value))
-
-        old_value = list(
-            threadexec(
-                self.cursor.execute, SELECT_OLD, {"event": "creation_time", "guild_id": -1000}
-            )
+        old_creation_time = await self.cursor.fetch_val(
+            SELECT_OLD, {"event": "creation_time", "guild_id": -1000}
         )
-        threadexec(
-            self.cursor.execute,
+        await self.cursor.execute(
             UPSERT,
-            ("creation_time", old_value[0][0] if old_value else time.time()),
+            ("creation_time", old_creation_time or time.time()),
         )
 
-        threadexec(self.cursor.execute, DROP_OLD_TEMP)
-        threadexec(self.cursor.execute, DROP_OLD_PERMA)
-        threadexec(
-            self.cursor.execute,
-            ("INSERT or IGNORE INTO version (version_num) VALUES (2)"),
-        )
+        await self.cursor.execute(DROP_OLD_TEMP)
+        await self.cursor.execute(DROP_OLD_PERMA)
+        await self.cursor.execute("INSERT or IGNORE INTO version (version_num) VALUES (2)")
 
-    async def __populate_cache(self):
-        for event_name in events_names:
-            result = list(threadexec(self.cursor.execute, GET_EVENT_VALUE, {"event": event_name}))
-            if not result:
-                continue
+    async def _populate_cache(self):
+        for event_name in EVENTS_NAMES:
+            result = await self.cursor.fetch_val(GET_EVENT_VALUE, {"event": event_name})
+            if result:
+                self.cache["perma"][event_name] = result
 
-            self.cache["perma"][event_name] = result[0][0]
+        result = await self.cursor.fetch_val(GET_EVENT_VALUE, {"event": "creation_time"})
+        self.cache["perma"]["creation_time"] = result or time.time()
 
-        result = list(threadexec(self.cursor.execute, GET_EVENT_VALUE, {"event": "creation_time"}))
-        self.cache["perma"]["creation_time"] = result[0][0] if result else time.time()
+    async def _dump_cache_to_db(self):
+        for event_name, value in self.cache["perma"].items():
+            await self.cursor.execute(UPSERT, {"event": event_name, "quantity": value})
 
-    async def __dump_cache_to_db(self):
+    async def _dump_cache_to_db_task(self):
         await self.bot.wait_until_red_ready()
         while True:
             await asyncio.sleep(300)
             try:
-                for event_name, value in self.cache["perma"].items():
-                    threadexec(self.cursor.execute, UPSERT, (event_name, value))
+                await self._dump_cache_to_db()
             except Exception:
-                log.exception("Something went wrong in __dump_cache_to_db task:")
+                log.exception("Something went wrong in _dump_cache_to_db_task:")
 
     def get_value(self, key: str, perma: bool = False, raw: bool = False) -> Union[int, str]:
         if raw:

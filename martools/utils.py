@@ -1,8 +1,4 @@
-from concurrent.futures._base import as_completed
-from concurrent.futures.thread import ThreadPoolExecutor
-from typing import List
-
-events_names = (
+EVENTS_NAMES = (
     "on_error",
     "msg_sent",
     "dms_received",
@@ -40,11 +36,3 @@ events_names = (
     "twitch_tracks",
     "other_tracks",
 )
-
-
-def threadexec(func, *args) -> List:
-    result = []
-    with ThreadPoolExecutor(max_workers=4) as executor:
-        for future in as_completed([executor.submit(func, *args)]):
-            result = future.result()
-    return result

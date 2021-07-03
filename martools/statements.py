@@ -31,14 +31,14 @@ UPSERT = """INSERT or REPLACE INTO
 bot_stats 
   (event, quantity) 
 VALUES 
-  (?, ?)
+  (:event, :quantity)
 """
 
-INSERT_DO_NOTHING = """INSERT or IGNORE INTO 
+INSERT_OR_IGNORE = """INSERT or IGNORE INTO 
 bot_stats 
   (event, quantity) 
 VALUES 
-  (?, ?)
+  (:event, :quantity)
 """
 
 GET_EVENT_VALUE = """

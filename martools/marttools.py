@@ -41,7 +41,7 @@ class MartTools(Listeners, commands.Cog):
     """Multiple tools that are originally used on Martine."""
 
     __author__ = ["Predä", "Draper"]
-    __version__ = "3.0.0"
+    __version__ = "3.0.1"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""

@@ -119,28 +119,31 @@ class Listeners:
     async def on_red_audio_track_start(self, guild, track, requester):
         if not Query:
             return
+
         self.upsert_cache("tracks_played")
-        cog = self.bot.get_cog("Audio")
-        query = Query.process_input(
-            query=track.uri, _local_folder_current_path=cog.local_folder_current_path
-        )
         if track.is_stream:
             self.upsert_cache("streams_played")
-        if track.is_stream and query.is_youtube:
-            self.upsert_cache("yt_streams_played")
-        if track.is_stream and query.is_twitch:
-            self.upsert_cache("ttv_streams_played")
-        if track.is_stream and query.is_other:
-            self.upsert_cache("other_streams_played")
-        if query.is_youtube:
-            self.upsert_cache("youtube_tracks")
-        if query.is_soundcloud:
-            self.upsert_cache("soundcloud_tracks")
-        if query.is_bandcamp:
-            self.upsert_cache("bandcamp_tracks")
-        if query.is_vimeo:
-            self.upsert_cache("vimeo_tracks")
-        if query.is_twitch:
-            self.upsert_cache("twitch_tracks")
-        if query.is_other:
-            self.upsert_cache("other_tracks")
+
+        cog = self.bot.get_cog("Audio")
+        if cog:
+            query = Query.process_input(
+                query=track.uri, _local_folder_current_path=cog.local_folder_current_path
+            )
+            if track.is_stream and query.is_youtube:
+                self.upsert_cache("yt_streams_played")
+            if track.is_stream and query.is_twitch:
+                self.upsert_cache("ttv_streams_played")
+            if track.is_stream and query.is_other:
+                self.upsert_cache("other_streams_played")
+            if query.is_youtube:
+                self.upsert_cache("youtube_tracks")
+            if query.is_soundcloud:
+                self.upsert_cache("soundcloud_tracks")
+            if query.is_bandcamp:
+                self.upsert_cache("bandcamp_tracks")
+            if query.is_vimeo:
+                self.upsert_cache("vimeo_tracks")
+            if query.is_twitch:
+                self.upsert_cache("twitch_tracks")
+            if query.is_other:
+                self.upsert_cache("other_tracks")

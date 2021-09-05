@@ -162,6 +162,7 @@ CUMSHOTS = [
 ]
 DEEPTHROAT = ["AmateurDeepthroat", "DeepThroatTears", "SwordSwallowers", "deepthroat"]
 DICK = ["DickPics4Freedom", "MassiveCock", "ThickDick", "bulges", "cock", "penis", "twinks"]
+DILF = ["dilf", "dilfs"]
 DOUBLE_P = ["Technical_DP", "doublepenetration"]
 EBONY = [
     "DarkAngels",

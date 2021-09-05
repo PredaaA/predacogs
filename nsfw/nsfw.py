@@ -191,6 +191,15 @@ class Nsfw(Core):
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
+    @commands.command(aliases=["dilfs""])
+    async def dilf(self, ctx: commands.Context):
+        """Sends some dilf images from random subreddits."""
+
+        await self._send_msg(ctx, _("dilf"), sub=sub.DILF)
+
+    @commands.is_nsfw()
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command(aliases=["doublep"])
     async def doublepenetration(self, ctx: commands.Context):
         """Sends some double penetration images/gifs from random subreddits."""

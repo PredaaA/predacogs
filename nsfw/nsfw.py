@@ -128,7 +128,7 @@ class Nsfw(Core):
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
-    @commands.command(aliases=["boob", "boobies", "tits", "titties", "breasts", "breast"])
+    @commands.command(aliases=["boob", "boobies", "tits", "titties", "breasts", "breast", "mommymilkers"])
     async def boobs(self, ctx: commands.Context):
         """Sends some boobs images from random subreddits."""
 

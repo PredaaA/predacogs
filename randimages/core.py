@@ -110,9 +110,8 @@ class Core(commands.Cog):
                     url = url[:-3] + "gif"
                 elif url.endswith(".gifv"):
                     url = url[:-1]
-                elif (
-                    not url.endswith(GOOD_EXTENSIONS)
-                    and not url.startswith("https://gfycat.com")
+                elif not url.endswith(GOOD_EXTENSIONS) and not url.startswith(
+                    "https://gfycat.com"
                 ):
                     url, subr, author, title, post = await self._get_reddit_imgs_details(
                         ctx, sub=sub

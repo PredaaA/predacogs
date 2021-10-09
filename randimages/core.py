@@ -96,7 +96,6 @@ class Core(commands.Cog):
                     subr = content["subreddit"]
                     nsfw = content["over_18"]
                     permalink = content["permalink"]
-                    text = content["selftext"]
                     post = f"https://www.reddit.com{permalink}"
                     if ctx.guild and nsfw and not ctx.message.channel.is_nsfw():
                         await ctx.send(embed=await self._nsfw_channel_check(ctx))
@@ -112,8 +111,7 @@ class Core(commands.Cog):
                 elif url.endswith(".gifv"):
                     url = url[:-1]
                 elif (
-                    text
-                    or not url.endswith(GOOD_EXTENSIONS)
+                    not url.endswith(GOOD_EXTENSIONS)
                     and not url.startswith("https://gfycat.com")
                 ):
                     url, subr, author, title, post = await self._get_reddit_imgs_details(

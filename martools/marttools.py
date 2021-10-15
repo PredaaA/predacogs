@@ -542,6 +542,7 @@ class MartTools(Listeners, commands.Cog):
             "india": ":flag_in:" + _(" India"),
             "dubai": ":flag_ae:" + _(" Dubai"),
             "south-korea": ":flag_kr:" + _(" South Korea"),
+            "newark": ":flag_us:" + _(" Newark"),
         }
         regions = {}
         for guild in self.bot.guilds:

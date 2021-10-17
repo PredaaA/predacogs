@@ -542,6 +542,14 @@ class MartTools(Listeners, commands.Cog):
             "india": ":flag_in:" + _(" India"),
             "dubai": ":flag_ae:" + _(" Dubai"),
             "south-korea": ":flag_kr:" + _(" South Korea"),
+            "newark": ":flag_us:" + _(" Newark"),
+            "atlanta": ":flag_us:" + _(" Atlanta"),
+            "santa-clara": ":flag_us:" + _(" Santa Clara"),
+            "seattle": ":flag_us:" + _(" Seattle"),
+            "st-pete": ":flag_us:" + _(" St. Petersburg"),
+            "buenos-aires": ":flag_ar:" + _(" Buenos Aires"),
+            "stockholm": ":flag_se: " + _(" Stockholm"),
+            "santiago": ":flag_cl: " + _(" Santiago"),
         }
         regions = {}
         for guild in self.bot.guilds:
@@ -563,7 +571,7 @@ class MartTools(Listeners, commands.Cog):
 
         msg = [
             _("{flag}: {guilds_len} and {users_len}").format(
-                flag=regions_dict[region_name],
+                flag=regions_dict.get(region_name, region_name),
                 guilds_len=(
                     f"`{humanize_number(values['guilds'])} {_('server') if values['guilds'] < 2 else _('servers')}`"
                 ),

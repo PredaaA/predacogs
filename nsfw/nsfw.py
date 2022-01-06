@@ -1,6 +1,6 @@
 import discord
 
-from redbot.core import checks, commands
+from redbot.core import commands
 from redbot.core.i18n import Translator, cog_i18n
 
 import contextlib
@@ -25,6 +25,23 @@ class Nsfw(Core):
         """Get the version of the installed Nsfw cog."""
 
         await self._version_msg(ctx, self.__version__, self.__author__)
+
+    @commands.group()
+    async def nsfwset(self, ctx: commands.Context):
+        """Settings for the Nsfw cog."""
+
+    @nsfwset.command()
+    async def switchredditapi(self, ctx: commands.Context):
+        """Toggle to use Reddit API directly with the cost of getting ratelimited fast, or use Martine API with faster results and no ratelimits problems.
+
+        Defaults to Martine API."""
+        val = await self.config.use_reddit_api()
+        await self.config.use_reddit_api.set(not val)
+        await ctx.send(
+            "Switched to Reddit API. Warning: Your bot might be ratelimited by Reddit fast."
+            if not val
+            else "Switched back to Martine API."
+        )
 
     @commands.is_nsfw()
     @commands.command()
@@ -51,7 +68,7 @@ class Nsfw(Core):
     async def four_k(self, ctx: commands.Context):
         """Sends some 4k images from random subreddits."""
 
-        await self._send_msg(ctx, _("4k"), sub=sub.FOUR_K)
+        await self._send_msg(ctx, _("4k"), sub.FOUR_K)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -60,7 +77,7 @@ class Nsfw(Core):
     async def ahegao(self, ctx: commands.Context):
         """Sends some ahegao images from random subreddits."""
 
-        await self._send_msg(ctx, _("ahegao"), sub=sub.AHEGAO)
+        await self._send_msg(ctx, _("ahegao"), sub.AHEGAO)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -69,7 +86,7 @@ class Nsfw(Core):
     async def ass(self, ctx: commands.Context):
         """Sends some ass images from random subreddits."""
 
-        await self._send_msg(ctx, _("ass"), sub=sub.ASS)
+        await self._send_msg(ctx, _("ass"), sub.ASS)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -78,7 +95,7 @@ class Nsfw(Core):
     async def asianporn(self, ctx: commands.Context):
         """Sends some asian porn images."""
 
-        await self._send_msg(ctx, _("asian porn"), sub=sub.ASIANPORN)
+        await self._send_msg(ctx, _("asian porn"), sub.ASIANPORN)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -87,7 +104,7 @@ class Nsfw(Core):
     async def anal(self, ctx: commands.Context):
         """Sends some anal images/gifs from random subreddits."""
 
-        await self._send_msg(ctx, _("anal"), sub=sub.ANAL)
+        await self._send_msg(ctx, _("anal"), sub.ANAL)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -96,7 +113,7 @@ class Nsfw(Core):
     async def bbw(self, ctx: commands.Context):
         """Sends some bbw images."""
 
-        await self._send_msg(ctx, _("bbw"), sub=sub.BBW)
+        await self._send_msg(ctx, _("bbw"), sub.BBW)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -105,7 +122,7 @@ class Nsfw(Core):
     async def bdsm(self, ctx: commands.Context):
         """Sends some bdsm from random subreddits."""
 
-        await self._send_msg(ctx, _("bdsm"), sub=sub.BDSM)
+        await self._send_msg(ctx, _("bdsm"), sub.BDSM)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -114,7 +131,7 @@ class Nsfw(Core):
     async def blackcock(self, ctx: commands.Context):
         """Sends some blackcock images from random subreddits."""
 
-        await self._send_msg(ctx, _("black cock"), sub=sub.BLACKCOCK)
+        await self._send_msg(ctx, _("black cock"), sub.BLACKCOCK)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -123,7 +140,7 @@ class Nsfw(Core):
     async def blowjob(self, ctx: commands.Context):
         """Sends some blowjob images/gifs from random subreddits."""
 
-        await self._send_msg(ctx, _("blowjob"), sub=sub.BLOWJOB)
+        await self._send_msg(ctx, _("blowjob"), sub.BLOWJOB)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -132,7 +149,7 @@ class Nsfw(Core):
     async def boobs(self, ctx: commands.Context):
         """Sends some boobs images from random subreddits."""
 
-        await self._send_msg(ctx, _("boobs"), sub=sub.BOOBS)
+        await self._send_msg(ctx, _("boobs"), sub.BOOBS)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -141,7 +158,7 @@ class Nsfw(Core):
     async def bottomless(self, ctx: commands.Context):
         """Sends some bottomless images from random subreddits."""
 
-        await self._send_msg(ctx, _("bottomless"), sub=sub.BOTTOMLESS)
+        await self._send_msg(ctx, _("bottomless"), sub.BOTTOMLESS)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -150,7 +167,7 @@ class Nsfw(Core):
     async def cosplay(self, ctx: commands.Context):
         """Sends some nsfw cosplay images from random subreddits."""
 
-        await self._send_msg(ctx, _("nsfw cosplay"), sub=sub.COSPLAY)
+        await self._send_msg(ctx, _("nsfw cosplay"), sub.COSPLAY)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -159,7 +176,7 @@ class Nsfw(Core):
     async def cunnilingus(self, ctx: commands.Context):
         """Sends some cunnilingus images from random subreddits."""
 
-        await self._send_msg(ctx, _("cunnilingus"), sub=sub.CUNNI)
+        await self._send_msg(ctx, _("cunnilingus"), sub.CUNNI)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -168,7 +185,7 @@ class Nsfw(Core):
     async def cumshot(self, ctx: commands.Context):
         """Sends some cumshot images/gifs from random subreddits."""
 
-        await self._send_msg(ctx, _("cumshot"), sub=sub.CUMSHOTS)
+        await self._send_msg(ctx, _("cumshot"), sub.CUMSHOTS)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -177,7 +194,7 @@ class Nsfw(Core):
     async def deepthroat(self, ctx: commands.Context):
         """Sends some deepthroat images from random subreddits."""
 
-        await self._send_msg(ctx, _("deepthroat"), sub=sub.DEEPTHROAT)
+        await self._send_msg(ctx, _("deepthroat"), sub.DEEPTHROAT)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -186,7 +203,7 @@ class Nsfw(Core):
     async def dick(self, ctx: commands.Context):
         """Sends some dicks images from random subreddits."""
 
-        await self._send_msg(ctx, _("dick"), sub=sub.DICK)
+        await self._send_msg(ctx, _("dick"), sub.DICK)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -195,7 +212,7 @@ class Nsfw(Core):
     async def doublepenetration(self, ctx: commands.Context):
         """Sends some double penetration images/gifs from random subreddits."""
 
-        await self._send_msg(ctx, _("double penetration"), sub=sub.DOUBLE_P)
+        await self._send_msg(ctx, _("double penetration"), sub.DOUBLE_P)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -204,7 +221,7 @@ class Nsfw(Core):
     async def ebony(self, ctx: commands.Context):
         """Sends some ebony images."""
 
-        await self._send_msg(ctx, _("ebony"), sub=sub.EBONY)
+        await self._send_msg(ctx, _("ebony"), sub.EBONY)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -213,7 +230,7 @@ class Nsfw(Core):
     async def facials(self, ctx: commands.Context):
         """Sends some facials images from random subreddits."""
 
-        await self._send_msg(ctx, _("facials"), sub=sub.FACIALS)
+        await self._send_msg(ctx, _("facials"), sub.FACIALS)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -222,7 +239,7 @@ class Nsfw(Core):
     async def feet(self, ctx: commands.Context):
         """Sends some feet images from random subreddits."""
 
-        await self._send_msg(ctx, _("feets"), sub=sub.FEET)
+        await self._send_msg(ctx, _("feets"), sub.FEET)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -231,7 +248,7 @@ class Nsfw(Core):
     async def femdom(self, ctx: commands.Context):
         """Sends some femdom images from random subreddits."""
 
-        await self._send_msg(ctx, _("femdom"), sub=sub.FEMDOM)
+        await self._send_msg(ctx, _("femdom"), sub.FEMDOM)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -240,7 +257,7 @@ class Nsfw(Core):
     async def futa(self, ctx: commands.Context):
         """Sends some futa images from random subreddits."""
 
-        await self._send_msg(ctx, _("futa"), sub=sub.FUTA)
+        await self._send_msg(ctx, _("futa"), sub.FUTA)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -249,7 +266,7 @@ class Nsfw(Core):
     async def gay(self, ctx: commands.Context):
         """Sends some gay porn from random subreddits."""
 
-        await self._send_msg(ctx, _("gay porn"), sub=sub.GAY_P)
+        await self._send_msg(ctx, _("gay porn"), sub.GAY_P)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -258,7 +275,7 @@ class Nsfw(Core):
     async def group(self, ctx: commands.Context):
         """Sends some groups nudes from random subreddits."""
 
-        await self._send_msg(ctx, "groups nudes", sub=sub.GROUPS)
+        await self._send_msg(ctx, "groups nudes", sub.GROUPS)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -282,7 +299,7 @@ class Nsfw(Core):
     async def lesbian(self, ctx: commands.Context):
         """Sends some lesbian gifs or images from random subreddits."""
 
-        await self._send_msg(ctx, _("lesbian"), sub=sub.LESBIANS)
+        await self._send_msg(ctx, _("lesbian"), sub.LESBIANS)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -291,7 +308,7 @@ class Nsfw(Core):
     async def milf(self, ctx: commands.Context):
         """Sends some milf images from random subreddits."""
 
-        await self._send_msg(ctx, _("milf"), sub=sub.MILF)
+        await self._send_msg(ctx, _("milf"), sub.MILF)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -300,7 +317,7 @@ class Nsfw(Core):
     async def oral(self, ctx: commands.Context):
         """Sends some oral gifs or images from random subreddits."""
 
-        await self._send_msg(ctx, _("oral"), sub=sub.ORAL)
+        await self._send_msg(ctx, _("oral"), sub.ORAL)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -324,7 +341,7 @@ class Nsfw(Core):
     async def public(self, ctx: commands.Context):
         """Sends some public nude images from random subreddits."""
 
-        await self._send_msg(ctx, _("public nude"), sub=sub.PUBLIC)
+        await self._send_msg(ctx, _("public nude"), sub.PUBLIC)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -333,7 +350,7 @@ class Nsfw(Core):
     async def pussy(self, ctx: commands.Context):
         """Sends some pussy nude images from random subreddits."""
 
-        await self._send_msg(ctx, _("pussy"), sub=sub.PUSSY)
+        await self._send_msg(ctx, _("pussy"), sub.PUSSY)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -342,7 +359,7 @@ class Nsfw(Core):
     async def realgirls(self, ctx: commands.Context):
         """Sends some real girls images from random subreddits."""
 
-        await self._send_msg(ctx, _("real nudes"), sub=sub.REAL_GIRLS)
+        await self._send_msg(ctx, _("real nudes"), sub.REAL_GIRLS)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -351,7 +368,7 @@ class Nsfw(Core):
     async def redhead(self, ctx: commands.Context):
         """Sends some red heads images from random subreddits."""
 
-        await self._send_msg(ctx, _("red head"), sub=sub.REDHEADS)
+        await self._send_msg(ctx, _("red head"), sub.REDHEADS)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -360,7 +377,7 @@ class Nsfw(Core):
     async def rule34(self, ctx: commands.Context):
         """Sends some rule34 images from random subreddits."""
 
-        await self._send_msg(ctx, _("rule34"), sub=sub.RULE_34)
+        await self._send_msg(ctx, _("rule34"), sub.RULE_34)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -369,7 +386,7 @@ class Nsfw(Core):
     async def squirt(self, ctx: commands.Context):
         """Sends some squirts images from random subreddits."""
 
-        await self._send_msg(ctx, _("squirt"), sub=sub.SQUIRTS)
+        await self._send_msg(ctx, _("squirt"), sub.SQUIRTS)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -378,7 +395,7 @@ class Nsfw(Core):
     async def thigh(self, ctx: commands.Context):
         """Sends some thighs images from random subreddits."""
 
-        await self._send_msg(ctx, _("thigh"), sub=sub.THIGHS)
+        await self._send_msg(ctx, _("thigh"), sub.THIGHS)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -387,7 +404,7 @@ class Nsfw(Core):
     async def threesome(self, ctx: commands.Context):
         """Sends some threesome images."""
 
-        await self._send_msg(ctx, _("threesome"), sub=sub.THREESOME)
+        await self._send_msg(ctx, _("threesome"), sub.THREESOME)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -396,7 +413,7 @@ class Nsfw(Core):
     async def trans(self, ctx: commands.Context):
         """Sends some trans from random subreddits."""
 
-        await self._send_msg(ctx, _("trans"), sub=sub.TRANS)
+        await self._send_msg(ctx, _("trans"), sub.TRANS)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -405,7 +422,7 @@ class Nsfw(Core):
     async def gonewild(self, ctx: commands.Context):
         """Sends some gonewild images from random subreddits."""
 
-        await self._send_msg(ctx, _("gonewild"), sub=sub.WILD)
+        await self._send_msg(ctx, _("gonewild"), sub.WILD)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -414,4 +431,4 @@ class Nsfw(Core):
     async def yiff(self, ctx: commands.Context):
         """Sends some yiff images from random subreddits."""
 
-        await self._send_msg(ctx, _("yiff"), sub=sub.YIFF)
+        await self._send_msg(ctx, _("yiff"), sub.YIFF)

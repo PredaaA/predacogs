@@ -1,6 +1,6 @@
 {
   "author": ["Predä", "aikaterna"],
-  "install_msg": "Thank you for installing my Nsfw cog!\nImportant note: As indicated in name of this cog, it contains mature content and is not suited for all audiences, use it responsibly.\nUse `[p]help Nsfw` to get all commands.",
+  "install_msg": "Thank you for installing my Nsfw cog!\n\n__Important note:__ As indicated in name of this cog, it contains mature content and is not suited for all audiences, use it responsibly.\n__Second important note:__ This cog uses by default Martine's API, this is to avoid your bot being ratelimited by Reddit pretty fast. That API is owned by this cog's author. It keeps a hash of your bot's IP in order to get ratelimits working, then access logs are not stored persistently. See privacy policy here: https://api.martinebot.com/v1/privacypolicy. If you ever want to switch back to use Reddit API, it is possible by using `[p]nsfwset switchredditapi`\n\nUse `[p]help Nsfw` to get all commands.",
   "name": "Nsfw",
   "short": "Send random NSFW images from random subreddits and Nekobot API.",
   "description": "Send random NSFW images from random subreddits and Nekobot API in NSFW only channels.",

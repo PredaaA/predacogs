@@ -15,7 +15,8 @@ def emoji():
     return emoji
 
 
-REDDIT_BASEURL = "https://api.reddit.com/r/{}/random"
+REDDIT_BASEURL = "https://api.reddit.com/r/{sub}/random"
+MARTINE_API_BASE_URL = "https://api.martinebot.com/v1/images/subreddit"
 IMGUR_LINKS = ("http://imgur.com", "https://m.imgur.com", "https://imgur.com")
 GOOD_EXTENSIONS = (".png", ".jpg", ".jpeg", ".gif")
 

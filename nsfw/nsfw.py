@@ -26,6 +26,7 @@ class Nsfw(Core):
 
         await self._version_msg(ctx, self.__version__, self.__author__)
 
+    @commands.is_owner()
     @commands.group()
     async def nsfwset(self, ctx: commands.Context):
         """Settings for the Nsfw cog."""

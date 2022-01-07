@@ -20,7 +20,7 @@ _ = Translator("Nsfw", __file__)
 class Core(commands.Cog):
 
     __author__ = ["Predä", "aikaterna"]
-    __version__ = "2.3.970"
+    __version__ = "2.3.971"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""

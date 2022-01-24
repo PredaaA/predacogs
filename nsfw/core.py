@@ -11,16 +11,24 @@ from redbot.core.bot import Red
 from redbot.core.i18n import Translator, cog_i18n
 from redbot.core.utils.chat_formatting import bold, box, inline
 
-from .constants import GOOD_EXTENSIONS, IMGUR_LINKS, MARTINE_API_BASE_URL, REDDIT_BASEURL, emoji
+from .constants import (
+    GOOD_EXTENSIONS,
+    IMGUR_LINKS,
+    MARTINE_API_BASE_URL,
+    NOT_EMBED_DOMAINS,
+    REDDIT_BASEURL,
+    emoji,
+)
 
 _ = Translator("Nsfw", __file__)
 
 
+# FIXME: This code really needs a good rewrite at some point.
 @cog_i18n(_)
 class Core(commands.Cog):
 
     __author__ = ["Predä", "aikaterna"]
-    __version__ = "2.3.971"
+    __version__ = "2.3.98"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""
@@ -134,13 +142,26 @@ class Core(commands.Cog):
     async def _make_embed(self, ctx: commands.Context, subs: List[str], name: str):
         """Function to make the embed for all Reddit API images."""
         try:
-            url, subr = await asyncio.wait_for(self._get_imgs(subs=subs), 3)
+            url, subr = await asyncio.wait_for(self._get_imgs(subs=subs), 5)
         except asyncio.TimeoutError:
             await ctx.send("Failed to get an image. Please try again later. (Timeout error)")
             return
         if not url:
             return
-        if url.endswith(GOOD_EXTENSIONS):
+
+        if any(wrong in url for wrong in NOT_EMBED_DOMAINS):
+            em = (
+                _("Here is {name} gif ...")
+                + " \N{EYES}\n\n"
+                + _("Requested by {req} {emoji} • From {r}\n{url}")
+            ).format(
+                name=name,
+                req=bold(ctx.author.display_name),
+                emoji=emoji(),
+                r=bold(f"r/{subr}"),
+                url=url,
+            )
+        else:
             em = await self._embed(
                 color=0x891193,
                 title=(_("Here is {name} image ...") + " \N{EYES}").format(name=name),
@@ -153,18 +174,7 @@ class Core(commands.Cog):
                     req=ctx.author.display_name, emoji=emoji(), r=subr
                 ),
             )
-        if url.startswith("https://gfycat.com"):
-            em = (
-                _("Here is {name} gif ...")
-                + " \N{EYES}\n\n"
-                + _("Requested by {req} {emoji} • From {r}\n{url}")
-            ).format(
-                name=name,
-                req=bold(ctx.author.display_name),
-                emoji=emoji(),
-                r=bold(f"r/{subr}"),
-                url=url,
-            )
+
         return em
 
     async def _make_embed_other(
@@ -172,7 +182,7 @@ class Core(commands.Cog):
     ):
         """Function to make the embed for all others APIs images."""
         try:
-            data = await asyncio.wait_for(self._get_others_imgs(ctx, url=url), 3)
+            data = await asyncio.wait_for(self._get_others_imgs(ctx, url=url), 5)
         except asyncio.TimeoutError:
             await ctx.send("Failed to get an image. Please try again later. (Timeout error)")
             return

@@ -18,7 +18,15 @@ def emoji():
 REDDIT_BASEURL = "https://api.reddit.com/r/{sub}/random"
 MARTINE_API_BASE_URL = "https://api.martinebot.com/v1/images/subreddit"
 IMGUR_LINKS = ("http://imgur.com", "https://m.imgur.com", "https://imgur.com")
-GOOD_EXTENSIONS = (".png", ".jpg", ".jpeg", ".gif")
+NOT_EMBED_DOMAINS = (
+    "gfycat.com/",
+    "gifdeliverynetwork.com/",
+    "redgifs.com",
+    "imgur.com/gallery/",
+    "imgur.com/a/",
+    ".gifv",
+)
+GOOD_EXTENSIONS = (".png", ".jpg", ".jpeg", ".gif", "gifv")
 
 # Subreddits
 FOUR_K = [

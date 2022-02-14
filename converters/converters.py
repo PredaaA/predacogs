@@ -6,7 +6,7 @@ from redbot.core.i18n import Translator, cog_i18n
 from redbot.core.utils.chat_formatting import humanize_timedelta
 
 from typing import Union
-from datetime import datetime
+from datetime import datetime, timezone
 
 import contextlib
 
@@ -18,7 +18,7 @@ class Converters(commands.Cog):
     """Some converters."""
 
     __author__ = "Predä"
-    __version__ = "0.3.9"
+    __version__ = "0.3.10"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""
@@ -40,7 +40,7 @@ class Converters(commands.Cog):
     async def todate(self, ctx: commands.Context, timestamp: Union[int, float]):
         """Convert a unix timestamp to a readable datetime."""
         try:
-            convert = datetime.utcfromtimestamp(int(timestamp)).strftime("%Y-%m-%d %H:%M:%S")
+            convert = datetime.fromtimestamp(int(timestamp), timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
             g = datetime.fromtimestamp(int(timestamp))
             curr = datetime.fromtimestamp(int(datetime.now().timestamp()))
             secs = str((curr - g).total_seconds())

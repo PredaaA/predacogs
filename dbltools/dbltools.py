@@ -34,7 +34,7 @@ class DblTools(commands.Cog):
     """Tools for Top.gg API."""
 
     __author__ = "Predä"
-    __version__ = "2.0.8"
+    __version__ = "2.0.9"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""
@@ -388,7 +388,7 @@ class DblTools(commands.Cog):
                 name=_("Top.gg info about {}:").format(data["username"]),
                 icon_url="https://cdn.discordapp.com/emojis/393548388664082444.gif",
             )
-            em.set_thumbnail(url=bot.avatar_url_as(static_format="png"))
+            em.set_thumbnail(url=bot.display_avatar)
             return await ctx.send(embed=em)
 
     @commands.command()

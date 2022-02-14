@@ -2,7 +2,7 @@ import asyncio
 import logging
 import time
 from collections import Counter
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Union
 
 import discord
@@ -41,7 +41,7 @@ class MartTools(Listeners, commands.Cog):
     """Multiple tools that are originally used on Martine."""
 
     __author__ = ["Predä", "Draper"]
-    __version__ = "3.0.1"
+    __version__ = "3.0.2"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""
@@ -51,7 +51,7 @@ class MartTools(Listeners, commands.Cog):
         self.bot = bot
         self.cursor = Database(f"sqlite:///{cog_data_path(self)}/MartTools.db")
         self.cache = {"perma": Counter(), "session": Counter()}
-        self.uptime = datetime.utcnow()
+        self.uptime = discord.utils.utcnow()
 
         self.init_task = self.bot.loop.create_task(self.initialize())
         self.dump_cache_task = self.bot.loop.create_task(self._dump_cache_to_db_task())
@@ -136,11 +136,11 @@ class MartTools(Listeners, commands.Cog):
         return humanize_number(self.cache["perma" if perma else "session"][key])
 
     def get_bot_uptime(self):
-        delta = datetime.utcnow() - self.uptime
+        delta = discord.utils.utcnow() - self.uptime
         return str(humanize_timedelta(timedelta=delta))
 
     def usage_counts_cpm(self, key: str, time: int = 60):
-        delta = datetime.utcnow() - self.uptime
+        delta = discord.utils.utcnow() - self.uptime
         minutes = delta.total_seconds() / time
         total = self.get_value(key, raw=True)
         return total / minutes
@@ -150,7 +150,7 @@ class MartTools(Listeners, commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def bankstats(self, ctx: commands.Context):
         """Show stats of the bank."""
-        icon = self.bot.user.avatar_url_as(static_format="png")
+        icon = self.bot.user.display_avatar
         user_bal = await bank.get_balance(ctx.author)
         credits_name = await bank.get_currency_name(ctx.guild)
         pos = await bank.get_leaderboard_position(ctx.author)
@@ -244,7 +244,7 @@ class MartTools(Listeners, commands.Cog):
                 title=_("Usage count of {} since last restart:").format(self.bot.user.name),
                 description=msg,
             )
-            em.set_thumbnail(url=self.bot.user.avatar_url_as(static_format="png"))
+            em.set_thumbnail(url=self.bot.user.display_avatar)
             em.set_footer(text=_("Since {}").format(self.get_bot_uptime()))
             await ctx.send(embed=em)
         else:
@@ -260,9 +260,9 @@ class MartTools(Listeners, commands.Cog):
         """
         Permanent stats since first time that the cog has been loaded.
         """
-        avatar = self.bot.user.avatar_url_as(static_format="png")
-        delta = datetime.utcnow() - datetime.utcfromtimestamp(
-            self.get_value("creation_time", perma=True, raw=True)
+        avatar = self.bot.user.display_avatar
+        delta = discord.utils.utcnow() - datetime.fromtimestamp(
+            self.get_value("creation_time", perma=True, raw=True), timezone.utc
         )
         uptime = humanize_timedelta(timedelta=delta)
         ll_players = "{}/{}".format(
@@ -452,7 +452,7 @@ class MartTools(Listeners, commands.Cog):
         except AttributeError:
             guild_prefixes = False
         bot_name = ctx.bot.user.name
-        avatar = self.bot.user.avatar_url_as(static_format="png")
+        avatar = self.bot.user.display_avatar
 
         if not guild_prefixes:
             to_send = [f"`\u200b{p}\u200b`" for p in default_prefixes]

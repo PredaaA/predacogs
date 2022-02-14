@@ -37,7 +37,9 @@ class Core(commands.Cog):
         """Convert a unix timestamp to a readable datetime."""
         try:
             given = timestamp[: timestamp.find(".")] if "." in str(timestamp) else timestamp
-            convert = datetime.fromtimestamp(int(given), timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+            convert = datetime.fromtimestamp(int(given), timezone.utc).strftime(
+                "%Y-%m-%d %H:%M:%S"
+            )
         except (ValueError, OverflowError):
             raise ValueError(f"{given} is not a valid timestamp.")
         b = datetime.fromtimestamp(int(given))

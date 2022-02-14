@@ -40,7 +40,9 @@ class Converters(commands.Cog):
     async def todate(self, ctx: commands.Context, timestamp: Union[int, float]):
         """Convert a unix timestamp to a readable datetime."""
         try:
-            convert = datetime.fromtimestamp(int(timestamp), timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+            convert = datetime.fromtimestamp(int(timestamp), timezone.utc).strftime(
+                "%Y-%m-%d %H:%M:%S"
+            )
             g = datetime.fromtimestamp(int(timestamp))
             curr = datetime.fromtimestamp(int(datetime.now().timestamp()))
             secs = str((curr - g).total_seconds())

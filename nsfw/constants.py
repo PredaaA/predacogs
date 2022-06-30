@@ -1,6 +1,8 @@
 from random import choice
 
 # Stuff for the cog
+
+
 def emoji():
     """Randomize footer emojis."""
     EMOJIS = [
@@ -42,16 +44,13 @@ ASS = [
     "AssOnTheGlass",
     "AssReveal",
     "AssholeBehindThong",
-    "BestBooties",
     "ButtsAndBareFeet",
     "GodBooty",
     "HighResASS",
     "HungryButts",
-    "ILikeLittleButts",
     "Mooning",
     "SnakeButt",
     "TheUnderbun",
-    "Underbun",
     "Upshorts",
     "ass",
     "asshole",
@@ -61,19 +60,16 @@ ASS = [
     "bigasses",
     "booty",
     "brunetteass",
-    "datass",
     "datgap",
     "girlsinleggings",
     "girlsinyogapants",
     "hugeass",
     "paag",
     "pawg",
-    "onherstomach",
     "facedownassup",
 ]
 ASIANPORN = [
     "AmateurAsianGirls",
-    "AsianAmericanHotties",
     "AsianCuties",
     "AsianHotties",
     "AsianNSFW",
@@ -82,7 +78,6 @@ ASIANPORN = [
     "AsiansGoneWild",
     "KoreanHotties",
     "NSFW_Japan",
-    "NSFW_Korea",
     "asian_gifs",
     "bustyasians",
     "juicyasians",
@@ -95,21 +90,23 @@ ANAL = [
     "analinsertions",
     "assholegonewild",
     "buttsthatgrip",
-    "sodomy",
 ]
-BBW = ["BBW", "BBWVideos", "BBW_Chubby", "GoneWildPlus", "PerkyChubby", "chubby", "gonewildcurvy"]
+BBW = [
+    "BBW",
+    "BBW_Chubby",
+    "GoneWildPlus",
+    "PerkyChubby",
+    "chubby",
+    "gonewildcurvy",
+]
 BDSM = ["BDSMGW", "BDSM_NoSpam", "Bondage", "Spanking", "bdsm", "ropeart"]
 BLACKCOCK = ["Blackdick", "ChurchOfTheBBC", "bigblackcocks", "blackcock"]
 BLOWJOB = [
     "AsianBlowjobs",
-    "BlowjobEyeContact",
-    "BlowjobGifs",
     "Blowjobs",
     "OralCreampie",
-    "SuckingItDry",
     "SwordSwallowers",
     "blowjobsandwich",
-    "fellatio",
 ]
 BOOBS = [
     "AreolasGW",
@@ -135,30 +132,25 @@ BOOBS = [
     "boobgifs",
     "boobs",
     "burstingout",
-    "cleavage",
     "fortyfivefiftyfive",
     "ghostnipples",
     "homegrowntits",
     "hugeboobs",
     "naturaltitties",
-    "piercedtits",
     "pokies",
     "smallboobs",
     "tits",
 ]
 BOTTOMLESS = ["Bottomless", "nopanties", "upskirt"]
 COSPLAY = [
-    "CosplayBeauties",
     "CosplayBoobs",
     "CosplayLewd",
     "Cosplayheels",
-    "cosplayonoff",
     "gwcosplay",
     "nsfwcosplay",
 ]
-CUNNI = ["CunnilingusSelfie", "Hegoesdown", "cunnilingus"]
+CUNNI = ["CunnilingusSelfie", "cunnilingus"]
 CUMSHOTS = [
-    "ContainTheLoad",
     "GirlsFinishingTheJob",
     "amateurcumsluts",
     "bodyshots",
@@ -170,7 +162,15 @@ CUMSHOTS = [
     "unexpectedcum",
 ]
 DEEPTHROAT = ["AmateurDeepthroat", "DeepThroatTears", "SwordSwallowers", "deepthroat"]
-DICK = ["DickPics4Freedom", "MassiveCock", "ThickDick", "bulges", "cock", "penis", "twinks"]
+DICK = [
+    "DickPics4Freedom",
+    "MassiveCock",
+    "ThickDick",
+    "bulges",
+    "cock",
+    "penis",
+    "twinks",
+]
 DOUBLE_P = ["Technical_DP", "doublepenetration"]
 EBONY = [
     "DarkAngels",
@@ -181,13 +181,12 @@ EBONY = [
     "blackporn",
     "ebonyamateurs",
 ]
-FACIALS = ["FacialFun", "facial", "facialcumshots"]
+FACIALS = ["FacialFun", "facialcumshots"]
 FEET = [
     "ButtsAndBareFeet",
     "Feet_NSFW",
     "Feetup",
     "FootFetish",
-    "feetish",
     "legsup",
     "rule34feet",
 ]
@@ -205,7 +204,6 @@ GAY_P = [
     "GayGifs",
     "ManSex",
     "NSFW_GAY",
-    "Singlets",
     "broslikeus",
     "bulges",
     "gaybears",
@@ -214,14 +212,12 @@ GAY_P = [
     "jockstraps",
     "ladybonersgw",
     "lovegaymale",
-    "malepornstars",
     "manass",
     "manlove",
     "MaleUnderwear",
 ]
 GROUPS = ["GroupOfNudeGirls", "groupsex"]
 LESBIANS = [
-    "Ass_to_ssA",
     "HDLesbianGifs",
     "Lesbian_gifs",
     "StraightGirlsPlaying",
@@ -231,7 +227,6 @@ LESBIANS = [
     "lesbians",
     "mmgirls",
     "scissoring",
-    "titstouchingtits",
 ]
 MILF = [
     "AgedBeauty",
@@ -246,14 +241,10 @@ MILF = [
 ]
 ORAL = [
     "AsianBlowjobs",
-    "BlowjobEyeContact",
-    "BlowjobGifs",
     "Blowjobs",
     "CunnilingusSelfie",
     "DeepThroatTears",
-    "Hegoesdown",
     "OralCreampie",
-    "SuckingItDry",
     "SwordSwallowers",
     "ballsucking",
     "blowjobsandwich",
@@ -269,8 +260,6 @@ PUBLIC = [
     "NotSafeForNature",
     "NudeInPublic",
     "PublicFlashing",
-    "RealPublicNudity",
-    "Unashamed",
     "WoodNymphs",
     "bitchinbubba",
     "casualnudity",
@@ -284,7 +273,6 @@ PUBLIC = [
 PUSSY = [
     "AsianPussy",
     "FireCrotch",
-    "GirlsWithToys",
     "GodPussy",
     "HairyPussy",
     "Innies",
@@ -300,16 +288,19 @@ PUSSY = [
     "pelfie",
     "pussy",
     "rearpussy",
-    "simps",
     "spreadeagle",
     "ButterflyWings",
     "DangleAndJingle",
-    "Outies",
-    "DarkBitsNPieces",
 ]
-REAL_GIRLS = ["CellShots", "ChangingRooms", "Nude_Selfie", "RealGirls", "selfpix", "selfshots"]
+REAL_GIRLS = [
+    "CellShots",
+    "ChangingRooms",
+    "Nude_Selfie",
+    "RealGirls",
+    "selfpix",
+    "selfshots",
+]
 REDHEADS = [
-    "FireBush",
     "FireCrotch",
     "FreckledRedheads",
     "RedheadGifs",
@@ -318,7 +309,6 @@ REDHEADS = [
     "nsfw_redhead",
     "redhead",
     "redheads",
-    "redheadxxx",
 ]
 RULE_34 = [
     "Overwatch_Porn",
@@ -330,11 +320,10 @@ RULE_34 = [
     "rule34cartoons",
     "rule34_ass",
 ]
-SQUIRTS = ["GushingGirls", "squirting", "squirting_gifs", "wetspot", "grool"]
+SQUIRTS = ["squirting", "squirting_gifs", "wetspot", "grool"]
 THIGHS = [
     "ThickThighs",
     "Thigh",
-    "Thighs",
     "datgap",
     "leggingsgonewild",
     "legs",
@@ -347,7 +336,6 @@ THREESOME = [
     "RealThreesomes",
     "SpitRoasted",
     "Threesome",
-    "Triplepenetration",
     "Xsome",
     "amateur_threesomes",
     "groupsex",
@@ -357,8 +345,6 @@ THREESOME = [
 TRANS = [
     "DeliciousTraps",
     "GoneWildTrans",
-    "SexyShemales",
-    "ShemaleGalleries",
     "Shemale_Big_Cock",
     "Shemales",
     "ShemalesParadise",

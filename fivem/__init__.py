@@ -6,6 +6,6 @@ __red_end_user_data_statement__ = (
 )
 
 
-def setup(bot: Red):
+async def setup(bot: Red):
     cog = FiveM(bot)
-    bot.add_cog(cog)
+    await bot.add_cog(cog)

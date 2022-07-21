@@ -1,3 +1,5 @@
+from redbot.core.bot import Red
+
 from .grafana import Grafana
 
 __red_end_user_data_statement__ = (
@@ -5,5 +7,5 @@ __red_end_user_data_statement__ = (
 )
 
 
-def setup(bot):
-    bot.add_cog(Grafana(bot))
+async def setup(bot: Red):
+    await bot.add_cog(Grafana(bot))

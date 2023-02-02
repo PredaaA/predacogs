@@ -48,6 +48,7 @@
 | [DblTools](https://github.com/PredaaA/predacogs/tree/master/dbltools) | <details><summary>Tools to get bots information from Top.gg and more.</summary>Tools to get bots information from top.gg, post stats, set a daily reward for votes, or give a role to new users who voted.</details>
 | [DblToolsLite](https://github.com/PredaaA/predacogs/tree/master/dbltoolslite) | <details><summary>Same as DblTools but without advanced features, only commands.</summary></details>
 | [FiveM](https://github.com/PredaaA/predacogs/tree/master/fivem) | <details><summary>Tools for FiveM servers.</details></summary>
+| [OnConnect](https://github.com/PredaaA/predacogs/tree/master/onconnect) | <details><summary>This is a cog that sends shard events for resume, on ready and disconnect.</details></summary>
 
 ## Contributing
 
@@ -61,8 +62,9 @@ For any suggestions or issues, feel free to ask in the #support-othercogs channe
 
 - [Red devs](https://github.com/Cog-Creators) for base of my remplacement commands cogs.
 - [Red Discord server community](https://discord.gg/red) for all the help in coding.
-- [Aikaterna](https://github.com/aikaterna) for the help on [Nsfw cog](https://github.com/PredaaA/predacogs/tree/master/nsfw).
-- [Stevy](https://github.com/AznStevy) to authorize me to publish rewritten version of [WhoPlays cog](https://github.com/PredaaA/predacogs/tree/master/whoplays).
+- [aikaterna](https://github.com/aikaterna) for the help on [Nsfw cog](https://github.com/PredaaA/predacogs/tree/master/nsfw).
+- [AznStevy](https://github.com/AznStevy) to authorize me to publish rewritten version of [WhoPlays cog](https://github.com/PredaaA/predacogs/tree/master/whoplays).
+- [ltzmax](https://github.com/ltzmax) for the original onconnect cog, which is now ported to this repo.
 
 <a href="https://github.com/PredaaA/predacogs">
   <img src="https://img.shields.io/badge/PredaCogs-For Red-red.svg?style=popout&logo=Python">

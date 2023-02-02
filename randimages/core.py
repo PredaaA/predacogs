@@ -150,8 +150,7 @@ class Core(commands.Cog):
                     except json.decoder.JSONDecodeError as exception:
                         await self._api_errors_msg(ctx, error_code=exception)
                         return None
-            data = dict(img=img_data, fact=fact_data)
-            return data
+            return dict(img=img_data, fact=fact_data)
         except aiohttp.client_exceptions.ClientConnectionError:
             await self._api_errors_msg(ctx, error_code="JSON decode failed")
             return None

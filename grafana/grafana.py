@@ -80,7 +80,7 @@ class Grafana(commands.Cog):
             f"panelId={params['panelId']}&fullscreen&orgId={params['orgId']}"
             f"&from={params['from']}&to={params['to']}"
         )
-        filename = "&".join([f"{k}={v}" for k, v in params.items()])
+        filename = "&".join(f"{k}={v}" for k, v in params.items())
         return await ctx.send(msg, file=discord.File(file, filename=f"graph-{filename}.png"))
 
     @graph.command(name="list")

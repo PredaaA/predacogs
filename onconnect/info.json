@@ -1,0 +1,33 @@
+{
+    "author": [
+        "max",
+        "PredaaA"
+    ],
+    "name": "OnConnect",
+    "install_msg": "Thanks for installing. Use `[p]connectset channel` to set event channel.\nFeel free to check out the docs for this cog <https://maxbooiii.gitbook.io/maxcogs/cogs/onconnect>",
+    "description": "On connect is a shard event cog that shows on ready, disconnect and resume.",
+    "short": "Shard events cog that shows on ready, disconnect and resume.",
+    "hidden": false,
+    "min_bot_version": "3.4.6",
+    "max_bot_version": "3.4.99",
+    "tags": [
+        "shard",
+        "reconnect",
+        "disconnect",
+        "on_ready"
+    ],
+    "permissions": [
+        "embed_links",
+        "add_reactions"
+    ],
+    "min_python_version": [
+        3,
+        8,
+        1
+    ],
+    "requirements": [
+        "psutil"
+    ],
+    "end_user_data_statement": "This cog does not store any End User Data.",
+    "type": "COG"
+}

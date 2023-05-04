@@ -2,7 +2,7 @@ import asyncio
 import logging
 import time
 from collections import Counter
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Union
 
 import discord
@@ -41,7 +41,7 @@ class MartTools(Listeners, commands.Cog):
     """Multiple tools that are originally used on Martine."""
 
     __author__ = ["Predä", "Draper"]
-    __version__ = "3.0.1"
+    __version__ = "3.0.2"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""
@@ -51,7 +51,7 @@ class MartTools(Listeners, commands.Cog):
         self.bot = bot
         self.cursor = Database(f"sqlite:///{cog_data_path(self)}/MartTools.db")
         self.cache = {"perma": Counter(), "session": Counter()}
-        self.uptime = datetime.utcnow()
+        self.uptime = discord.utils.utcnow()
 
         self.init_task = self.bot.loop.create_task(self.initialize())
         self.dump_cache_task = self.bot.loop.create_task(self._dump_cache_to_db_task())
@@ -136,11 +136,11 @@ class MartTools(Listeners, commands.Cog):
         return humanize_number(self.cache["perma" if perma else "session"][key])
 
     def get_bot_uptime(self):
-        delta = datetime.utcnow() - self.uptime
+        delta = discord.utils.utcnow() - self.uptime
         return str(humanize_timedelta(timedelta=delta))
 
     def usage_counts_cpm(self, key: str, time: int = 60):
-        delta = datetime.utcnow() - self.uptime
+        delta = discord.utils.utcnow() - self.uptime
         minutes = delta.total_seconds() / time
         total = self.get_value(key, raw=True)
         return total / minutes
@@ -150,7 +150,7 @@ class MartTools(Listeners, commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def bankstats(self, ctx: commands.Context):
         """Show stats of the bank."""
-        icon = self.bot.user.avatar_url_as(static_format="png")
+        icon = self.bot.user.display_avatar
         user_bal = await bank.get_balance(ctx.author)
         credits_name = await bank.get_currency_name(ctx.guild)
         pos = await bank.get_leaderboard_position(ctx.author)
@@ -244,7 +244,7 @@ class MartTools(Listeners, commands.Cog):
                 title=_("Usage count of {} since last restart:").format(self.bot.user.name),
                 description=msg,
             )
-            em.set_thumbnail(url=self.bot.user.avatar_url_as(static_format="png"))
+            em.set_thumbnail(url=self.bot.user.display_avatar)
             em.set_footer(text=_("Since {}").format(self.get_bot_uptime()))
             await ctx.send(embed=em)
         else:
@@ -260,9 +260,9 @@ class MartTools(Listeners, commands.Cog):
         """
         Permanent stats since first time that the cog has been loaded.
         """
-        avatar = self.bot.user.avatar_url_as(static_format="png")
-        delta = datetime.utcnow() - datetime.utcfromtimestamp(
-            self.get_value("creation_time", perma=True, raw=True)
+        avatar = self.bot.user.display_avatar
+        delta = discord.utils.utcnow() - datetime.fromtimestamp(
+            self.get_value("creation_time", perma=True, raw=True), timezone.utc
         )
         uptime = humanize_timedelta(timedelta=delta)
         ll_players = "{}/{}".format(
@@ -452,7 +452,7 @@ class MartTools(Listeners, commands.Cog):
         except AttributeError:
             guild_prefixes = False
         bot_name = ctx.bot.user.name
-        avatar = self.bot.user.avatar_url_as(static_format="png")
+        avatar = self.bot.user.display_avatar
 
         if not guild_prefixes:
             to_send = [f"`\u200b{p}\u200b`" for p in default_prefixes]
@@ -508,96 +508,4 @@ class MartTools(Listeners, commands.Cog):
             em = discord.Embed(color=await ctx.embed_colour(), description=msg)
             await ctx.send(embed=em)
         else:
-            await ctx.send(msg)
-
-    @commands.command(aliases=["servreg"])
-    async def serversregions(self, ctx: commands.Context, sort: str = "guilds"):
-        """
-        Show total of regions where the bot is.
-
-        You can also sort by number of users by using `[p]serversregions users`
-        By default it sort by guilds.
-        """
-        regions_dict = {
-            "vip-us-east": ":flag_us:" + _(" __VIP__ US East"),
-            "vip-us-west": ":flag_us:" + _(" __VIP__ US West"),
-            "vip-amsterdam": ":flag_nl:" + _(" __VIP__ Amsterdam"),
-            "eu-west": ":flag_eu:" + _(" EU West"),
-            "eu-central": ":flag_eu:" + _(" EU Central"),
-            "europe": ":flag_eu:" + _(" Europe"),
-            "london": ":flag_gb:" + _(" London"),
-            "frankfurt": ":flag_de:" + _(" Frankfurt"),
-            "amsterdam": ":flag_nl:" + _(" Amsterdam"),
-            "us-west": ":flag_us:" + _(" US West"),
-            "us-east": ":flag_us:" + _(" US East"),
-            "us-south": ":flag_us:" + _(" US South"),
-            "us-central": ":flag_us:" + _(" US Central"),
-            "singapore": ":flag_sg:" + _(" Singapore"),
-            "sydney": ":flag_au:" + _(" Sydney"),
-            "brazil": ":flag_br:" + _(" Brazil"),
-            "hongkong": ":flag_hk:" + _(" Hong Kong"),
-            "russia": ":flag_ru:" + _(" Russia"),
-            "japan": ":flag_jp:" + _(" Japan"),
-            "southafrica": ":flag_za:" + _(" South Africa"),
-            "india": ":flag_in:" + _(" India"),
-            "dubai": ":flag_ae:" + _(" Dubai"),
-            "south-korea": ":flag_kr:" + _(" South Korea"),
-            "newark": ":flag_us:" + _(" Newark"),
-            "atlanta": ":flag_us:" + _(" Atlanta"),
-            "santa-clara": ":flag_us:" + _(" Santa Clara"),
-            "seattle": ":flag_us:" + _(" Seattle"),
-            "st-pete": ":flag_us:" + _(" St. Petersburg"),
-            "buenos-aires": ":flag_ar:" + _(" Buenos Aires"),
-            "stockholm": ":flag_se: " + _(" Stockholm"),
-            "santiago": ":flag_cl: " + _(" Santiago"),
-        }
-        regions = {}
-        for guild in self.bot.guilds:
-            region = str(guild.region)
-            if region not in regions:
-                regions[region] = {"guilds": 0, "users": 0}
-            regions[region]["users"] += guild.member_count
-            regions[region]["guilds"] += 1
-
-        def sort_keys(key: str):
-            keys = (
-                (key[1]["guilds"], key[1]["users"])
-                if sort != "users"
-                else (key[1]["users"], key[1]["guilds"])
-            )
-            return keys
-
-        regions_stats = dict(sorted(regions.items(), key=lambda x: sort_keys(x), reverse=True))
-
-        msg = [
-            _("{flag}: {guilds_len} and {users_len}").format(
-                flag=regions_dict.get(region_name, region_name),
-                guilds_len=(
-                    f"`{humanize_number(values['guilds'])} {_('server') if values['guilds'] < 2 else _('servers')}`"
-                ),
-                users_len=(
-                    f"`{humanize_number(values['users'])} {_('user') if values['users'] < 2 else _('users')}`"
-                ),
-            )
-            for region_name, values in regions_stats.items()
-        ]
-        guilds_word = _("server") if len(self.bot.guilds) < 2 else _("servers")
-        users_word = (
-            _("user") if sum(k["users"] for k in regions_stats.values()) < 2 else _("users")
-        )
-        footer = _("For a total of {guilds} and {users}").format(
-            guilds=f"{humanize_number(len(self.bot.guilds))} {guilds_word}",
-            users=f"{humanize_number(sum(k['users'] for k in regions_stats.values()))} {users_word}",
-        )
-
-        if await ctx.embed_requested():
-            em = discord.Embed(
-                color=await ctx.embed_colour(),
-                title=_("Servers regions stats:"),
-                description="\n".join(msg),
-            )
-            em.set_footer(text=footer)
-            await ctx.send(embed=em)
-        else:
-            msg = bold(_("Servers regions stats:\n\n")) + "\n".join(msg) + "\n" + bold(footer)
             await ctx.send(msg)

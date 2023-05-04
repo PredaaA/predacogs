@@ -7,7 +7,7 @@ from redbot.core.utils.chat_formatting import humanize_timedelta
 import aiohttp
 
 from typing import Optional
-from datetime import datetime
+from datetime import datetime, timezone
 
 SPACE_X_API_BASE_URL = "https://api.spacexdata.com/v3/"
 
@@ -15,7 +15,7 @@ SPACE_X_API_BASE_URL = "https://api.spacexdata.com/v3/"
 class Core(commands.Cog):
 
     __author__ = "Predä"
-    __version__ = "0.1.5"
+    __version__ = "0.1.6"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""
@@ -37,7 +37,9 @@ class Core(commands.Cog):
         """Convert a unix timestamp to a readable datetime."""
         try:
             given = timestamp[: timestamp.find(".")] if "." in str(timestamp) else timestamp
-            convert = datetime.utcfromtimestamp(int(given)).strftime("%Y-%m-%d %H:%M:%S")
+            convert = datetime.fromtimestamp(int(given), timezone.utc).strftime(
+                "%Y-%m-%d %H:%M:%S"
+            )
         except (ValueError, OverflowError):
             raise ValueError(f"{given} is not a valid timestamp.")
         b = datetime.fromtimestamp(int(given))

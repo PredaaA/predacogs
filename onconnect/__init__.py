@@ -7,5 +7,5 @@ __red_end_user_data_statement__ = (
 )
 
 
-def setup(bot: Red) -> None:
-    bot.add_cog(OnConnect(bot))
+async def setup(bot: Red) -> None:
+    await bot.add_cog(OnConnect(bot))

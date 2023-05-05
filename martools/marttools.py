@@ -12,7 +12,7 @@ from databases import Database
 from redbot.cogs.audio.audio_dataclasses import Query
 from redbot.core import bank, commands
 from redbot.core.bot import Red
-from redbot.core.cog_manager import cog_data_path
+from redbot.core.data_manager import cog_data_path
 from redbot.core.i18n import Translator, cog_i18n
 from redbot.core.utils.chat_formatting import bold, box, humanize_number, humanize_timedelta
 

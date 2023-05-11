@@ -28,7 +28,7 @@ _ = Translator("Nsfw", __file__)
 class Core(commands.Cog):
 
     __author__ = ["Predä", "aikaterna"]
-    __version__ = "2.3.98"
+    __version__ = "2.3.99"
 
     async def red_delete_data_for_user(self, **kwargs):
         """Nothing to delete."""
@@ -81,7 +81,7 @@ class Core(commands.Cog):
                             url = url[:-1]
                         elif not url.endswith(GOOD_EXTENSIONS) and not url.startswith(
                             "https://gfycat.com"
-                        ):
+                        ) or "redgifs" in url:
                             tries += 1
                             continue
                         return url, subr

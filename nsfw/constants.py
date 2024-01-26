@@ -33,20 +33,16 @@ GOOD_EXTENSIONS = (".png", ".jpg", ".jpeg", ".gif", "gifv")
 # Subreddits
 FOUR_K = [
     "Hegre",
-    "HighResASS",
     "HighResNSFW",
     "NSFW_Wallpapers",
     "UHDnsfw",
     "closeup",
 ]
-AHEGAO = ["AhegaoGirls", "EyeRollOrgasm", "O_Faces", "RealAhegao", "ahegao"]
+AHEGAO = ["AhegaoGirls", "EyeRollOrgasm", "O_Faces", "RealAhegao"]
 ASS = [
     "AssOnTheGlass",
-    "AssReveal",
     "AssholeBehindThong",
     "ButtsAndBareFeet",
-    "GodBooty",
-    "HighResASS",
     "HungryButts",
     "Mooning",
     "SnakeButt",
@@ -59,7 +55,6 @@ ASS = [
     "beautifulbutt",
     "bigasses",
     "booty",
-    "brunetteass",
     "datgap",
     "girlsinleggings",
     "girlsinyogapants",
@@ -69,27 +64,15 @@ ASS = [
     "facedownassup",
 ]
 ASIANPORN = [
-    "AmateurAsianGirls",
     "AsianCuties",
     "AsianHotties",
     "AsianNSFW",
     "AsianPorn",
-    "AsianPussy",
     "AsiansGoneWild",
     "KoreanHotties",
     "NSFW_Japan",
-    "asian_gifs",
     "bustyasians",
     "juicyasians",
-]
-ANAL = [
-    "AnalGW",
-    "MasterOfAnal",
-    "NotInThePussy",
-    "anal",
-    "analinsertions",
-    "assholegonewild",
-    "buttsthatgrip",
 ]
 BBW = [
     "BBW",
@@ -99,8 +82,8 @@ BBW = [
     "chubby",
     "gonewildcurvy",
 ]
-BDSM = ["BDSMGW", "BDSM_NoSpam", "Bondage", "Spanking", "bdsm", "ropeart"]
-BLACKCOCK = ["Blackdick", "ChurchOfTheBBC", "bigblackcocks", "blackcock"]
+BDSM = ["BDSMGW", "BDSM_NoSpam", "Bondage", "Spanking", "bdsm"]
+BLACKCOCK = ["bigblackcocks", "blackcock"]
 BLOWJOB = [
     "AsianBlowjobs",
     "Blowjobs",
@@ -115,19 +98,16 @@ BOOBS = [
     "BigBoobsGonewild",
     "BiggerThanYouThought",
     "Boobies",
-    "BoobsBetweenArms",
     "BustyNaturals",
     "BustyPetite",
     "Nipples",
     "PerfectTits",
-    "PiercedNSFW",
     "Stacked",
     "TheHangingBoobs",
     "TheUnderboob",
     "TinyTits",
     "Titties",
     "TittyDrop",
-    "bigboobs",
     "boobbounce",
     "boobgifs",
     "boobs",
@@ -141,15 +121,12 @@ BOOBS = [
     "smallboobs",
     "tits",
 ]
-BOTTOMLESS = ["Bottomless", "nopanties", "upskirt"]
+BOTTOMLESS = ["nopanties", "upskirt"]
 COSPLAY = [
-    "CosplayBoobs",
     "CosplayLewd",
     "Cosplayheels",
-    "gwcosplay",
     "nsfwcosplay",
 ]
-CUNNI = ["CunnilingusSelfie", "cunnilingus"]
 CUMSHOTS = [
     "GirlsFinishingTheJob",
     "amateurcumsluts",
@@ -159,11 +136,13 @@ CUMSHOTS = [
     "cumshots",
     "facialcumshots",
     "pulsatingcumshots",
-    "unexpectedcum",
 ]
-DEEPTHROAT = ["AmateurDeepthroat", "DeepThroatTears", "SwordSwallowers", "deepthroat"]
+DEEPTHROAT = [
+    "DeepThroatTears",
+    "SwordSwallowers",
+    "deepthroat",
+]
 DICK = [
-    "DickPics4Freedom",
     "MassiveCock",
     "ThickDick",
     "bulges",
@@ -178,7 +157,6 @@ EBONY = [
     "EbonyGirls",
     "bigblackasses",
     "blackchickswhitedicks",
-    "blackporn",
     "ebonyamateurs",
 ]
 FACIALS = ["FacialFun", "facialcumshots"]
@@ -187,41 +165,14 @@ FEET = [
     "Feet_NSFW",
     "Feetup",
     "FootFetish",
-    "legsup",
     "rule34feet",
 ]
 FEMDOM = ["Femdom", "FemdomHumiliation", "femdom", "hentaifemdom"]
-FUTA = [
-    "FutanariHentai",
-    "FutanariPegging",
-    "HorsecockFuta",
-    "Rule34_Futanari",
-    "hugefutanari",
-]
-GAY_P = [
-    "CuteGuyButts",
-    "GayDaddiesPics",
-    "GayGifs",
-    "ManSex",
-    "NSFW_GAY",
-    "broslikeus",
-    "bulges",
-    "gaybears",
-    "gaynsfw",
-    "gayotters",
-    "jockstraps",
-    "ladybonersgw",
-    "lovegaymale",
-    "manass",
-    "manlove",
-    "MaleUnderwear",
-]
 GROUPS = ["GroupOfNudeGirls", "groupsex"]
 LESBIANS = [
     "HDLesbianGifs",
     "Lesbian_gifs",
     "StraightGirlsPlaying",
-    "amateurlesbians",
     "dyke",
     "girlskissing",
     "lesbians",
@@ -230,7 +181,6 @@ LESBIANS = [
 ]
 MILF = [
     "AgedBeauty",
-    "HotAsianMilfs",
     "MILFs",
     "Milfie",
     "amateur_milfs",
@@ -242,11 +192,9 @@ MILF = [
 ORAL = [
     "AsianBlowjobs",
     "Blowjobs",
-    "CunnilingusSelfie",
     "DeepThroatTears",
     "OralCreampie",
     "SwordSwallowers",
-    "ballsucking",
     "blowjobsandwich",
     "cunnilingus",
     "deepthroat",
@@ -258,39 +206,31 @@ PUBLIC = [
     "FlashingGirls",
     "NSFW_Outdoors",
     "NotSafeForNature",
-    "NudeInPublic",
     "PublicFlashing",
     "WoodNymphs",
     "bitchinbubba",
     "casualnudity",
     "exposedinpublic",
-    "girlsflashing",
     "gwpublic",
     "holdthemoan",
     "publicplug",
     "snowgirls",
 ]
 PUSSY = [
-    "AsianPussy",
-    "FireCrotch",
     "GodPussy",
     "HairyPussy",
     "Innies",
     "LabiaGW",
     "LipsThatGrip",
     "MoundofVenus",
-    "PerfectPussies",
     "PussyFlashing",
     "PussyMound",
     "grool",
-    "legsup",
     "peachlips",
     "pelfie",
     "pussy",
     "rearpussy",
     "spreadeagle",
-    "ButterflyWings",
-    "DangleAndJingle",
 ]
 REAL_GIRLS = [
     "CellShots",
@@ -298,27 +238,20 @@ REAL_GIRLS = [
     "Nude_Selfie",
     "RealGirls",
     "selfpix",
-    "selfshots",
 ]
 REDHEADS = [
-    "FireCrotch",
     "FreckledRedheads",
     "RedheadGifs",
     "RedheadsPorn",
     "ginger",
     "nsfw_redhead",
-    "redhead",
     "redheads",
 ]
 RULE_34 = [
     "Overwatch_Porn",
     "Rule34LoL",
-    "Rule34Overwatch",
     "Rule_34",
-    "WesternHentai",
     "rule34",
-    "rule34cartoons",
-    "rule34_ass",
 ]
 SQUIRTS = ["squirting", "squirting_gifs", "wetspot", "grool"]
 THIGHS = [
@@ -327,13 +260,11 @@ THIGHS = [
     "datgap",
     "leggingsgonewild",
     "legs",
-    "legsup",
     "theratio",
     "thighhighs",
 ]
 THREESOME = [
     "AirTight",
-    "RealThreesomes",
     "SpitRoasted",
     "Threesome",
     "Xsome",
@@ -343,13 +274,10 @@ THREESOME = [
     "blowbang",
 ]
 TRANS = [
-    "DeliciousTraps",
     "GoneWildTrans",
     "Shemale_Big_Cock",
     "Shemales",
     "ShemalesParadise",
-    "Transex",
-    "shemale_gifs",
     "trapgifs",
     "traps",
 ]
@@ -360,11 +288,9 @@ WILD = [
     "BigBoobsGonewild",
     "GWCouples",
     "GWNerdy",
-    "GirlsWithBikes",
     "GoneWildSmiles",
     "LabiaGW",
     "LingerieGW",
-    "MyCalvins",
     "PetiteGoneWild",
     "Swingersgw",
     "TallGoneWild",
@@ -377,11 +303,9 @@ WILD = [
     "gonewildcouples",
     "gonewildcurvy",
     "gwpublic",
-    "librarygirls",
     "workgonewild",
 ]
 YIFF = ["Hyiff", "Yiffbondage", "femyiff", "yiff", "yiffgif"]
-
 # Other APIs
 NEKOBOT_HENTAI = choice(["hentai_anal", "hentai"])
 NEKOBOT_URL = "https://nekobot.xyz/api/image?type={}"

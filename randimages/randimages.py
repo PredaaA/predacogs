@@ -67,7 +67,7 @@ class RandImages(Core):
             source="nekos.life",
             img_url="https://nekos.life/api/v2/img/meow",
             img_arg="url",
-            facts_url="https://some-random-api.ml/facts/cat",
+            facts_url="https://some-random-api.com/facts/cat",
             facts_arg="fact",
             facts=True,
         )
@@ -127,7 +127,7 @@ class RandImages(Core):
             source="random.dog",
             img_url="https://random.dog/woof.json",
             img_arg="url",
-            facts_url="https://some-random-api.ml/facts/dog",
+            facts_url="https://some-random-api.com/facts/dog",
             facts_arg="fact",
             facts=True,
         )
@@ -179,7 +179,7 @@ class RandImages(Core):
             name=_("panda"),
             emoji="\N{PANDA FACE}",
             source="some-random-api.ml",
-            img_url="https://some-random-api.ml/img/panda",
+            img_url="https://some-random-api.com/img/panda",
             img_arg="link",
             facts=False,
         )
@@ -221,9 +221,9 @@ class RandImages(Core):
             name=_("a panda fact with a random panda image"),
             emoji="\N{PANDA FACE}",
             source="some-random-api.ml",
-            img_url="https://some-random-api.ml/img/panda",
+            img_url="https://some-random-api.com/img/panda",
             img_arg="link",
-            facts_url="https://some-random-api.ml/facts/panda",
+            facts_url="https://some-random-api.com/facts/panda",
             facts_arg="fact",
             facts=True,
         )
@@ -239,7 +239,7 @@ class RandImages(Core):
             name=_("Pikachu"),
             emoji="❤️",
             source="some-random-api.ml",
-            img_url="https://some-random-api.ml/img/pikachu",
+            img_url="https://some-random-api.com/img/pikachu",
             img_arg="link",
             facts=False,
         )
